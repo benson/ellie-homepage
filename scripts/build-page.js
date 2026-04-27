@@ -4,7 +4,7 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const HTML_PATH = path.join(ROOT, 'index.html');
 
-const GOODREADS_USER_ID = '';
+const GOODREADS_USER_ID = '145364144';
 
 async function fetchBase64(url) {
   const res = await fetch(url);
