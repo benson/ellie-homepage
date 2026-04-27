@@ -1,10 +1,16 @@
 const CLIENT_ID = '2aa0050d9d0a45519af3426f3dca0b69';
-const CLIENT_SECRET = '4de7171c474a45198ba5fcf3dc6c2cec';
+const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 const REDIRECT_URI = 'https://elliexcenteno.com/spotify-callback.html';
 
 const code = process.argv[2];
 if (!code) {
-  console.error('usage: node spotify-auth-step2.js <code>');
+  console.error('usage: SPOTIFY_CLIENT_SECRET=xxx node spotify-auth-step2.js <code>');
+  console.error('grab the secret from https://developer.spotify.com/dashboard');
+  process.exit(1);
+}
+if (!CLIENT_SECRET) {
+  console.error('SPOTIFY_CLIENT_SECRET env var not set');
+  console.error('grab it from https://developer.spotify.com/dashboard and prefix the command');
   process.exit(1);
 }
 
