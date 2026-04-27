@@ -50,12 +50,15 @@ h2 {
 }
 
 #spotify-recent,
-#spotify-top {
+#spotify-top,
+#goodreads-reading,
+#goodreads-read {
   display: flex;
   gap: 6px;
 }
 
-.album-wrap {
+.album-wrap,
+.book-wrap {
   position: relative;
   text-decoration: none;
 }
@@ -68,7 +71,17 @@ h2 {
   border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
-.album-tip {
+.book-icon {
+  width: 36px;
+  height: 54px;
+  border-radius: 2px;
+  display: block;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  object-fit: cover;
+}
+
+.album-tip,
+.book-tip {
   display: none;
   position: absolute;
   top: 48px;
@@ -84,7 +97,8 @@ h2 {
   z-index: 10;
 }
 
-.album-tip span {
+.album-tip span,
+.book-tip span {
   display: block;
   line-height: 1.4;
 }
@@ -93,17 +107,21 @@ h2 {
   color: #000;
 }
 
-.album-wrap:hover .album-tip {
+.album-wrap:hover .album-tip,
+.book-wrap:hover .book-tip {
   display: block;
 }
 
 .album-wrap:first-child .album-tip,
-.album-wrap:nth-child(2) .album-tip {
+.album-wrap:nth-child(2) .album-tip,
+.book-wrap:first-child .book-tip,
+.book-wrap:nth-child(2) .book-tip {
   left: 0;
   transform: none;
 }
 
-.album-wrap:last-child .album-tip {
+.album-wrap:last-child .album-tip,
+.book-wrap:last-child .book-tip {
   left: auto;
   right: 0;
   transform: none;
@@ -123,18 +141,22 @@ section.compact + section.compact {
   }
 
   #spotify-recent,
-  #spotify-top {
+  #spotify-top,
+  #goodreads-reading,
+  #goodreads-read {
     flex-wrap: wrap;
   }
 
-  .album-wrap {
+  .album-wrap,
+  .book-wrap {
     display: flex;
     flex-direction: column;
     flex: 1;
     min-width: 0;
   }
 
-  .album-tip {
+  .album-tip,
+  .book-tip {
     display: block;
     position: static;
     transform: none;
