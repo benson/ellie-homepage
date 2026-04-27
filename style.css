@@ -19,13 +19,43 @@ header {
   margin-bottom: 56px;
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
 h1 {
   font-family: "UnifrakturMaguntia", "Old English Text MT", serif;
   font-size: 5rem;
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1;
-  margin-bottom: 24px;
+}
+
+.header-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.social-link {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #555;
+  text-decoration: underline;
+  text-decoration-color: rgba(0, 0, 0, 0.18);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  white-space: nowrap;
+}
+
+.social-link:hover {
+  color: #000;
+  text-decoration-color: #000;
 }
 
 .primary-links {
