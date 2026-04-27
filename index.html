@@ -9,7 +9,7 @@
   <meta property="og:description" content="">
   <meta property="og:url" content="https://elliexcenteno.com">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="style.css?v=34">
+  <link rel="stylesheet" href="style.css?v=35">
 </head>
 <body>
   <header>
@@ -71,35 +71,6 @@
       <!-- HIKE_END -->
     </div>
   </section>
-
-  <div class="welcome-overlay" id="welcomeOverlay" role="dialog" aria-modal="true" aria-labelledby="welcomeText">
-    <div class="welcome-card">
-      <p class="welcome-text" id="welcomeText">welcome to my brain, enjoy your stay.</p>
-      <button class="welcome-button" type="button" id="welcomeContinue">continue</button>
-    </div>
-  </div>
-
-  <script>
-  (function () {
-    let shown = false;
-    function showWelcome() {
-      if (shown) return;
-      shown = true;
-      const overlay = document.getElementById('welcomeOverlay');
-      const btn = document.getElementById('welcomeContinue');
-      const close = () => {
-        overlay.classList.remove('visible');
-        document.removeEventListener('keydown', onKey);
-      };
-      const onKey = (e) => { if (e.key === 'Escape') close(); };
-      btn.addEventListener('click', close);
-      overlay.addEventListener('click', (e) => { if (e.target === overlay) close(); });
-      document.addEventListener('keydown', onKey);
-      overlay.classList.add('visible');
-    }
-    window.addEventListener('load', () => setTimeout(showWelcome, 3000));
-  })();
-  </script>
 
   <script>
   (function () {
