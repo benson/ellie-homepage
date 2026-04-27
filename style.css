@@ -251,62 +251,6 @@ section.compact + section.compact {
   text-decoration-color: #000;
 }
 
-.welcome-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-  padding: 24px;
-}
-
-.welcome-overlay.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.welcome-card {
-  background: #f8f7f4;
-  padding: 32px 36px;
-  max-width: 360px;
-  width: 100%;
-  text-align: center;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 4px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  text-transform: lowercase;
-}
-
-.welcome-text {
-  font-size: 1rem;
-  line-height: 1.5;
-  margin-bottom: 24px;
-  color: #000;
-}
-
-.welcome-button {
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: #000;
-  background: rgba(74, 12, 30, 0.3);
-  border: none;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: background 0.15s ease;
-}
-
-.welcome-button:hover {
-  background: rgba(74, 12, 30, 0.5);
-}
-
 .image-zoom-overlay {
   position: fixed;
   top: 50%;
