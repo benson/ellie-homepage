@@ -1,0 +1,147 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Times New Roman", Times, Georgia, serif;
+  background: #f8f7f4;
+  color: #000;
+  min-height: 100vh;
+  padding: 40px 30px;
+  text-transform: lowercase;
+}
+
+header {
+  margin-bottom: 40px;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+nav {
+  display: flex;
+  gap: 16px;
+}
+
+nav a {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #ccc;
+}
+
+nav a:hover {
+  color: #000;
+  border-bottom-color: #000;
+}
+
+h2 {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #999;
+  letter-spacing: 0.03em;
+  margin-bottom: 12px;
+}
+
+#spotify-recent,
+#spotify-top {
+  display: flex;
+  gap: 6px;
+}
+
+.album-wrap {
+  position: relative;
+  text-decoration: none;
+}
+
+.album-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 3px;
+  display: block;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.album-tip {
+  display: none;
+  position: absolute;
+  top: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 6px 10px;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  color: #666;
+  z-index: 10;
+}
+
+.album-tip span {
+  display: block;
+  line-height: 1.4;
+}
+
+.tip-track {
+  color: #000;
+}
+
+.album-wrap:hover .album-tip {
+  display: block;
+}
+
+.album-wrap:first-child .album-tip,
+.album-wrap:nth-child(2) .album-tip {
+  left: 0;
+  transform: none;
+}
+
+.album-wrap:last-child .album-tip {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+section + section {
+  margin-top: 40px;
+}
+
+section.compact + section.compact {
+  margin-top: 20px;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 20px 15px;
+  }
+
+  #spotify-recent,
+  #spotify-top {
+    flex-wrap: wrap;
+  }
+
+  .album-wrap {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .album-tip {
+    display: block;
+    position: static;
+    transform: none;
+    border: none;
+    background: none;
+    padding: 2px 0 0;
+    font-size: 0.65rem;
+    white-space: normal;
+  }
+}
