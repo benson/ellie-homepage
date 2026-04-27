@@ -181,10 +181,8 @@ section.compact + section.compact {
   max-width: 480px;
 }
 
-.craft-photo-link {
+.craft-photo-wrap {
   flex: 0 0 96px;
-  display: block;
-  line-height: 0;
 }
 
 .craft-photo {
@@ -194,6 +192,7 @@ section.compact + section.compact {
   object-fit: cover;
   border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.3);
+  cursor: zoom-in;
 }
 
 .craft-caption {
@@ -222,6 +221,50 @@ section.compact + section.compact {
   text-decoration-color: #000;
 }
 
+.image-zoom-overlay {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+.image-zoom-overlay.visible {
+  opacity: 1;
+}
+
+.image-zoom-img {
+  display: block;
+  border-radius: 3px;
+  background: #f1f0ec;
+}
+
+.image-zoom-overlay[data-type="album"] .image-zoom-img {
+  width: 360px;
+  height: 360px;
+  object-fit: cover;
+}
+
+.image-zoom-overlay[data-type="book"] .image-zoom-img {
+  width: 320px;
+  height: 480px;
+  object-fit: cover;
+}
+
+.image-zoom-overlay[data-type="photo"] .image-zoom-img {
+  width: min(72vw, 640px);
+  height: min(72vw, 640px);
+  object-fit: cover;
+}
+
 @media (max-width: 600px) {
   body {
     padding: 24px 18px;
@@ -244,5 +287,9 @@ section.compact + section.compact {
   .book-icon {
     width: 48px;
     height: 72px;
+  }
+
+  .image-zoom-overlay {
+    display: none;
   }
 }

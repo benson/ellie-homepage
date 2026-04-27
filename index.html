@@ -9,7 +9,7 @@
   <meta property="og:description" content="">
   <meta property="og:url" content="https://elliexcenteno.com">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="style.css?v=11">
+  <link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
   <header>
@@ -47,7 +47,7 @@
     <h2>currently crafting</h2>
     <div class="craft-content">
       <!-- CRAFT_START -->
-      <a class="craft-photo-link" href="craft/current.jpg?v=2" target="_blank"><img src="craft/current.jpg?v=2" alt="current craft" class="craft-photo"></a>
+      <div class="craft-photo-wrap"><img src="craft/current.jpg?v=2" alt="current craft" class="craft-photo"></div>
       <p class="craft-caption">felt textile art &mdash; inspired by a great egret in the everglades. all hand drawn, cut, and sewn. wip :)</p>
       <!-- CRAFT_END -->
     </div>
@@ -57,7 +57,7 @@
     <h2>recently hiked</h2>
     <div class="craft-content">
       <!-- HIKE_START -->
-      <a class="craft-photo-link" href="hike/current.jpg?v=1" target="_blank"><img src="hike/current.jpg?v=1" alt="bull hill full loop, april 16" class="craft-photo"></a>
+      <div class="craft-photo-wrap"><img src="hike/current.jpg?v=1" alt="bull hill full loop, april 16" class="craft-photo"></div>
       <div class="craft-text">
         <p class="craft-caption">april 16, bull hill full loop in cold spring, ny. mid-70s and beautiful. saw an eastern racer and a wild turkey on the trail :)</p>
         <p class="craft-caption"><a class="craft-link" href="https://www.alltrails.com/explore/recording/afternoon-hike-at-bull-hill-full-loop-8ccd293" target="_blank">alltrails &#8599;</a></p>
@@ -66,5 +66,44 @@
     </div>
   </section>
 
+  <script>
+  (function () {
+    let overlay, imgEl;
+
+    function ensure() {
+      if (overlay) return;
+      overlay = document.createElement('div');
+      overlay.className = 'image-zoom-overlay';
+      imgEl = document.createElement('img');
+      imgEl.className = 'image-zoom-img';
+      imgEl.alt = '';
+      overlay.appendChild(imgEl);
+      document.body.appendChild(overlay);
+    }
+
+    function show(srcEl) {
+      ensure();
+      let type = 'photo';
+      if (srcEl.classList.contains('album-icon')) type = 'album';
+      else if (srcEl.classList.contains('book-icon')) type = 'book';
+      overlay.dataset.type = type;
+      imgEl.src = srcEl.src;
+      overlay.classList.add('visible');
+    }
+
+    function hide() {
+      if (overlay) overlay.classList.remove('visible');
+    }
+
+    document.addEventListener('mouseover', e => {
+      const img = e.target.closest('.craft-photo');
+      if (img) show(img);
+    });
+    document.addEventListener('mouseout', e => {
+      const img = e.target.closest('.craft-photo');
+      if (img) hide();
+    });
+  })();
+  </script>
 </body>
 </html>
