@@ -78,35 +78,6 @@ async function buildSpotify(token) {
   return buildAlbumStrip(albums, 'spotify-recent');
 }
 
-async function buildOnRepeat(token) {
-  const res = await fetch('https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=20', {
-    headers: { 'Authorization': `Bearer ${token}` },
-  });
-  if (!res.ok) throw new Error(`spotify top: ${res.status}`);
-  const data = await res.json();
-
-  if (!data.items || !data.items.length) return null;
-
-  const seen = new Set();
-  const albums = [];
-  for (const t of data.items) {
-    const albumId = t.album.id;
-    if (seen.has(albumId)) continue;
-    seen.add(albumId);
-    albums.push({
-      album: t.album.name,
-      artist: t.artists.map(a => a.name).join(', '),
-      artUrl: t.album.images.find(i => i.width <= 64)?.url
-        || t.album.images[t.album.images.length - 1]?.url || '',
-      url: t.album.external_urls.spotify,
-    });
-    if (albums.length >= 5) break;
-  }
-
-  console.log(`spotify on repeat: ${albums.length} tracks inlined`);
-  return buildAlbumStrip(albums, 'spotify-top');
-}
-
 function decodeCdata(str) {
   return str.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').trim();
 }
@@ -131,7 +102,8 @@ async function buildBookStrip(books, containerId) {
 
 async function buildGoodreadsShelf(shelf, containerId) {
   if (!GOODREADS_USER_ID) return null;
-  const url = `https://www.goodreads.com/review/list_rss/${GOODREADS_USER_ID}?shelf=${shelf}`;
+  const sortParam = shelf === 'read' ? '&sort=date_read&order=d' : '';
+  const url = `https://www.goodreads.com/review/list_rss/${GOODREADS_USER_ID}?shelf=${shelf}${sortParam}`;
   const res = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
   if (!res.ok) throw new Error(`goodreads ${shelf}: ${res.status}`);
   const xml = await res.text();
@@ -170,17 +142,6 @@ async function main() {
       console.error('spotify recent error:', err.message);
     }
 
-    try {
-      const onRepeatHtml = await buildOnRepeat(token);
-      if (onRepeatHtml) {
-        html = html.replace(
-          /<!-- ONREPEAT_START -->[\s\S]*?<!-- ONREPEAT_END -->/,
-          `<!-- ONREPEAT_START -->\n    ${onRepeatHtml}\n    <!-- ONREPEAT_END -->`
-        );
-      }
-    } catch (err) {
-      console.error('spotify on repeat error:', err.message);
-    }
   } else {
     console.error('spotify credentials not set, skipping');
   }
