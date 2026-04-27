@@ -113,10 +113,10 @@ h2 {
   letter-spacing: 0.16em;
   text-transform: uppercase;
   margin-bottom: 14px;
-  text-decoration: underline;
-  text-decoration-color: rgba(0, 0, 0, 0.18);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
+  display: inline-block;
+  background: rgba(74, 12, 30, 0.3);
+  padding: 2px 6px;
+  margin-left: -6px;
 }
 
 #spotify-recent,
@@ -302,6 +302,14 @@ section.compact + section.compact {
 
   h1 {
     font-size: 3.5rem;
+  }
+
+  .social-link {
+    font-size: 0.72rem;
+  }
+
+  .header-links {
+    gap: 4px;
   }
 
   .album-wrap,
