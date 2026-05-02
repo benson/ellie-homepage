@@ -9,7 +9,7 @@
   <meta property="og:description" content="">
   <meta property="og:url" content="https://elliexcenteno.com">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="style.css?v=35">
+  <link rel="stylesheet" href="style.css?v=36">
 </head>
 <body>
   <header>
@@ -108,6 +108,18 @@
     document.addEventListener('mouseout', e => {
       const img = e.target.closest('.craft-photo');
       if (img) hide();
+    });
+
+    // Tap support for touch devices: tap a photo to expand, tap anywhere to dismiss
+    document.addEventListener('click', e => {
+      const img = e.target.closest('.craft-photo');
+      const isVisible = overlay && overlay.classList.contains('visible');
+      if (img) {
+        e.preventDefault();
+        if (isVisible) hide(); else show(img);
+      } else if (isVisible) {
+        hide();
+      }
     });
   })();
   </script>

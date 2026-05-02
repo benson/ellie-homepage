@@ -326,8 +326,4 @@ section.compact + section.compact {
     width: 48px;
     height: 72px;
   }
-
-  .image-zoom-overlay {
-    display: none;
-  }
 }
