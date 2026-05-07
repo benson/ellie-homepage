@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brain drain</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Beastly&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="braindrain.css?v=5">
+</head>
+<body>
+  <header class="bd-header">
+    <div class="wordmark">
+      <svg class="rings" viewBox="0 0 200 200" aria-hidden="true">
+        <path id="rings-spiral" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <h1>brain drain</h1>
+    </div>
+    <a href="/braindrain-mainline" class="main-line">* main line</a>
+  </header>
+
+  <main class="bd-main">
+    <p class="now-stamp" id="now-stamp"><span class="now-date" id="now-date"></span><span class="now-time" id="now-time"></span></p>
+    <div class="stage">
+      <div class="brain-frame">
+        <img src="brain.jpg?v=4" class="brain" alt="" aria-hidden="true">
+
+        <section id="compose-overlay" class="overlay">
+          <div class="textbox-wrap">
+            <textarea id="factoid-input" rows="4" autofocus></textarea>
+            <svg class="clip" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 17v5" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </section>
+
+        <section id="review-overlay" class="overlay" hidden>
+          <div class="review-card">
+            <div class="review-stamp" id="review-stamp"></div>
+            <div class="review-text" id="review-text"></div>
+            <div class="review-context" id="review-context" hidden></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div id="compose-actions" class="action-row">
+        <div class="left-action" id="context-area">
+          <button type="button" id="add-context-btn" class="link-btn">+ add context</button>
+        </div>
+        <button type="button" id="review-btn" class="link-btn">review &gt;</button>
+      </div>
+      <div id="review-actions" class="action-row" hidden>
+        <button type="button" id="edit-btn" class="link-btn">&lt; edit</button>
+        <div class="sort-wrap">
+          <button type="button" id="sort-btn" class="link-btn">+ sort</button>
+          <div id="sort-menu" class="sort-menu" hidden></div>
+        </div>
+        <button type="button" id="enter-btn" class="link-btn">enter &gt;</button>
+      </div>
+    </div>
+
+    <p id="status" class="bd-status" hidden></p>
+  </main>
+
+  <script src="braindrain.js?v=4"></script>
+</body>
+</html>

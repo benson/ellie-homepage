@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brain drain · main line</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Beastly&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../braindrain/braindrain.css?v=4">
+  <link rel="stylesheet" href="braindrainmain.css?v=2">
+</head>
+<body>
+  <header class="bd-header">
+    <div class="wordmark">
+      <svg class="rings" viewBox="0 0 200 200" aria-hidden="true">
+        <path id="rings-spiral" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <h1>brain drain</h1>
+    </div>
+    <a href="/braindrain" class="main-line">+ new entry</a>
+  </header>
+
+  <main class="bd-main archive-main">
+    <p class="archive-title">main line</p>
+    <div id="archive-container">
+      <p class="archive-empty">loading…</p>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      const path = document.getElementById('rings-spiral');
+      if (!path) return;
+      const cx = 100, cy = 100, maxR = 92, turns = 5, ptsPerTurn = 28;
+      const total = turns * ptsPerTurn;
+      let d = '';
+      for (let i = 0; i <= total; i++) {
+        const ratio = i / total;
+        const angle = ratio * turns * 2 * Math.PI;
+        const r = ratio * maxR;
+        const x = (cx + r * Math.cos(angle)).toFixed(2);
+        const y = (cy + r * Math.sin(angle)).toFixed(2);
+        d += (i === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
+      }
+      path.setAttribute('d', d);
+    })();
+  </script>
+  <script src="braindrainmain.js?v=2"></script>
+</body>
+</html>
