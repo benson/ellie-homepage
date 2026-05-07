@@ -8,11 +8,22 @@
 
 body {
   font-family: "Neue Machina", "Space Grotesk", system-ui, -apple-system, sans-serif;
-  background: #f8f7f4;
-  color: #000;
+  background-color: #1a1a1a;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url('bg/current.jpg?v=2');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #f4ede4;
   min-height: 100vh;
   padding: 40px 30px;
   text-transform: lowercase;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.7);
+}
+
+h2, .link-label {
+  text-shadow: none;
 }
 
 header {
@@ -33,6 +44,12 @@ h1 {
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1;
+  color: #000;
+  -webkit-text-stroke: 4px #fff;
+  paint-order: stroke fill;
+  text-shadow:
+    0 0 18px rgba(255, 240, 180, 0.45),
+    0 0 6px rgba(255, 240, 180, 0.35);
 }
 
 .header-links {
@@ -45,7 +62,7 @@ h1 {
 .social-link {
   font-size: 0.85rem;
   font-weight: 400;
-  color: #555;
+  color: #d8cfc4;
   text-decoration: underline;
   text-decoration-color: rgba(0, 0, 0, 0.18);
   text-decoration-thickness: 1px;
@@ -54,8 +71,9 @@ h1 {
 }
 
 .social-link:hover {
-  color: #000;
-  text-decoration-color: #000;
+  color: #fff;
+  text-decoration-color: #fff;
+  font-style: italic;
 }
 
 .primary-links {
@@ -75,20 +93,20 @@ h1 {
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  background: #000;
-  color: #f8f7f4;
+  background: #f8f7f4;
+  color: #000;
   padding: 1px 5px;
   margin-left: -5px;
 }
 
 .link-desc {
-  color: #555;
+  color: #d8cfc4;
   margin-left: 4px;
 }
 
 .primary-links a::after {
   content: " ↗";
-  color: #555;
+  color: #d8cfc4;
   font-size: 0.95rem;
   margin-left: 4px;
   display: inline-block;
@@ -96,25 +114,26 @@ h1 {
 }
 
 .primary-links a:hover .link-desc {
-  color: #000;
+  color: #fff;
   text-decoration: underline;
   text-underline-offset: 3px;
+  font-style: italic;
 }
 
 .primary-links a:hover::after {
-  color: #000;
+  color: #fff;
   transform: translate(2px, -2px);
 }
 
 h2 {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #000;
+  color: #f4ede4;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   margin-bottom: 14px;
   display: inline-block;
-  background: rgba(74, 12, 30, 0.3);
+  background: rgba(74, 12, 30, 0.8);
   padding: 2px 6px;
   margin-left: -6px;
 }
@@ -141,6 +160,7 @@ h2 {
   border-radius: 3px;
   display: block;
   border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.65), 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .book-icon {
@@ -150,6 +170,7 @@ h2 {
   display: block;
   border: 1px solid rgba(0, 0, 0, 0.3);
   object-fit: cover;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.65), 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .album-tip,
@@ -158,7 +179,7 @@ h2 {
   margin-top: 6px;
   font-size: 0.7rem;
   line-height: 1.3;
-  color: #666;
+  color: #d8cfc4;
 }
 
 .album-tip span,
@@ -166,8 +187,13 @@ h2 {
   display: block;
 }
 
+.album-tip span:not(.tip-track),
+.book-tip span:not(.tip-track) {
+  font-style: italic;
+}
+
 .tip-track {
-  color: #000;
+  color: #fff;
   font-weight: 500;
 }
 
@@ -175,6 +201,20 @@ h2 {
 .book-wrap:hover .tip-track {
   text-decoration: underline;
   text-underline-offset: 2px;
+  text-decoration-color: rgba(255, 255, 255, 0.6);
+}
+
+.barbed-divider {
+  width: 33%;
+  margin: 28px auto;
+  color: #f4ede4;
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.6));
+}
+
+.barbed-divider svg {
+  display: block;
+  width: 100%;
+  height: 14px;
 }
 
 section + section,
@@ -223,13 +263,14 @@ section.compact + section.compact {
   border-radius: 3px;
   border: 1px solid rgba(0, 0, 0, 0.3);
   cursor: zoom-in;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.65), 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .craft-caption {
   font-size: 0.7rem;
   font-style: italic;
   line-height: 1.4;
-  color: #666;
+  color: #d8cfc4;
 }
 
 .craft-text {
@@ -239,16 +280,16 @@ section.compact + section.compact {
 }
 
 .craft-link {
-  color: #000;
+  color: #f4ede4;
   text-decoration: underline;
-  text-decoration-color: rgba(0, 0, 0, 0.25);
+  text-decoration-color: rgba(244, 237, 228, 0.4);
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
   font-style: normal;
 }
 
 .craft-link:hover {
-  text-decoration-color: #000;
+  text-decoration-color: #f4ede4;
 }
 
 .image-zoom-overlay {
