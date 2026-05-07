@@ -48,8 +48,8 @@ h1 {
   -webkit-text-stroke: 4px #fff;
   paint-order: stroke fill;
   text-shadow:
-    0 0 18px rgba(255, 240, 180, 0.45),
-    0 0 6px rgba(255, 240, 180, 0.35);
+    0 0 8px rgba(255, 240, 180, 0.18),
+    0 0 3px rgba(255, 240, 180, 0.12);
 }
 
 .header-links {
@@ -343,6 +343,10 @@ section.compact + section.compact {
 
   h1 {
     font-size: 3.5rem;
+    -webkit-text-stroke: 2.5px #fff;
+    text-shadow:
+      0 0 6px rgba(255, 240, 180, 0.18),
+      0 0 2px rgba(255, 240, 180, 0.12);
   }
 
   .social-link {
