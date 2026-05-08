@@ -102,6 +102,7 @@ function hideAllStates() {
 
 function showCompose() {
   hideAllStates();
+  if (nowEl) nowEl.hidden = false;
   composeOverlay.hidden = false;
   composeActions.hidden = false;
   input.focus();
@@ -109,6 +110,7 @@ function showCompose() {
 
 function showReview(text, capturedAt, context) {
   hideAllStates();
+  if (nowEl) nowEl.hidden = true;
   reviewOverlay.hidden = false;
   reviewActions.hidden = false;
   reviewStamp.textContent = formatNow(capturedAt);
@@ -124,6 +126,7 @@ function showReview(text, capturedAt, context) {
 
 function showSaved() {
   hideAllStates();
+  if (nowEl) nowEl.hidden = false;
   savedOverlay.hidden = false;
   savedActions.hidden = false;
 }
@@ -247,7 +250,16 @@ function expandContext(initial = '') {
 
   const counter = document.createElement('span');
   counter.id = 'context-counter';
-  const updateCounter = () => { counter.textContent = `${ctx.value.length}/${CONTEXT_MAX}`; };
+  const updateCounter = () => {
+    const remaining = CONTEXT_MAX - ctx.value.length;
+    if (remaining <= 15) {
+      counter.textContent = `${ctx.value.length}/${CONTEXT_MAX}`;
+      counter.hidden = false;
+    } else {
+      counter.textContent = '';
+      counter.hidden = true;
+    }
+  };
   updateCounter();
   ctx.addEventListener('input', () => { contextDraft = ctx.value; updateCounter(); });
 
@@ -269,7 +281,7 @@ function collapseContext() {
   btn.type = 'button';
   btn.id = 'add-context-btn';
   btn.className = 'link-btn';
-  btn.textContent = '+ add context';
+  btn.textContent = '+ context';
   btn.addEventListener('click', () => expandContext(contextDraft));
   contextArea.append(btn);
 }

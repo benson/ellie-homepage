@@ -191,6 +191,8 @@ body {
   padding: 6px 0;
   cursor: pointer;
   text-transform: lowercase;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .link-btn:hover {
@@ -207,8 +209,9 @@ body {
 #context-input {
   font-family: inherit;
   font-size: 1.225rem;
-  width: 320px;
-  max-width: 60vw;
+  width: 220px;
+  max-width: 100%;
+  min-width: 0;
   border: none;
   border-bottom: 1.5px solid #1a1a1a;
   background: transparent;
@@ -216,6 +219,14 @@ body {
   outline: none;
   text-transform: none;
   color: #1a1a1a;
+}
+
+#context-input-wrap {
+  min-width: 0;
+}
+
+.left-action {
+  min-width: 0;
 }
 
 #context-counter {
@@ -423,7 +434,7 @@ a:hover {
   .textbox-wrap { width: min(56%, 240px); }
   #factoid-input { font-size: 0.85rem; min-height: 48px; padding: 8px 24px 8px 10px; }
   .saved-message { padding: 18px 12px; font-size: 1rem; }
-  #context-input { font-size: 0.9rem; }
+  #context-input { font-size: 0.9rem; width: 130px; }
   #context-counter { font-size: 0.75rem; }
   .review-stamp { font-size: 0.8rem; }
   .review-text { font-size: 0.95rem; }
