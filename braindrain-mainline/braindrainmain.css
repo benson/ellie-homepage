@@ -260,11 +260,27 @@
   text-decoration: underline;
 }
 
+.sewer-hunter {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 387px;
+  max-width: 90vw;
+  height: auto;
+  opacity: 0.35;
+  z-index: 1;
+  pointer-events: none;
+  user-select: none;
+  display: block;
+}
+
 @media print {
   .bd-header { position: static; }
   .bd-header .rings { display: none; }
   .archive-controls,
-  .archive-bottom-bar { display: none !important; }
+  .archive-bottom-bar,
+  .sewer-hunter { display: none !important; }
   body { padding: 16px 24px; background: #fff; color: #000; }
   .archive-entry { break-inside: avoid; padding: 10px 0; }
   .wordmark h1 {
@@ -311,4 +327,5 @@
   .archive-bottom-bar { padding: 0; margin-top: 24px; gap: 8px; }
   .bottom-link { font-size: 0.95rem; }
   .bottom-sheet-link { font-size: 0.75rem; }
+  .sewer-hunter { width: min(80%, 280px); }
 }
