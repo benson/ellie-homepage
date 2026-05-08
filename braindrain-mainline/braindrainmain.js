@@ -81,7 +81,7 @@ function renderEntries() {
               <div class="edit-actions">
                 <button type="button" class="edit-delete">delete</button>
                 <button type="button" class="link-btn edit-cancel">cancel</button>
-                <button type="button" class="link-btn edit-save">save &gt;</button>
+                <button type="button" class="link-btn edit-save">save</button>
               </div>
             </div>
           </div>
@@ -218,7 +218,7 @@ async function saveEdit(li) {
     console.error(err);
     saveBtn.disabled = false;
     cancelBtn.disabled = false;
-    saveBtn.textContent = 'save >';
+    saveBtn.textContent = 'save';
     alert("couldn't save — try again");
   }
 }

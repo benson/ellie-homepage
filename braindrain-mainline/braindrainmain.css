@@ -125,10 +125,10 @@
 }
 
 .rethink-active .archive-entry:not(.editing):hover {
-  background: #faf6f1;
+  background: rgba(74, 12, 30, 0.3);
 }
 
-.archive-entry.editing { background: #faf6f1; }
+.archive-entry.editing { background: rgba(74, 12, 30, 0.3); }
 
 .archive-entry.editing .entry-category { display: none; }
 
