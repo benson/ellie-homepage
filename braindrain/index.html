@@ -28,15 +28,20 @@
         <section id="compose-overlay" class="overlay">
           <div class="textbox-wrap">
             <textarea id="factoid-input" rows="4" autofocus autocapitalize="none" autocorrect="off"></textarea>
-            <svg class="clip" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 17v5" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <button type="button" id="pin-btn" class="pin-btn" aria-label="pin this thought">
+              <svg class="clip" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 17v5" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="pin-count" id="pin-count" hidden>0</span>
+            </button>
           </div>
         </section>
 
         <section id="review-overlay" class="overlay" hidden>
           <div class="review-card">
+            <button type="button" id="card-delete-btn" class="card-delete" aria-label="discard this card">&times;</button>
+            <div class="review-counter" id="review-counter" hidden></div>
             <div class="review-stamp" id="review-stamp"></div>
             <div class="review-text" id="review-text"></div>
             <div class="review-context" id="review-context" hidden></div>
@@ -60,10 +65,12 @@
       </div>
       <div id="review-actions" class="action-row" hidden>
         <button type="button" id="edit-btn" class="link-btn">&lt; edit</button>
+        <button type="button" id="prev-card-btn" class="link-btn" hidden>&lt; prev</button>
         <div class="sort-wrap">
           <button type="button" id="sort-btn" class="link-btn">+ sort</button>
           <div id="sort-menu" class="sort-menu" hidden></div>
         </div>
+        <button type="button" id="next-card-btn" class="link-btn" hidden>next &gt;</button>
         <button type="button" id="enter-btn" class="link-btn">enter &gt;</button>
       </div>
       <div id="saved-actions" class="action-row saved-actions" hidden>

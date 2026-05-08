@@ -136,6 +136,55 @@ let pendingDate = null;
 let pendingContext = '';
 let contextDraft = '';
 let pendingCategory = '';
+let pinnedCards = [];
+let reviewCards = [];
+let reviewIndex = 0;
+
+const pinBtn = document.getElementById('pin-btn');
+const pinCountEl = document.getElementById('pin-count');
+const prevCardBtn = document.getElementById('prev-card-btn');
+const nextCardBtn = document.getElementById('next-card-btn');
+const reviewCounterEl = document.getElementById('review-counter');
+
+function updatePinCount() {
+  if (!pinCountEl) return;
+  if (pinnedCards.length > 0) {
+    pinCountEl.textContent = pinnedCards.length;
+    pinCountEl.hidden = false;
+  } else {
+    pinCountEl.hidden = true;
+  }
+}
+
+if (pinBtn) {
+  pinBtn.addEventListener('click', () => {
+    const text = input.value.trim();
+    if (!text) {
+      showStatus("type something first", true);
+      return;
+    }
+    pinnedCards.push({
+      text,
+      context: (contextDraft || '').trim(),
+      category: pendingCategory || '',
+      stamp: new Date().toISOString(),
+    });
+    const wrap = composeOverlay.querySelector('.textbox-wrap');
+    wrap.classList.add('pin-out');
+    setTimeout(() => {
+      input.value = '';
+      contextDraft = '';
+      pendingCategory = '';
+      updateSortBtn();
+      collapseContext();
+      updatePinCount();
+      wrap.classList.remove('pin-out');
+      wrap.classList.add('pin-in');
+      setTimeout(() => wrap.classList.remove('pin-in'), 320);
+      input.focus();
+    }, 280);
+  });
+}
 let categories = (() => {
   try { return JSON.parse(localStorage.getItem(CATEGORIES_KEY)) || [...DEFAULT_CATEGORIES]; }
   catch { return [...DEFAULT_CATEGORIES]; }
@@ -294,21 +343,125 @@ addContextBtn.addEventListener('click', () => expandContext(contextDraft));
 
 reviewBtn.addEventListener('click', () => {
   const text = input.value.trim();
-  if (!text) {
+  if (!text && pinnedCards.length === 0) {
     showStatus("type something first", true);
     return;
   }
-  pendingText = text;
-  pendingDate = new Date();
-  pendingContext = (contextDraft || '').trim();
-  showReview(pendingText, pendingDate, pendingContext);
+  reviewCards = [...pinnedCards];
+  if (text) {
+    reviewCards.push({
+      text,
+      context: (contextDraft || '').trim(),
+      category: pendingCategory || '',
+      stamp: new Date().toISOString(),
+    });
+  }
+  reviewIndex = 0;
+  showReviewMulti();
 });
 
+function showReviewMulti() {
+  const card = reviewCards[reviewIndex];
+  if (!card) return;
+  pendingText = card.text;
+  pendingDate = new Date(card.stamp);
+  pendingContext = card.context || '';
+  pendingCategory = card.category || '';
+  updateSortBtn();
+  showReview(pendingText, pendingDate, pendingContext);
+  // counter
+  if (reviewCounterEl) {
+    if (reviewCards.length > 1) {
+      reviewCounterEl.textContent = `${reviewIndex + 1} of ${reviewCards.length}`;
+      reviewCounterEl.hidden = false;
+    } else {
+      reviewCounterEl.hidden = true;
+    }
+  }
+  // prev / next visibility
+  if (prevCardBtn) prevCardBtn.hidden = reviewIndex === 0;
+  const isLast = reviewIndex === reviewCards.length - 1;
+  if (nextCardBtn) nextCardBtn.hidden = isLast;
+  if (enterBtn) {
+    enterBtn.hidden = !isLast;
+    enterBtn.textContent = reviewCards.length > 1 ? 'enter all >' : 'enter >';
+  }
+}
+
+if (prevCardBtn) {
+  prevCardBtn.addEventListener('click', () => {
+    // Save current edits back to reviewCards
+    reviewCards[reviewIndex] = {
+      ...reviewCards[reviewIndex],
+      category: pendingCategory || '',
+    };
+    if (reviewIndex > 0) {
+      reviewIndex--;
+      showReviewMulti();
+    }
+  });
+}
+
+if (nextCardBtn) {
+  nextCardBtn.addEventListener('click', () => {
+    reviewCards[reviewIndex] = {
+      ...reviewCards[reviewIndex],
+      category: pendingCategory || '',
+    };
+    if (reviewIndex < reviewCards.length - 1) {
+      reviewIndex++;
+      showReviewMulti();
+    }
+  });
+}
+
+const cardDeleteBtn = document.getElementById('card-delete-btn');
+if (cardDeleteBtn) {
+  cardDeleteBtn.addEventListener('click', () => {
+    if (reviewCards.length === 0) return;
+    reviewCards.splice(reviewIndex, 1);
+    pinnedCards = [...reviewCards]; // sync queue (may include current-as-pinned)
+    updatePinCount();
+    if (reviewCards.length === 0) {
+      // Nothing left → back to empty compose
+      pendingText = '';
+      pendingDate = null;
+      pendingContext = '';
+      pendingCategory = '';
+      contextDraft = '';
+      updateSortBtn();
+      input.value = '';
+      collapseContext();
+      showCompose();
+      return;
+    }
+    if (reviewIndex >= reviewCards.length) reviewIndex = reviewCards.length - 1;
+    showReviewMulti();
+  });
+}
+
 editBtn.addEventListener('click', () => {
-  input.value = pendingText;
-  contextDraft = pendingContext;
+  // If we're cycling through multi cards, edit the current one in compose mode.
+  // Pop the currently-shown card off and put its content back into the compose form.
+  if (reviewCards.length > 0) {
+    const card = reviewCards[reviewIndex];
+    input.value = card.text;
+    contextDraft = card.context || '';
+    pendingCategory = card.category || '';
+    updateSortBtn();
+    // Remove this card from the queue so it'll be re-added on next review
+    reviewCards.splice(reviewIndex, 1);
+    // Sync pinnedCards: rebuild from reviewCards (excluding the in-edit one)
+    pinnedCards = [...reviewCards];
+    updatePinCount();
+    reviewCards = [];
+    reviewIndex = 0;
+  } else {
+    input.value = pendingText;
+    contextDraft = pendingContext;
+  }
   showCompose();
-  if (pendingContext) expandContext(pendingContext);
+  if (contextDraft) expandContext(contextDraft);
   else collapseContext();
   input.setSelectionRange(input.value.length, input.value.length);
 });
@@ -317,18 +470,38 @@ enterBtn.addEventListener('click', async () => {
   enterBtn.disabled = true;
   editBtn.disabled = true;
   try {
-    await saveEntry({
-      timestamp: pendingDate.toISOString(),
-      text: pendingText,
-      context: pendingContext,
-      category: pendingCategory,
-    });
+    // If multi-card review, persist last category edit and save all
+    if (reviewCards.length > 0) {
+      reviewCards[reviewIndex] = {
+        ...reviewCards[reviewIndex],
+        category: pendingCategory || '',
+      };
+      for (const card of reviewCards) {
+        await saveEntry({
+          timestamp: card.stamp,
+          text: card.text,
+          context: card.context || '',
+          category: card.category || '',
+        });
+      }
+    } else {
+      await saveEntry({
+        timestamp: pendingDate.toISOString(),
+        text: pendingText,
+        context: pendingContext,
+        category: pendingCategory,
+      });
+    }
+    pinnedCards = [];
+    reviewCards = [];
+    reviewIndex = 0;
     pendingText = '';
     pendingDate = null;
     pendingContext = '';
     contextDraft = '';
     pendingCategory = '';
     updateSortBtn();
+    updatePinCount();
     input.value = '';
     collapseContext();
     showSaved();
