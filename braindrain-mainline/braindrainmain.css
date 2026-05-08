@@ -7,6 +7,31 @@
   padding-bottom: 12px;
 }
 
+.wordmark-sub {
+  position: absolute;
+  font-family: "Helvetica Now Text", "Helvetica Now", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 4.5rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: lowercase;
+  -webkit-text-stroke: 1.5px #4a0c1e;
+  color: transparent;
+  white-space: nowrap;
+  top: 78%;
+  opacity: 0.69;
+  z-index: 4;
+  pointer-events: none;
+}
+
+@media (max-width: 720px) {
+  .wordmark-sub {
+    font-size: 2rem;
+    opacity: 0.69;
+    -webkit-text-stroke: 1px #4a0c1e;
+    top: 80%;
+  }
+}
+
 .archive-main {
   margin-top: 70px;
 }
