@@ -61,12 +61,12 @@
       path.setAttribute('d', d);
     })();
 
-    function alignSubtitle() {
+    function alignSubtitleMobile() {
+      if (window.innerWidth > 720) return;
       const wordmark = document.querySelector('.wordmark');
       const h1 = wordmark && wordmark.querySelector('h1');
       const sub = document.querySelector('.wordmark-sub');
       if (!h1 || !sub || !h1.firstChild) return;
-      if (sub.dataset.userPositioned) return;
       const text = h1.textContent;
       let idx = -1;
       for (let i = 0; i < 2; i++) idx = text.indexOf('a', idx + 1);
@@ -78,9 +78,9 @@
       const wRect = wordmark.getBoundingClientRect();
       sub.style.left = Math.max(0, aRect.right - wRect.left) + 'px';
     }
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(alignSubtitle);
-    else setTimeout(alignSubtitle, 300);
-    window.addEventListener('resize', alignSubtitle);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(alignSubtitleMobile);
+    else setTimeout(alignSubtitleMobile, 300);
+    window.addEventListener('resize', alignSubtitleMobile);
   </script>
 
   <img src="sewer-hunter.jpg" class="sewer-hunter" alt="" aria-hidden="true">
