@@ -360,17 +360,31 @@ a:hover {
 
 @media (max-width: 720px) {
   :root { --brain-w: 92%; }
-  body { padding: 16px 14px 20px; }
+  body { padding: 16px 14px 60px; }
   .wordmark h1 { font-size: 2.75rem; padding: 0 4px; }
   .rings { width: 110px; height: 110px; left: 60%; }
   .review-card { width: min(48%, 240px); padding: 12px 14px; }
-  .main-line { font-size: 1rem; margin-top: 10px; }
+  .main-line {
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0;
+    font-size: 1rem;
+  }
   .now-stamp {
     font-size: 0.9rem;
     top: auto;
     bottom: calc(100% + 4px);
   }
-  .bd-main { margin-top: 80px; }
+  .now-stamp .now-date,
+  .now-stamp .now-time {
+    display: inline;
+  }
+  .now-stamp .now-date::after {
+    content: " · ";
+  }
+  .bd-main { margin-top: 110px; }
   .link-btn { font-size: 1rem; }
   .sort-menu { min-width: 140px; }
   .sort-menu-item { font-size: 0.9rem; padding: 8px 12px; }
