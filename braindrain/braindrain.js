@@ -49,8 +49,11 @@ const nowDateEl = document.getElementById('now-date');
 const nowTimeEl = document.getElementById('now-time');
 const composeOverlay = document.getElementById('compose-overlay');
 const reviewOverlay = document.getElementById('review-overlay');
+const savedOverlay = document.getElementById('saved-overlay');
 const composeActions = document.getElementById('compose-actions');
 const reviewActions = document.getElementById('review-actions');
+const savedActions = document.getElementById('saved-actions');
+const newThoughtBtn = document.getElementById('new-thought-btn');
 const input = document.getElementById('factoid-input');
 const reviewBtn = document.getElementById('review-btn');
 const editBtn = document.getElementById('edit-btn');
@@ -88,17 +91,24 @@ function showStatus(msg, isError = false) {
   if (!isError) setTimeout(() => { statusEl.hidden = true; }, 2400);
 }
 
-function showCompose() {
+function hideAllStates() {
+  composeOverlay.hidden = true;
+  composeActions.hidden = true;
   reviewOverlay.hidden = true;
   reviewActions.hidden = true;
+  savedOverlay.hidden = true;
+  savedActions.hidden = true;
+}
+
+function showCompose() {
+  hideAllStates();
   composeOverlay.hidden = false;
   composeActions.hidden = false;
   input.focus();
 }
 
 function showReview(text, capturedAt, context) {
-  composeOverlay.hidden = true;
-  composeActions.hidden = true;
+  hideAllStates();
   reviewOverlay.hidden = false;
   reviewActions.hidden = false;
   reviewStamp.textContent = formatNow(capturedAt);
@@ -110,6 +120,12 @@ function showReview(text, capturedAt, context) {
     reviewContext.textContent = '';
     reviewContext.hidden = true;
   }
+}
+
+function showSaved() {
+  hideAllStates();
+  savedOverlay.hidden = false;
+  savedActions.hidden = false;
 }
 
 let pendingText = '';
@@ -299,8 +315,7 @@ enterBtn.addEventListener('click', async () => {
     updateSortBtn();
     input.value = '';
     collapseContext();
-    showCompose();
-    showStatus("saved");
+    showSaved();
   } catch (err) {
     showStatus("couldn't save — try again", true);
     console.error(err);
@@ -309,6 +324,12 @@ enterBtn.addEventListener('click', async () => {
     editBtn.disabled = false;
   }
 });
+
+if (newThoughtBtn) {
+  newThoughtBtn.addEventListener('click', () => {
+    showCompose();
+  });
+}
 
 async function saveEntry(entry) {
   if (BRAINDRAIN_API_URL) {
