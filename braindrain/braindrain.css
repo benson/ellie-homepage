@@ -374,10 +374,18 @@ body {
   gap: 8px;
 }
 
-.saved-mainline {
-  font-size: 1rem;
-  color: #555;
+.bottom-mainline {
+  display: block;
+  text-align: center;
+  margin-top: 18px;
+  font-size: 1.05rem;
+  color: #1a1a1a;
   text-decoration: none;
+}
+
+.bottom-mainline:hover {
+  text-decoration: underline;
+  font-style: italic;
 }
 
 a:hover {
@@ -390,9 +398,9 @@ a:hover {
   .wordmark h1 { font-size: 2.75rem; padding: 0 4px; }
   .rings { width: 110px; height: 110px; left: 60%; }
   .review-card { width: min(48%, 240px); padding: 12px 14px; }
-  .main-line {
-    font-size: 1rem;
-    margin-top: 8px;
+  .bottom-mainline {
+    font-size: 0.95rem;
+    margin-top: 14px;
   }
   .now-stamp {
     font-size: 0.9rem;
