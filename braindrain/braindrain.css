@@ -514,7 +514,11 @@ a:hover {
   .sort-menu-item { font-size: 0.9rem; padding: 8px 12px; }
   .sort-add-input { font-size: 0.9rem; padding: 8px 12px; }
   .action-row { gap: 8px; }
-  .textbox-wrap { width: min(56%, 240px); }
+  .textbox-wrap {
+    left: 50%;
+    top: 42%;
+    width: min(56%, 240px);
+  }
   #factoid-input { font-size: 0.85rem; min-height: 48px; padding: 8px 24px 8px 10px; }
   .saved-message { padding: 18px 12px; font-size: 1rem; }
   #context-input { font-size: 0.9rem; width: 130px; }
