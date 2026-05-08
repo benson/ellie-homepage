@@ -65,7 +65,7 @@ const addContextBtn = document.getElementById('add-context-btn');
 function formatNowParts(date) {
   const day = date.toLocaleDateString(undefined, { weekday: 'long' });
   const md = date.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
-  const t = date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit', second: '2-digit' });
+  const t = date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
   return { date: `${day}, ${md}`.toLowerCase(), time: t.toLowerCase() };
 }
 function formatNow(date) {

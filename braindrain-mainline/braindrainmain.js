@@ -7,7 +7,7 @@ function formatStamp(iso) {
   const d = new Date(iso);
   if (isNaN(d.getTime())) return iso;
   const md = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-  const t = d.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' });
+  const t = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: false });
   return `${md} · ${t}`.toLowerCase();
 }
 
