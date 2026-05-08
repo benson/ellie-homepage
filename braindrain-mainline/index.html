@@ -18,13 +18,27 @@
       </svg>
       <h1>brain drain</h1>
     </div>
-    <a href="/braindrain" class="main-line">+ new entry</a>
   </header>
 
   <main class="bd-main archive-main">
-    <p class="archive-title">main line</p>
     <div id="archive-container">
-      <p class="archive-empty">loading…</p>
+      <div class="archive-controls">
+        <div class="control-wrap">
+          <button type="button" id="sort-by-btn" class="link-btn">sort &gt;</button>
+          <div id="sort-by-menu" class="sort-menu" hidden></div>
+        </div>
+        <button type="button" id="rethink-btn" class="link-btn">rethink &gt;</button>
+      </div>
+      <div id="archive-body">
+        <p class="archive-empty">loading…</p>
+      </div>
+    </div>
+    <div class="archive-bottom-bar">
+      <a href="/braindrain" class="link-btn bottom-link">+ new entry</a>
+      <div class="bottom-right-stack">
+        <button type="button" id="download-btn" class="link-btn bottom-link">* download</button>
+        <a id="sheet-link" class="bottom-sheet-link" href="#" target="_blank" rel="noopener" hidden>&gt; view sheet</a>
+      </div>
     </div>
   </main>
 

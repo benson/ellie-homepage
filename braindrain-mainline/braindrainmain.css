@@ -1,13 +1,14 @@
-.archive-main {
-  margin-top: 24px;
+.bd-header {
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 50;
+  padding-top: 12px;
+  padding-bottom: 12px;
 }
 
-.archive-title {
-  font-size: 1.05rem;
-  color: #1a1a1a;
-  margin: 0 auto 12px;
-  max-width: 880px;
-  font-style: italic;
+.archive-main {
+  margin-top: 70px;
 }
 
 #archive-container {
@@ -15,11 +16,41 @@
   max-width: 880px;
 }
 
+.archive-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0 4px 14px;
+  gap: 0;
+  border-bottom: 1.5px solid #1a1a1a;
+}
+
+.archive-controls .link-btn {
+  font-size: 1.05rem;
+  padding: 2px 0;
+  line-height: 1.1;
+}
+
+.control-wrap {
+  position: relative;
+}
+
+.archive-controls .sort-menu {
+  top: 0;
+  right: calc(100% + 10px);
+  left: auto;
+  transform: none;
+}
+
+#rethink-btn.active {
+  font-style: italic;
+  font-weight: 700;
+}
+
 .archive-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  border-top: 1.5px solid #1a1a1a;
 }
 
 .archive-entry {
@@ -31,21 +62,21 @@
   text-transform: none;
 }
 
-.archive-entry .entry-category {
-  font-size: 0.9rem;
-  color: #4a0c1e;
-  font-style: italic;
-  text-align: right;
-  padding-top: 2px;
-  text-transform: lowercase;
-}
-
 .archive-entry .entry-time {
   font-size: 0.9rem;
   color: #666;
   font-style: italic;
   white-space: nowrap;
   padding-top: 2px;
+}
+
+.entry-time .entry-date,
+.entry-time .entry-clock {
+  display: inline;
+}
+
+.entry-time .entry-date::after {
+  content: " · ";
 }
 
 .archive-entry .entry-body {
@@ -69,6 +100,15 @@
   padding-left: 10px;
 }
 
+.archive-entry .entry-category {
+  font-size: 0.9rem;
+  color: #4a0c1e;
+  font-style: italic;
+  text-align: right;
+  padding-top: 2px;
+  text-transform: lowercase;
+}
+
 .archive-empty {
   text-align: center;
   padding: 40px 16px;
@@ -77,17 +117,198 @@
   text-transform: none;
 }
 
-.archive-empty a {
+.archive-empty a { color: #1a1a1a; }
+
+.rethink-active .archive-entry:not(.editing) {
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+.rethink-active .archive-entry:not(.editing):hover {
+  background: #faf6f1;
+}
+
+.archive-entry.editing { background: #faf6f1; }
+
+.archive-entry.editing .entry-category { display: none; }
+
+.archive-entry.editing .entry-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.entry-edit-form .edit-text {
+  width: 100%;
+  border: 1px solid #1a1a1a;
+  border-radius: 2px;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.4;
+  resize: vertical;
+  min-height: 50px;
+  text-transform: none;
+  outline: none;
+  background: #fff;
+}
+
+.entry-edit-form .edit-context {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #999;
+  padding: 4px 4px 6px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
   color: #1a1a1a;
+  text-transform: none;
+}
+
+.entry-edit-form .edit-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.entry-edit-form .edit-category {
+  width: 140px;
+  border: none;
+  border-bottom: 1px solid #999;
+  padding: 4px 4px 6px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  color: #4a0c1e;
+  text-transform: lowercase;
+}
+
+.entry-edit-form .edit-actions {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.entry-edit-form .edit-delete {
+  color: #b13030;
+  font-size: 0.95rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-transform: lowercase;
+  padding: 0;
+}
+
+.entry-edit-form .edit-delete:hover {
+  text-decoration: underline;
+  font-style: italic;
+}
+
+.entry-edit-form .link-btn {
+  font-size: 0.95rem;
+  padding: 0;
+}
+
+.archive-bottom-bar {
+  max-width: 880px;
+  margin: 32px auto 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 4px;
+  gap: 16px;
+}
+
+.bottom-right-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.bottom-link {
+  font-family: inherit;
+  font-size: 1.1rem;
+  background: none;
+  border: none;
+  color: #1a1a1a;
+  cursor: pointer;
+  text-transform: lowercase;
+  text-decoration: none;
+  padding: 0;
+}
+
+.bottom-link:hover {
+  text-decoration: underline;
+  font-style: italic;
+}
+
+.bottom-sheet-link {
+  font-size: 0.85rem;
+  color: #777;
+  font-style: italic;
+  text-decoration: none;
+}
+
+.bottom-sheet-link:hover {
+  color: #1a1a1a;
+  text-decoration: underline;
+}
+
+@media print {
+  .bd-header { position: static; }
+  .bd-header .rings { display: none; }
+  .archive-controls,
+  .archive-bottom-bar { display: none !important; }
+  body { padding: 16px 24px; background: #fff; color: #000; }
+  .archive-entry { break-inside: avoid; padding: 10px 0; }
+  .wordmark h1 {
+    font-size: 2rem !important;
+    text-shadow: none !important;
+    -webkit-text-stroke: 0 !important;
+  }
 }
 
 @media (max-width: 720px) {
-  .archive-title { padding: 0 4%; }
-  #archive-container { padding: 0 4%; }
+  .bd-header { padding-top: 8px; padding-bottom: 8px; }
+  .archive-main { margin-top: 36px; }
+  #archive-container { padding: 0 3%; }
+  .archive-controls { padding: 0 0 8px; }
+  .archive-controls .link-btn { font-size: 0.95rem; }
+
   .archive-entry {
-    grid-template-columns: 1fr;
-    gap: 6px;
+    grid-template-columns: 64px 1fr 56px;
+    gap: 8px;
+    padding: 12px 2px;
   }
-  .archive-entry .entry-time { padding-top: 0; }
-  .archive-entry .entry-category { text-align: left; }
+  .archive-entry .entry-time {
+    padding-top: 1px;
+    font-size: 0.72rem;
+    white-space: normal;
+    line-height: 1.25;
+  }
+  .entry-time .entry-date,
+  .entry-time .entry-clock {
+    display: block;
+  }
+  .entry-time .entry-date::after { content: ""; }
+
+  .archive-entry .entry-text { font-size: 0.88rem; line-height: 1.4; }
+  .archive-entry .entry-context { font-size: 0.76rem; padding-left: 8px; }
+  .archive-entry .entry-category {
+    text-align: right;
+    font-size: 0.72rem;
+    padding-top: 1px;
+    line-height: 1.25;
+    word-break: break-word;
+  }
+
+  .archive-bottom-bar { padding: 0; margin-top: 24px; gap: 8px; }
+  .bottom-link { font-size: 0.95rem; }
+  .bottom-sheet-link { font-size: 0.75rem; }
 }
