@@ -55,7 +55,7 @@ function sortEntries(entries, mode) {
 
 function renderEntries() {
   if (!allEntries.length) {
-    body.innerHTML = '<p class="archive-empty">nothing in here yet — head to <a href="/braindrain">/braindrain</a> to add your first factoid</p>';
+    body.innerHTML = '<p class="archive-empty">plant a thought at <a href="/braindrain">/braindrain</a></p>';
     return;
   }
   const sorted = sortEntries(allEntries, currentSort);
