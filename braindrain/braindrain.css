@@ -7,7 +7,7 @@
 }
 
 :root {
-  --brain-w: min(80%, 980px, calc(54vh * 900 / 744));
+  --brain-w: min(82%, 1000px, calc(70vh * 900 / 744));
 }
 
 body {
@@ -64,6 +64,7 @@ body {
   color: #1a1a1a;
   text-decoration: none;
   margin-top: 18px;
+  white-space: nowrap;
 }
 
 .main-line:hover {
@@ -73,7 +74,7 @@ body {
 
 .bd-main {
   position: relative;
-  margin: 36px auto 0;
+  margin: 56px auto 0;
   max-width: 1280px;
 }
 
@@ -92,7 +93,7 @@ body {
 
 .now-stamp {
   position: absolute;
-  top: 28px;
+  bottom: calc(100% + 4px);
   left: 0;
   font-size: 1.275rem;
   color: #1a1a1a;
@@ -260,10 +261,10 @@ body {
 
 .sort-menu-item {
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 1.1rem;
   background: none;
   border: none;
-  padding: 7px 14px;
+  padding: 10px 16px;
   cursor: pointer;
   text-align: left;
   color: #1a1a1a;
@@ -292,9 +293,9 @@ body {
 
 .sort-add-input {
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 1.1rem;
   border: none;
-  padding: 7px 14px;
+  padding: 10px 16px;
   outline: none;
   text-transform: none;
   color: #1a1a1a;
@@ -359,9 +360,19 @@ a:hover {
 
 @media (max-width: 720px) {
   :root { --brain-w: 92%; }
-  body { padding: 20px 16px 24px; }
-  .wordmark h1 { font-size: 3.75rem; }
-  .rings { width: 180px; height: 180px; }
-  .textbox-wrap { width: 70%; }
-  .review-card { width: 84%; }
+  body { padding: 16px 14px 20px; }
+  .wordmark h1 { font-size: 2.75rem; padding: 0 4px; }
+  .rings { width: 130px; height: 130px; left: 60%; }
+  .textbox-wrap { width: 68%; }
+  .review-card { width: 86%; }
+  .now-stamp { font-size: 0.95rem; }
+  .main-line { font-size: 0.95rem; margin-top: 10px; }
+  .bd-main { margin-top: 48px; }
+  .link-btn { font-size: 1.05rem; }
+  .sort-menu { min-width: 140px; }
+  .sort-menu-item { font-size: 1rem; padding: 8px 12px; }
+  .sort-add-input { font-size: 1rem; padding: 8px 12px; }
+  .action-row { gap: 8px; }
+  #factoid-input { font-size: 1.05rem; min-height: 100px; padding: 10px 30px 10px 12px; }
+  .clip { width: 18px; height: 18px; }
 }
