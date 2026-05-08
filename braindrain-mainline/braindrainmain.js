@@ -146,14 +146,18 @@ document.addEventListener('click', (e) => {
   }
 });
 
+function updateRethinkBtnText() {
+  rethinkBtn.textContent = editingEntryId ? 'remember >' : 'rethink >';
+}
+
 rethinkBtn.addEventListener('click', () => {
   const active = document.body.classList.toggle('rethink-active');
   rethinkBtn.classList.toggle('active', active);
-  rethinkBtn.textContent = active ? 'done >' : 'rethink >';
   if (!active && editingEntryId) {
     editingEntryId = null;
     renderEntries();
   }
+  updateRethinkBtnText();
 });
 
 body.addEventListener('click', (e) => {
@@ -165,6 +169,7 @@ body.addEventListener('click', (e) => {
   if (e.target.classList.contains('edit-cancel')) {
     editingEntryId = null;
     renderEntries();
+    updateRethinkBtnText();
     return;
   }
   // Delete button
@@ -185,6 +190,7 @@ body.addEventListener('click', (e) => {
   if (!ts) return;
   editingEntryId = ts;
   renderEntries();
+  updateRethinkBtnText();
 });
 
 async function saveEdit(li) {
@@ -214,6 +220,7 @@ async function saveEdit(li) {
     }
     editingEntryId = null;
     renderEntries();
+    updateRethinkBtnText();
   } catch (err) {
     console.error(err);
     saveBtn.disabled = false;
@@ -238,6 +245,7 @@ async function deleteEdit(li) {
     allEntries = allEntries.filter(e => e.timestamp !== ts);
     editingEntryId = null;
     renderEntries();
+    updateRethinkBtnText();
   } catch (err) {
     console.error(err);
     delBtn.disabled = false;
