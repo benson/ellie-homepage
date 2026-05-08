@@ -130,7 +130,7 @@ body {
   transform: translate(-50%, -50%);
   width: min(42%, 380px);
   background: #ffffff;
-  border: 1.5px solid #1a1a1a;
+  border: 1.5px solid #4a0c1e;
   border-radius: 2px;
   box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.05);
   pointer-events: auto;
@@ -390,7 +390,7 @@ body {
   text-align: center;
   margin-top: 18px;
   font-size: 1.05rem;
-  color: #1a1a1a;
+  color: #4a0c1e;
   text-decoration: none;
 }
 
