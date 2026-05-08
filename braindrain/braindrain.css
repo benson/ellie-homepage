@@ -362,21 +362,26 @@ a:hover {
   :root { --brain-w: 92%; }
   body { padding: 16px 14px 20px; }
   .wordmark h1 { font-size: 2.75rem; padding: 0 4px; }
-  .rings { width: 130px; height: 130px; left: 60%; }
+  .rings { width: 110px; height: 110px; left: 60%; }
   .review-card { width: min(48%, 240px); padding: 12px 14px; }
-  .main-line { font-size: 1.05rem; margin-top: 10px; }
-  .now-stamp { font-size: 0.95rem; top: 14px; }
-  .bd-main { margin-top: 32px; }
-  .link-btn { font-size: 1.075rem; }
+  .main-line { font-size: 1rem; margin-top: 10px; }
+  .now-stamp {
+    font-size: 0.9rem;
+    top: auto;
+    bottom: calc(100% + 4px);
+  }
+  .bd-main { margin-top: 80px; }
+  .link-btn { font-size: 1rem; }
   .sort-menu { min-width: 140px; }
-  .sort-menu-item { font-size: 0.95rem; padding: 8px 12px; }
-  .sort-add-input { font-size: 0.95rem; padding: 8px 12px; }
+  .sort-menu-item { font-size: 0.9rem; padding: 8px 12px; }
+  .sort-add-input { font-size: 0.9rem; padding: 8px 12px; }
   .action-row { gap: 8px; }
-  #factoid-input { font-size: 0.95rem; min-height: 84px; padding: 10px 28px 10px 12px; }
-  #context-input { font-size: 0.95rem; }
-  #context-counter { font-size: 0.78rem; }
-  .review-stamp { font-size: 0.85rem; }
-  .review-text { font-size: 1rem; }
-  .review-context { font-size: 0.9rem; }
+  #factoid-input { font-size: 0.9rem; min-height: 84px; padding: 10px 28px 10px 12px; }
+  #context-input { font-size: 0.9rem; }
+  #context-counter { font-size: 0.75rem; }
+  .review-stamp { font-size: 0.8rem; }
+  .review-text { font-size: 0.95rem; }
+  .review-context { font-size: 0.85rem; }
+  .bd-status { font-size: 0.95rem; }
   .clip { width: 16px; height: 16px; top: 4px; right: 4px; }
 }
