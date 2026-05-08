@@ -74,12 +74,12 @@ function renderEntries() {
         <li class="archive-entry editing" data-timestamp="${escapeAttr(e.timestamp)}">
           <div class="entry-time">${timeHtml}</div>
           <div class="entry-edit-form">
-            <textarea class="edit-text" rows="2">${escapeHtml(e.text || '')}</textarea>
-            <input class="edit-context" type="text" maxlength="${CONTEXT_MAX}" placeholder="context (optional)" value="${escapeAttr(e.context || '')}">
+            <textarea class="edit-text" rows="2" autocapitalize="none" autocorrect="off">${escapeHtml(e.text || '')}</textarea>
+            <input class="edit-context" type="text" maxlength="${CONTEXT_MAX}" placeholder="context (optional)" autocapitalize="none" autocorrect="off" value="${escapeAttr(e.context || '')}">
             <div class="edit-controls">
-              <input class="edit-category" type="text" maxlength="${CATEGORY_MAX}" placeholder="category" value="${escapeAttr(e.category || '')}">
+              <input class="edit-category" type="text" maxlength="${CATEGORY_MAX}" placeholder="category" autocapitalize="none" autocorrect="off" value="${escapeAttr(e.category || '')}">
               <div class="edit-actions">
-                <button type="button" class="edit-delete">delete</button>
+                <button type="button" class="edit-delete">del</button>
                 <button type="button" class="link-btn edit-cancel">cancel</button>
                 <button type="button" class="link-btn edit-save">save</button>
               </div>

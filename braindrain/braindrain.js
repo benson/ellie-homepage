@@ -192,6 +192,8 @@ function showAddNew() {
   input.className = 'sort-add-input';
   input.placeholder = 'new category';
   input.maxLength = CATEGORY_MAX;
+  input.setAttribute('autocapitalize', 'none');
+  input.setAttribute('autocorrect', 'off');
   input.addEventListener('keydown', (e) => {
     e.stopPropagation();
     if (e.key === 'Enter') {
@@ -247,6 +249,8 @@ function expandContext(initial = '') {
   ctx.maxLength = CONTEXT_MAX;
   ctx.placeholder = 'context';
   ctx.value = initial;
+  ctx.setAttribute('autocapitalize', 'none');
+  ctx.setAttribute('autocorrect', 'off');
 
   const counter = document.createElement('span');
   counter.id = 'context-counter';
