@@ -10,10 +10,10 @@ body {
   font-family: "Neue Machina", "Space Grotesk", system-ui, -apple-system, sans-serif;
   background-color: #1a1a1a;
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    linear-gradient(rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.78)),
     url('bg/current.jpg?v=2');
   background-size: cover;
-  background-position: center;
+  background-position: 50% 30%;
   background-attachment: fixed;
   color: #f4ede4;
   min-height: 100vh;
