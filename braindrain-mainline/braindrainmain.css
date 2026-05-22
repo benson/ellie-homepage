@@ -38,6 +38,39 @@
   margin-top: 70px;
 }
 
+.folder-tabs {
+  max-width: 880px;
+  margin: 14px auto 0;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 4px;
+}
+
+.folder-tabs-left {
+  justify-content: flex-start;
+}
+
+.folder-tab {
+  display: inline-block;
+  background: #fff;
+  border: 1.5px solid #4a0c1e;
+  color: #4a0c1e;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 7px 20px 9px;
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+  position: relative;
+  z-index: 2;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+}
+
+.folder-tab:hover {
+  font-style: italic;
+  background: #faf6f1;
+}
+
 #archive-container {
   margin: 0 auto;
   max-width: 880px;

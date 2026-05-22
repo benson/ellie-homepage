@@ -3,46 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>brain drain · main line</title>
+  <title>brain drain · lexicon</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Beastly&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../braindrain/braindrain.css?v=4">
-  <link rel="stylesheet" href="braindrainmain.css?v=4">
+  <link rel="stylesheet" href="../braindrain/braindrain.css?v=15">
+  <link rel="stylesheet" href="../braindrain-mainline/braindrainmain.css?v=4">
+  <link rel="stylesheet" href="lexicon.css?v=2">
 </head>
 <body>
   <header class="bd-header">
     <div class="wordmark">
       <svg class="rings" viewBox="0 0 200 200" aria-hidden="true">
-        <path id="rings-spiral" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round"/>
+        <path id="rings-spiral" fill="none" stroke="#4a0c1e" stroke-width="1.6" stroke-linecap="round"/>
       </svg>
       <h1>brain drain</h1>
-      <span class="wordmark-sub">the main line</span>
+      <span class="wordmark-sub">the lexicon</span>
     </div>
   </header>
 
   <main class="bd-main archive-main">
-    <div id="archive-container">
-      <div class="archive-controls">
-        <div class="control-wrap">
-          <button type="button" id="sort-by-btn" class="link-btn">sort &gt;</button>
-          <div id="sort-by-menu" class="sort-menu" hidden></div>
-        </div>
-        <button type="button" id="rethink-btn" class="link-btn">rethink &gt;</button>
-      </div>
-      <div id="archive-body">
+    <div id="lexicon-container">
+      <div id="lexicon-body">
         <p class="archive-empty">loading…</p>
       </div>
     </div>
     <div class="archive-bottom-bar">
-      <a href="/braindrain" class="link-btn bottom-link">+ fresh thought</a>
-      <div class="bottom-right-stack">
-        <button type="button" id="download-btn" class="link-btn bottom-link">* download</button>
-        <a id="sheet-link" class="bottom-sheet-link" href="#" target="_blank" rel="noopener" hidden>&gt; view sheet</a>
-      </div>
+      <a href="/braindrain" class="link-btn bottom-link">+ fresh word</a>
     </div>
-    <div class="folder-tabs folder-tabs-bottom">
-      <a href="/braindrain-lexicon" class="folder-tab">lexicon</a>
+    <div class="folder-tabs folder-tabs-bottom folder-tabs-left">
+      <a href="/braindrain-mainline" class="folder-tab">main line</a>
     </div>
   </main>
 
@@ -63,11 +53,8 @@
       }
       path.setAttribute('d', d);
     })();
-
   </script>
 
-  <img src="sewer-hunter.jpg" class="sewer-hunter" alt="" aria-hidden="true">
-
-  <script src="braindrainmain.js?v=2"></script>
+  <script src="lexicon.js?v=1"></script>
 </body>
 </html>

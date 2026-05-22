@@ -1,20 +1,45 @@
 // braindrain backend — paste this into the Apps Script editor attached
 // to the braindrain Google Sheet, then deploy as a web app (or update the
-// existing deployment). v5 adds the "delete" action and exposes the sheet
-// URL on GET so the archive can link to it.
+// existing deployment). v6 adds the "lexicon" type for vocabulary words,
+// which writes to a separate "lexicon" sheet tab.
 
 const SHEET_NAME = 'braindrain';
 const HEADERS = ['timestamp', 'text', 'context', 'category'];
+const LEXICON_SHEET_NAME = 'lexicon';
+const LEXICON_HEADERS = ['timestamp', 'word', 'definition'];
 
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
+    if (data.type === 'lexicon') return createLexiconEntry(data);
     if (data.action === 'update') return updateEntry(data);
     if (data.action === 'delete') return deleteEntry(data);
     return createEntry(data);
   } catch (err) {
     return jsonResponse({ ok: false, error: String(err) });
   }
+}
+
+function createLexiconEntry(data) {
+  const sheet = getLexiconSheet();
+  const word = String(data.word || '').trim().toLowerCase();
+  if (!word) return jsonResponse({ ok: false, error: 'empty word' });
+  const timestamp = data.timestamp || new Date().toISOString();
+  const definition = String(data.definition || '');
+  sheet.appendRow([timestamp, word, definition]);
+  return jsonResponse({ ok: true, timestamp });
+}
+
+function getLexiconSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = ss.getSheetByName(LEXICON_SHEET_NAME);
+  if (!sheet) {
+    sheet = ss.insertSheet(LEXICON_SHEET_NAME);
+    sheet.appendRow(LEXICON_HEADERS);
+  } else if (sheet.getLastRow() === 0) {
+    sheet.appendRow(LEXICON_HEADERS);
+  }
+  return sheet;
 }
 
 function createEntry(data) {

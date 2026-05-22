@@ -96,7 +96,7 @@ body {
   top: 28px;
   left: 0;
   font-size: 1.275rem;
-  color: #1a1a1a;
+  color: #4a0c1e;
   z-index: 4;
   text-align: left;
   line-height: 1.25;
@@ -125,10 +125,10 @@ body {
 
 .textbox-wrap {
   position: absolute;
-  left: 315px;
-  top: 233px;
+  left: 50%;
+  top: 42%;
   transform: translate(-50%, -50%);
-  width: 360px;
+  width: min(40%, 360px);
   background: #ffffff;
   border: 1.5px solid #4a0c1e;
   border-radius: 2px;
@@ -145,7 +145,7 @@ body {
   font-size: 1.275rem;
   line-height: 1.5;
   padding: 14px 36px 14px 16px;
-  resize: vertical;
+  resize: none;
   color: #1a1a1a;
   text-transform: none;
   min-height: 165px;
@@ -486,6 +486,181 @@ a:hover {
   font-style: italic;
 }
 
+.book-btn {
+  position: fixed;
+  top: 118px;
+  right: 78px;
+  width: 48px;
+  height: 48px;
+  background: radial-gradient(circle at 40% 35%, rgba(74, 12, 30, 0.38) 0%, rgba(74, 12, 30, 0.3) 55%, rgba(74, 12, 30, 0.18) 100%);
+  border: none;
+  border-radius: 50%;
+  cursor: grab;
+  padding: 7px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  touch-action: none;
+}
+
+.book-btn.dragging { cursor: grabbing; }
+
+.book-icon { width: 100%; height: 100%; }
+
+.book-resize {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #4a0c1e;
+  cursor: nwse-resize;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+.book-resize:hover { opacity: 1; }
+.book-resize svg { width: 9px; height: 9px; display: block; }
+
+.book-btn svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0.75;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.book-btn:hover svg {
+  opacity: 1;
+  transform: rotate(-4deg);
+}
+
+.lex-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lex-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(2px);
+}
+
+.lex-card {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid #1a1a1a;
+  border-radius: 2px;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.05);
+  padding: 24px 28px 20px;
+  width: min(92%, 460px);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.lex-close {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #999;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.lex-close:hover { color: #4a0c1e; }
+
+.lex-title {
+  font-size: 1.3rem;
+  font-style: italic;
+  color: #4a0c1e;
+  margin-bottom: 14px;
+  text-transform: lowercase;
+}
+
+.lex-input {
+  width: 100%;
+  font-family: inherit;
+  font-size: 1.5rem;
+  border: none;
+  border-bottom: 1.5px solid #1a1a1a;
+  background: transparent;
+  padding: 6px 2px 8px;
+  outline: none;
+  text-transform: none;
+  color: #1a1a1a;
+}
+
+.lex-preview {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px dashed #999;
+  font-size: 1.05rem;
+  color: #1a1a1a;
+  text-transform: none;
+  line-height: 1.5;
+}
+
+.lex-preview .lex-pos {
+  font-style: italic;
+  color: #4a0c1e;
+  font-size: 0.95rem;
+  margin-right: 6px;
+}
+
+.lex-preview .lex-def {
+  margin-bottom: 6px;
+}
+
+.lex-status {
+  margin-top: 12px;
+  font-size: 1rem;
+  font-style: italic;
+  color: #555;
+  text-transform: lowercase;
+}
+
+.lex-status.lex-status-error {
+  color: #b13030;
+}
+
+.lex-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lex-add, .lex-enter {
+  font-size: 1.75rem;
+  color: #4a0c1e;
+  padding: 4px 10px;
+  line-height: 1;
+}
+
+.lex-queue-count {
+  font-size: 0.95rem;
+  color: #777;
+  font-style: italic;
+  text-transform: lowercase;
+}
+
 @media (max-width: 720px) {
   :root { --brain-w: 92%; }
   body { padding: 16px 14px 24px; }
@@ -528,4 +703,11 @@ a:hover {
   .review-context { font-size: 0.85rem; }
   .bd-status { font-size: 0.95rem; }
   .clip { width: 16px; height: 16px; top: 4px; right: 4px; }
+  .book-btn {
+    top: 70px;
+    right: 14px;
+    width: 38px;
+    height: 38px;
+    padding: 6px;
+  }
 }

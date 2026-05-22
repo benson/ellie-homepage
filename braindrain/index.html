@@ -7,13 +7,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Beastly&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="braindrain.css?v=5">
+  <link rel="stylesheet" href="braindrain.css?v=15">
 </head>
 <body>
   <header class="bd-header">
     <div class="wordmark">
       <svg class="rings" viewBox="0 0 200 200" aria-hidden="true">
-        <path id="rings-spiral" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round"/>
+        <path id="rings-spiral" fill="none" stroke="#4a0c1e" stroke-width="1.6" stroke-linecap="round"/>
       </svg>
       <h1>brain drain</h1>
     </div>
@@ -30,8 +30,10 @@
             <textarea id="factoid-input" rows="4" autofocus autocapitalize="none" autocorrect="off"></textarea>
             <button type="button" id="pin-btn" class="pin-btn" aria-label="pin this thought">
               <svg class="clip" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 17v5" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                <g transform="rotate(35 12 12)">
+                  <path d="M12 17v5" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </g>
               </svg>
               <span class="pin-count" id="pin-count" hidden>0</span>
             </button>
@@ -83,6 +85,35 @@
     <p id="status" class="bd-status" hidden></p>
   </main>
 
-  <script src="braindrain.js?v=4"></script>
+  <button type="button" id="book-btn" class="book-btn" aria-label="add a word to lexicon">
+    <svg viewBox="0 0 24 24" aria-hidden="true" class="book-icon">
+      <path d="M5 3h12a2 2 0 0 1 2 2v15a1 1 0 0 1-1 1H6a2 2 0 0 1-2-2V5a2 2 0 0 1 1-2z" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M5 18h13" fill="none" stroke="#222" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M8 7h7M8 10h5" fill="none" stroke="#222" stroke-width="1.4" stroke-linecap="round"/>
+    </svg>
+    <span id="book-resize" class="book-resize" role="button" aria-label="drag to resize">
+      <svg viewBox="0 0 10 10" aria-hidden="true">
+        <path d="M2 8 L8 2 M5 8 L8 8 L8 5 M2 5 L2 2 L5 2" fill="none" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+  </button>
+
+  <div id="lex-modal" class="lex-modal" hidden>
+    <div class="lex-backdrop" id="lex-backdrop"></div>
+    <div class="lex-card" role="dialog" aria-label="add a new word">
+      <button type="button" id="lex-close" class="lex-close" aria-label="close">&times;</button>
+      <div class="lex-title">fresh word</div>
+      <input type="text" id="lex-input" class="lex-input" placeholder="feed me" autocapitalize="none" autocorrect="off" spellcheck="false"/>
+      <div id="lex-preview" class="lex-preview" hidden></div>
+      <div id="lex-status" class="lex-status" hidden></div>
+      <div class="lex-actions">
+        <button type="button" id="lex-add" class="link-btn lex-add" aria-label="add another word">+</button>
+        <span id="lex-queue-count" class="lex-queue-count" hidden></span>
+        <button type="button" id="lex-enter" class="link-btn lex-enter" aria-label="enter all words">&gt;</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="braindrain.js?v=17"></script>
 </body>
 </html>

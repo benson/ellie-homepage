@@ -1,0 +1,50 @@
+/* lexicon-page-specific styles */
+
+#lexicon-container {
+  margin: 0 auto;
+  max-width: 880px;
+  border-top: 1.5px solid #1a1a1a;
+  padding-top: 20px;
+}
+
+.lexicon-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lexicon-entry {
+  padding: 14px 4px;
+  border-bottom: 1px solid #ddd;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  text-transform: none;
+}
+
+.lexicon-entry .lex-word {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.lexicon-entry .lex-definition {
+  font-size: 1.05rem;
+  color: #333;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.archive-empty {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 40px 0;
+}
+
+@media (max-width: 720px) {
+  .lexicon-entry {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
