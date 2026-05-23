@@ -247,6 +247,9 @@ section.compact + section.compact {
     background-size: cover, 145%;
     background-position: center, 39% 72%;
   }
+  .primary-links a { font-size: 0.85rem; white-space: nowrap; }
+  .link-label { letter-spacing: 0.1em; }
+  .primary-links a::after { font-size: 0.8rem; }
   .reading-row {
     grid-template-columns: 1fr;
   }
