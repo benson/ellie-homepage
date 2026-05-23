@@ -11,9 +11,10 @@ body {
   background-color: #1a1a1a;
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.78)),
-    url('bg/current.jpg?v=2');
-  background-size: cover;
-  background-position: 50% 30%;
+    url('bg/option-legs.jpg?v=1');
+  background-size: cover, cover;
+  background-position: center, 34% 77%;
+  background-repeat: no-repeat, no-repeat;
   background-attachment: fixed;
   color: #f4ede4;
   min-height: 100vh;
@@ -239,6 +240,13 @@ section.compact + section.compact {
 }
 
 @media (max-width: 720px) {
+  body {
+    background-image:
+      linear-gradient(rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.78)),
+      url('bg/option-stool.jpg?v=1');
+    background-size: cover, 145%;
+    background-position: center, 39% 72%;
+  }
   .reading-row {
     grid-template-columns: 1fr;
   }
