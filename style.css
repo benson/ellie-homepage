@@ -284,11 +284,23 @@ section.compact + section.compact {
 
 @media (max-width: 720px) {
   body {
+    /* iOS Safari ignores background-attachment: fixed, so the body bg scrolls
+       with content and cuts off. We pin the image to a fixed pseudo-element
+       behind the content instead. */
+    background-image: none;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-color: #1a1a1a;
     background-image:
       linear-gradient(rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.78)),
       url('bg/option-stool.jpg?v=1');
     background-size: cover, 145%;
     background-position: center, 39% 72%;
+    background-repeat: no-repeat;
   }
   .primary-links a { font-size: 0.85rem; white-space: nowrap; }
   .link-label { letter-spacing: 0.1em; }
