@@ -11,13 +11,33 @@ const LEXICON_HEADERS = ['timestamp', 'word', 'definition'];
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
-    if (data.type === 'lexicon') return createLexiconEntry(data);
+    if (data.type === 'lexicon') {
+      if (data.action === 'delete') return deleteLexiconEntry(data);
+      return createLexiconEntry(data);
+    }
     if (data.action === 'update') return updateEntry(data);
     if (data.action === 'delete') return deleteEntry(data);
     return createEntry(data);
   } catch (err) {
     return jsonResponse({ ok: false, error: String(err) });
   }
+}
+
+function deleteLexiconEntry(data) {
+  const sheet = getLexiconSheet();
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return jsonResponse({ ok: false, error: 'empty' });
+  const targetTs = String(data.timestamp || '');
+  const stamps = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+  for (let i = 0; i < stamps.length; i++) {
+    const cell = stamps[i][0];
+    const cellTs = cell instanceof Date ? cell.toISOString() : String(cell);
+    if (cellTs === targetTs) {
+      sheet.deleteRow(i + 2);
+      return jsonResponse({ ok: true, deleted: i + 2 });
+    }
+  }
+  return jsonResponse({ ok: false, error: 'not found' });
 }
 
 function createLexiconEntry(data) {
@@ -27,6 +47,12 @@ function createLexiconEntry(data) {
   const timestamp = data.timestamp || new Date().toISOString();
   const definition = String(data.definition || '');
   sheet.appendRow([timestamp, word, definition]);
+  // Keep the sheet sorted alphabetically by word.
+  const lastRow = sheet.getLastRow();
+  if (lastRow > 2) {
+    sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn())
+      .sort({ column: 2, ascending: true });
+  }
   return jsonResponse({ ok: true, timestamp });
 }
 
@@ -87,7 +113,10 @@ function findRowByTimestamp(timestamp) {
   return null;
 }
 
-function doGet() {
+function doGet(e) {
+  if (e && e.parameter && e.parameter.type === 'lexicon') {
+    return getLexicon();
+  }
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const sheetUrl = ss.getUrl();
   const sheet = getSheet();
@@ -103,6 +132,21 @@ function doGet() {
       category: String(r[3] || ''),
     }));
   return jsonResponse({ entries, sheetUrl });
+}
+
+function getLexicon() {
+  const sheet = getLexiconSheet();
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return jsonResponse({ entries: [] });
+  const values = sheet.getRange(2, 1, lastRow - 1, 3).getValues();
+  const entries = values
+    .filter(r => r[1] !== '')
+    .map(r => ({
+      timestamp: r[0] instanceof Date ? r[0].toISOString() : String(r[0]),
+      word: String(r[1]),
+      definition: String(r[2] || ''),
+    }));
+  return jsonResponse({ entries });
 }
 
 function getSheet() {

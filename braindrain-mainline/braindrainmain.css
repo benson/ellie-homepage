@@ -1,3 +1,7 @@
+body {
+  font-family: "Work Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 .bd-header {
   position: sticky;
   top: 0;
@@ -71,6 +75,94 @@
   background: #faf6f1;
 }
 
+.folder-tabs-side {
+  position: fixed;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+  z-index: 50;
+}
+
+.folder-tab-side {
+  display: block;
+  background: #4a0c1e;
+  border: 1.5px solid #4a0c1e;
+  border-right: none;
+  color: #f4ede4;
+  padding: 22px 12px;
+  border-radius: 8px 0 0 8px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 600;
+  font-size: 1.05rem;
+  box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.18);
+  transition: padding 0.18s ease, background 0.18s ease;
+}
+
+.folder-tab-side:hover {
+  padding: 22px 18px;
+  background: #6a1530;
+  font-style: normal;
+}
+
+.folder-tabs-side-left {
+  right: auto;
+  left: 0;
+}
+
+.sort-submenu-item {
+  padding-left: 28px !important;
+  font-size: 0.95rem !important;
+  color: #444;
+}
+
+.sort-submenu-item.active {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.pager {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 4px 6px;
+  margin-top: 8px;
+  border-top: 1px solid #ddd;
+}
+
+.pager .link-btn {
+  font-size: 1.05rem;
+  color: #1a1a1a;
+}
+
+.pager .link-btn[disabled] {
+  color: #ccc;
+  cursor: default;
+  pointer-events: none;
+}
+
+.pager-status {
+  font-size: 0.9rem;
+  color: #666;
+  font-style: italic;
+  text-transform: lowercase;
+}
+
+.folder-tab-side-left {
+  border-right: 1.5px solid #4a0c1e;
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.18);
+  /* read top-to-bottom on the left so it still feels like a tab pointing out */
+  writing-mode: vertical-lr;
+}
+
 #archive-container {
   margin: 0 auto;
   max-width: 880px;
@@ -132,11 +224,11 @@
 
 .entry-time .entry-date,
 .entry-time .entry-clock {
-  display: inline;
+  display: block;
 }
 
 .entry-time .entry-date::after {
-  content: " · ";
+  content: "";
 }
 
 .archive-entry .entry-body {

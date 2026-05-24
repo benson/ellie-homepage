@@ -5,7 +5,7 @@ const BOOK_POS_KEY = 'braindrain.book_position';
 const BOOK_SIZE_KEY = 'braindrain.book_size';
 const STAMP_POS_KEY = 'braindrain.stamp_position';
 const CATEGORIES_KEY = 'braindrain.categories';
-const DEFAULT_CATEGORIES = ['fact', 'memory', 'feeling'];
+const DEFAULT_CATEGORIES = ['fact', 'memory', 'feeling', 'dream', 'idea', 'musing'];
 const CONTEXT_MAX = 120;
 const CATEGORY_MAX = 30;
 
@@ -191,8 +191,30 @@ if (pinBtn) {
   });
 }
 let categories = (() => {
-  try { return JSON.parse(localStorage.getItem(CATEGORIES_KEY)) || [...DEFAULT_CATEGORIES]; }
-  catch { return [...DEFAULT_CATEGORIES]; }
+  try {
+    const stored = JSON.parse(localStorage.getItem(CATEGORIES_KEY)) || [];
+    // Union with defaults so we never lose them, in stable order.
+    const set = new Set([...DEFAULT_CATEGORIES, ...stored]);
+    return Array.from(set);
+  } catch { return [...DEFAULT_CATEGORIES]; }
+})();
+
+// On page load, also fetch every category that's ever been used on saved
+// entries, and merge them into the local list. Keeps the sort dropdown
+// in sync with the cloud sheet even on a fresh browser.
+(async () => {
+  if (!BRAINDRAIN_API_URL) return;
+  try {
+    const res = await fetch(BRAINDRAIN_API_URL);
+    if (!res.ok) return;
+    const data = await res.json();
+    const set = new Set(categories);
+    (data.entries || []).forEach(e => { if (e.category) set.add(e.category); });
+    if (set.size !== categories.length) {
+      categories = Array.from(set);
+      persistCategories();
+    }
+  } catch {}
 })();
 
 const sortBtn = document.getElementById('sort-btn');
@@ -536,6 +558,13 @@ const lexStatus = document.getElementById('lex-status');
 const lexAdd = document.getElementById('lex-add');
 const lexEnter = document.getElementById('lex-enter');
 const lexQueueCount = document.getElementById('lex-queue-count');
+const lexActions = document.getElementById('lex-actions');
+const lexManual = document.getElementById('lex-manual');
+const lexManualPrompt = document.getElementById('lex-manual-prompt');
+const lexManualInput = document.getElementById('lex-manual-input');
+const lexManualSave = document.getElementById('lex-manual-save');
+const lexManualSkip = document.getElementById('lex-manual-skip');
+let pendingManualWord = null;
 
 const isMobile = window.matchMedia('(max-width: 720px)').matches;
 
@@ -708,6 +737,15 @@ if (bookBtn) {
   if (bookResize) bookResize.style.display = 'none';
 }
 
+// If we arrived here from "+ fresh word" on the lexicon, open the vocab
+// modal immediately so the book click is implicit.
+try {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('open') === 'lex') {
+    setTimeout(() => openLexModal(), 60);
+  }
+} catch {}
+
 if (isMobile && nowEl) {
   applySavedPosition(nowEl, STAMP_POS_KEY);
 }
@@ -729,6 +767,10 @@ function resetLexModal() {
   if (lexInput) lexInput.value = '';
   if (lexPreview) { lexPreview.hidden = true; lexPreview.innerHTML = ''; }
   if (lexStatus) { lexStatus.hidden = true; lexStatus.textContent = ''; lexStatus.classList.remove('lex-status-error'); }
+  if (lexManual) lexManual.hidden = true;
+  if (lexActions) lexActions.hidden = false;
+  if (lexManualInput) lexManualInput.value = '';
+  pendingManualWord = null;
   lexQueue = [];
   updateLexQueueCount();
 }
@@ -813,17 +855,54 @@ async function queueWord() {
   setLexStatus('looking up…');
   try {
     const entries = await lookupWord(word);
-    const definition = flattenDefinitions(entries);
-    lexQueue.push({ word, definition, timestamp: new Date().toISOString() });
-    updateLexQueueCount();
-    renderLexPreview(word, entries);
-    setLexStatus(entries && entries.length ? `pinned: ${word}` : `pinned: ${word} (no definition)`);
-    lexInput.value = '';
-    lexInput.focus();
+    if (entries && entries.length) {
+      const definition = flattenDefinitions(entries);
+      lexQueue.push({ word, definition, timestamp: new Date().toISOString() });
+      updateLexQueueCount();
+      renderLexPreview(word, entries);
+      setLexStatus(`pinned: ${word}`);
+      lexInput.value = '';
+      lexInput.focus();
+    } else {
+      // Nothing in the dictionary — let her drop her own meaning in.
+      showManualInput(word);
+    }
   } catch (err) {
     console.error(err);
     setLexStatus('lookup failed — try again', true);
   }
+}
+
+function showManualInput(word) {
+  pendingManualWord = word;
+  if (lexPreview) lexPreview.hidden = true;
+  setLexStatus('');
+  if (lexActions) lexActions.hidden = true;
+  if (lexManual) lexManual.hidden = false;
+  if (lexManualPrompt) lexManualPrompt.textContent = `"${word}" — not in the dictionary. write what it means to you:`;
+  if (lexManualInput) {
+    lexManualInput.value = '';
+    setTimeout(() => lexManualInput.focus(), 0);
+  }
+}
+
+function hideManualInput() {
+  pendingManualWord = null;
+  if (lexManual) lexManual.hidden = true;
+  if (lexActions) lexActions.hidden = false;
+  if (lexManualInput) lexManualInput.value = '';
+}
+
+function commitManualDefinition(useText) {
+  if (!pendingManualWord) return;
+  const word = pendingManualWord;
+  const definition = useText ? (lexManualInput.value || '').trim() : '';
+  lexQueue.push({ word, definition, timestamp: new Date().toISOString() });
+  updateLexQueueCount();
+  setLexStatus(definition ? `pinned: ${word}` : `pinned: ${word} (no def)`);
+  hideManualInput();
+  lexInput.value = '';
+  lexInput.focus();
 }
 
 async function commitQueue() {
@@ -856,10 +935,12 @@ async function commitQueue() {
 }
 
 async function saveLexiconEntry(entry) {
-  // Always cache locally so nothing's ever lost
+  // Always cache locally so nothing's ever lost. Keep the cache sorted
+  // alphabetically by word.
   try {
     const local = JSON.parse(localStorage.getItem(LEXICON_LOCAL_KEY) || '[]');
     local.push(entry);
+    local.sort((a, b) => String(a.word || '').localeCompare(String(b.word || '')));
     localStorage.setItem(LEXICON_LOCAL_KEY, JSON.stringify(local));
   } catch {}
   if (BRAINDRAIN_API_URL) {
@@ -885,6 +966,19 @@ if (lexAdd) lexAdd.addEventListener('click', queueWord);
 if (lexEnter) lexEnter.addEventListener('click', commitQueue);
 if (lexClose) lexClose.addEventListener('click', closeLexModal);
 if (lexBackdrop) lexBackdrop.addEventListener('click', closeLexModal);
+if (lexManualSave) lexManualSave.addEventListener('click', () => commitManualDefinition(true));
+if (lexManualSkip) lexManualSkip.addEventListener('click', () => commitManualDefinition(false));
+if (lexManualInput) {
+  lexManualInput.addEventListener('keydown', (e) => {
+    // Cmd/Ctrl+Enter or just Enter (without shift) saves.
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      commitManualDefinition(true);
+    } else if (e.key === 'Escape') {
+      commitManualDefinition(false);
+    }
+  });
+}
 
 async function saveEntry(entry) {
   if (BRAINDRAIN_API_URL) {

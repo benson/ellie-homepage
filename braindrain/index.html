@@ -6,8 +6,8 @@
   <title>brain drain</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik+Beastly&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="braindrain.css?v=15">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Beastly&family=Inter:wght@400;500;600&family=Work+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="braindrain.css?v=17">
 </head>
 <body>
   <header class="bd-header">
@@ -106,7 +106,15 @@
       <input type="text" id="lex-input" class="lex-input" placeholder="feed me" autocapitalize="none" autocorrect="off" spellcheck="false"/>
       <div id="lex-preview" class="lex-preview" hidden></div>
       <div id="lex-status" class="lex-status" hidden></div>
-      <div class="lex-actions">
+      <div id="lex-manual" class="lex-manual" hidden>
+        <div class="lex-manual-prompt" id="lex-manual-prompt"></div>
+        <textarea id="lex-manual-input" class="lex-manual-input" rows="3" placeholder="what does it mean to you?" autocapitalize="sentences"></textarea>
+        <div class="lex-manual-actions">
+          <button type="button" id="lex-manual-save" class="link-btn">+ pin with this</button>
+          <button type="button" id="lex-manual-skip" class="link-btn lex-skip">skip</button>
+        </div>
+      </div>
+      <div class="lex-actions" id="lex-actions">
         <button type="button" id="lex-add" class="link-btn lex-add" aria-label="add another word">+</button>
         <span id="lex-queue-count" class="lex-queue-count" hidden></span>
         <button type="button" id="lex-enter" class="link-btn lex-enter" aria-label="enter all words">&gt;</button>
@@ -114,6 +122,6 @@
     </div>
   </div>
 
-  <script src="braindrain.js?v=17"></script>
+  <script src="braindrain.js?v=21"></script>
 </body>
 </html>

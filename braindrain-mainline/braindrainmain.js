@@ -1,5 +1,6 @@
 const BRAINDRAIN_API_URL = 'https://script.google.com/macros/s/AKfycbygsC3wKaB2dps8ghda6Abyte2gCgdgTLqSbKqG7iXJtR9JVMUAuqZEeLPcxkBnuqjM/exec';
 const LOCAL_KEY = 'braindrain.entries';
+const CATEGORIES_KEY = 'braindrain.categories';
 const CONTEXT_MAX = 120;
 const CATEGORY_MAX = 30;
 
@@ -14,9 +15,32 @@ const SORT_OPTIONS = [
   { id: 'category', label: 'by category' },
 ];
 
+const PAGE_SIZE = 20;
+
 let allEntries = [];
 let currentSort = 'newest';
+let categoryFilter = null; // null = show all; string = show only that category
 let editingEntryId = null;
+let currentPage = 1;
+
+function loadStoredCategories() {
+  try { return JSON.parse(localStorage.getItem(CATEGORIES_KEY) || '[]'); }
+  catch { return []; }
+}
+
+function persistCategoriesFromEntries() {
+  // Union of stored categories + every category seen in entries, so we
+  // never forget a category Ellie has used (even after a cache clear).
+  const set = new Set(loadStoredCategories());
+  allEntries.forEach(e => { if (e.category) set.add(e.category); });
+  localStorage.setItem(CATEGORIES_KEY, JSON.stringify(Array.from(set)));
+}
+
+function getKnownCategories() {
+  const set = new Set(loadStoredCategories());
+  allEntries.forEach(e => { if (e.category) set.add(e.category); });
+  return Array.from(set).sort((a, b) => a.localeCompare(b));
+}
 
 function parseStamp(iso) {
   const d = new Date(iso);
@@ -37,7 +61,10 @@ function escapeAttr(s) {
 }
 
 function sortEntries(entries, mode) {
-  const arr = [...entries];
+  let arr = [...entries];
+  if (categoryFilter !== null) {
+    arr = arr.filter(e => (e.category || '') === categoryFilter);
+  }
   if (mode === 'oldest') {
     arr.sort((a, b) => (a.timestamp || '').localeCompare(b.timestamp || ''));
   } else if (mode === 'category') {
@@ -59,13 +86,19 @@ function renderEntries() {
     return;
   }
   const sorted = sortEntries(allEntries, currentSort);
+  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const pageEntries = sorted.slice(start, start + PAGE_SIZE);
   let lastDate = null;
-  const rows = sorted.map(e => {
+  const rows = pageEntries.map(e => {
     const fmt = parseStamp(e.timestamp);
+    const isEditing = e.timestamp === editingEntryId;
     const showDate = fmt.date !== lastDate;
     lastDate = fmt.date;
-    const stampStr = showDate ? `${fmt.date} · ${fmt.time}` : fmt.time;
-    const isEditing = e.timestamp === editingEntryId;
+    // Date stacks above time on the first entry of each day; subsequent
+    // same-day entries show just the time.
     const timeHtml = showDate
       ? `<span class="entry-date">${escapeHtml(fmt.date)}</span><span class="entry-clock">${escapeHtml(fmt.time)}</span>`
       : `<span class="entry-clock">${escapeHtml(fmt.time)}</span>`;
@@ -89,7 +122,7 @@ function renderEntries() {
       `;
     }
     return `
-      <li class="archive-entry${showDate ? ' new-date' : ''}" data-timestamp="${escapeAttr(e.timestamp)}">
+      <li class="archive-entry" data-timestamp="${escapeAttr(e.timestamp)}">
         <div class="entry-time">${timeHtml}</div>
         <div class="entry-body">
           <div class="entry-text">${escapeHtml(e.text || '')}</div>
@@ -99,10 +132,30 @@ function renderEntries() {
       </li>
     `;
   }).join('');
-  body.innerHTML = `<ul class="archive-list">${rows}</ul>`;
+  const pager = totalPages > 1 ? `
+    <nav class="pager" aria-label="archive pagination">
+      <button type="button" class="link-btn pager-prev" ${currentPage === 1 ? 'disabled' : ''}>&lt; prev</button>
+      <span class="pager-status">page ${currentPage} of ${totalPages} · ${sorted.length} ${sorted.length === 1 ? 'entry' : 'entries'}</span>
+      <button type="button" class="link-btn pager-next" ${currentPage === totalPages ? 'disabled' : ''}>next &gt;</button>
+    </nav>
+  ` : '';
+  body.innerHTML = `<ul class="archive-list">${rows}</ul>${pager}`;
   if (editingEntryId) {
     const editingLi = body.querySelector('.archive-entry.editing');
     if (editingLi) editingLi.querySelector('.edit-text').focus();
+  }
+  const prev = body.querySelector('.pager-prev');
+  const next = body.querySelector('.pager-next');
+  if (prev) prev.addEventListener('click', () => { currentPage--; renderEntries(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  if (next) next.addEventListener('click', () => { currentPage++; renderEntries(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+}
+
+function setSortLabel() {
+  if (currentSort === 'category' && categoryFilter) {
+    sortByBtn.textContent = `category: ${categoryFilter}`;
+  } else {
+    const opt = SORT_OPTIONS.find(o => o.id === currentSort);
+    sortByBtn.textContent = opt ? opt.label : 'sort >';
   }
 }
 
@@ -116,12 +169,70 @@ function renderSortMenu() {
     btn.textContent = opt.label;
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      currentSort = opt.id;
-      sortByBtn.textContent = opt.label;
-      hideSortMenu();
-      renderEntries();
+      if (opt.id === 'category') {
+        // Toggle expand the category submenu inline; don't close the menu.
+        currentSort = 'category';
+        categoryFilter = null;
+        currentPage = 1;
+        setSortLabel();
+        renderSortMenu();
+        renderEntries();
+      } else {
+        currentSort = opt.id;
+        categoryFilter = null;
+        currentPage = 1;
+        setSortLabel();
+        hideSortMenu();
+        renderEntries();
+      }
     });
     sortByMenu.appendChild(btn);
+
+    if (opt.id === 'category' && currentSort === 'category') {
+      // Inline submenu of known categories.
+      const cats = getKnownCategories();
+      const all = document.createElement('button');
+      all.type = 'button';
+      all.className = 'sort-menu-item sort-submenu-item';
+      if (categoryFilter === null) all.classList.add('active');
+      all.textContent = '· all';
+      all.addEventListener('click', (e) => {
+        e.stopPropagation();
+        categoryFilter = null;
+        currentPage = 1;
+        setSortLabel();
+        renderSortMenu();
+        renderEntries();
+      });
+      sortByMenu.appendChild(all);
+
+      cats.forEach(cat => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'sort-menu-item sort-submenu-item';
+        if (categoryFilter === cat) b.classList.add('active');
+        b.textContent = `· ${cat}`;
+        b.addEventListener('click', (e) => {
+          e.stopPropagation();
+          categoryFilter = cat;
+          currentPage = 1;
+          setSortLabel();
+          hideSortMenu();
+          renderEntries();
+        });
+        sortByMenu.appendChild(b);
+      });
+
+      if (cats.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'sort-menu-item sort-submenu-item';
+        empty.style.color = '#999';
+        empty.style.fontStyle = 'italic';
+        empty.style.cursor = 'default';
+        empty.textContent = '· (no categories yet)';
+        sortByMenu.appendChild(empty);
+      }
+    }
   });
 }
 
@@ -218,6 +329,7 @@ async function saveEdit(li) {
     if (idx >= 0) {
       allEntries[idx] = { ...allEntries[idx], text, context, category };
     }
+    persistCategoriesFromEntries();
     editingEntryId = null;
     renderEntries();
     updateRethinkBtnText();
@@ -284,5 +396,6 @@ async function loadEntries() {
 
 loadEntries().then(entries => {
   allEntries = entries;
+  persistCategoriesFromEntries();
   renderEntries();
 }).catch(() => {});

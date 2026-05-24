@@ -159,6 +159,24 @@ h2 {
   display: inline-block;
   vertical-align: middle;
   margin-right: 4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: transparent;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.primary-links a:hover .link-label-img,
+.primary-links a:focus-visible .link-label-img,
+.primary-links a:active .link-label-img {
+  background: rgba(74, 12, 30, 0.7);
+}
+
+.primary-links a:hover .link-desc,
+.primary-links a:focus-visible .link-desc {
+  color: #f4ede4;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-style: italic;
 }
 
 
@@ -380,9 +398,6 @@ section.compact + section.compact {
   h1 {
     font-size: 3.5rem;
     -webkit-text-stroke: 2.5px #d4a017;
-    text-shadow:
-      0 0 6px rgba(255, 240, 180, 0.18),
-      0 0 2px rgba(255, 240, 180, 0.12);
   }
 
   .social-link {
