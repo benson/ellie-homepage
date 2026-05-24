@@ -89,8 +89,8 @@ body {
 
 .folder-tab-side {
   display: block;
-  background: #4a0c1e;
-  border: 1.5px solid #4a0c1e;
+  background: rgba(74, 12, 30, 0.32);
+  border: 1.5px solid rgba(74, 12, 30, 0.32);
   color: #f4ede4;
   padding: 22px 12px;
   border-radius: 10px;
@@ -100,13 +100,16 @@ body {
   letter-spacing: 0.16em;
   font-weight: 600;
   font-size: 1.05rem;
-  box-shadow: -2px 3px 8px rgba(0, 0, 0, 0.25);
-  transition: padding 0.18s ease, background 0.18s ease;
+  box-shadow: -2px 3px 8px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  transition: padding 0.18s ease, background 0.18s ease, border-color 0.18s ease;
 }
 
 .folder-tab-side:hover {
   padding: 22px 18px;
   background: #6a1530;
+  border-color: #6a1530;
   font-style: normal;
 }
 
@@ -154,9 +157,8 @@ body {
 }
 
 .folder-tab-side-left {
-  border: 1.5px solid #4a0c1e;
   border-radius: 10px;
-  box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.15);
   /* read top-to-bottom on the left so it still feels like a tab pointing out */
   writing-mode: vertical-lr;
 }
@@ -507,4 +509,23 @@ body {
   .bottom-link { font-size: 0.95rem; }
   .bottom-sheet-link { font-size: 0.75rem; }
   .sewer-hunter { width: min(80%, 280px); }
+
+  /* on phones, tuck the tab tight against the screen edge and shrink it
+     so it eats less horizontal space */
+  .folder-tabs-side {
+    right: 0;
+  }
+  .folder-tabs-side-left {
+    right: auto;
+    left: 0;
+  }
+  .folder-tab-side {
+    padding: 14px 7px;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+  }
+  .folder-tab-side:hover,
+  .folder-tab-side:active {
+    padding: 14px 10px;
+  }
 }

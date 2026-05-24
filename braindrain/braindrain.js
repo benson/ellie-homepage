@@ -652,15 +652,21 @@ function makeDraggable(el, storageKey, onTap) {
   el.addEventListener('touchstart', onDown, { passive: true });
 }
 
-if (!isMobile) {
-  // Timestamp position is only adjustable on mobile.
-  try { localStorage.removeItem(STAMP_POS_KEY); } catch {}
-}
-
 // Storage keys are scoped per-viewport so mobile and desktop tunings don't
 // overwrite each other.
 const bookPosKey = BOOK_POS_KEY + (isMobile ? '_mobile' : '_desktop');
 const bookSizeKey = BOOK_SIZE_KEY + (isMobile ? '_mobile' : '_desktop');
+const stampPosKey = STAMP_POS_KEY + (isMobile ? '_mobile' : '_desktop');
+
+// One-time migration: lift the legacy mobile-only stamp position into the
+// new per-viewport mobile slot, then clear the old key.
+try {
+  const legacyStamp = localStorage.getItem(STAMP_POS_KEY);
+  if (legacyStamp && !localStorage.getItem(STAMP_POS_KEY + '_mobile')) {
+    localStorage.setItem(STAMP_POS_KEY + '_mobile', legacyStamp);
+  }
+  localStorage.removeItem(STAMP_POS_KEY);
+} catch {}
 
 // One-time migration: any legacy single-key values become the desktop values
 // (since that's what's currently in storage from the last desktop tune).
@@ -746,8 +752,9 @@ try {
   }
 } catch {}
 
-if (isMobile && nowEl) {
-  applySavedPosition(nowEl, STAMP_POS_KEY);
+if (nowEl) {
+  applySavedPosition(nowEl, stampPosKey);
+  makeDraggable(nowEl, stampPosKey);
 }
 
 function openLexModal() {
@@ -818,6 +825,20 @@ async function lookupWord(word) {
   return Array.isArray(data) ? data : null;
 }
 
+// Merriam-Webster fallback. Calls go through the Apps Script backend so
+// the API keys stay server-side (set as Script Properties). The proxy
+// returns definitions already normalized to the dictionaryapi.dev shape.
+async function lookupWordMW(word, dict) {
+  if (!BRAINDRAIN_API_URL) return null;
+  const d = dict === 'learners' ? 'learners' : 'collegiate';
+  const url = `${BRAINDRAIN_API_URL}?type=lookup&dict=${d}&word=${encodeURIComponent(word)}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`MW ${dict} lookup failed: ${res.status}`);
+  const data = await res.json();
+  const entries = Array.isArray(data.entries) ? data.entries : [];
+  return entries.length ? entries : null;
+}
+
 function renderLexPreview(word, entries) {
   if (!lexPreview) return;
   // Pull up to 3 definitions across part-of-speech buckets
@@ -854,7 +875,19 @@ async function queueWord() {
   }
   setLexStatus('looking up…');
   try {
-    const entries = await lookupWord(word);
+    // Try wiktionary first (broad casual coverage), then fall back to
+    // Merriam-Webster Collegiate, then Learner's. Only show manual input
+    // when all three strike out.
+    let entries = await lookupWord(word);
+    if (!entries || !entries.length) {
+      setLexStatus('checking merriam-webster…');
+      try { entries = await lookupWordMW(word, 'collegiate'); }
+      catch (mwErr) { console.error(mwErr); }
+    }
+    if (!entries || !entries.length) {
+      try { entries = await lookupWordMW(word, 'learners'); }
+      catch (mwErr) { console.error(mwErr); }
+    }
     if (entries && entries.length) {
       const definition = flattenDefinitions(entries);
       lexQueue.push({ word, definition, timestamp: new Date().toISOString() });
@@ -864,7 +897,7 @@ async function queueWord() {
       lexInput.value = '';
       lexInput.focus();
     } else {
-      // Nothing in the dictionary — let her drop her own meaning in.
+      // Nothing in any dictionary — let her drop her own meaning in.
       showManualInput(word);
     }
   } catch (err) {

@@ -1,7 +1,10 @@
 // braindrain backend — paste this into the Apps Script editor attached
 // to the braindrain Google Sheet, then deploy as a web app (or update the
-// existing deployment). v6 adds the "lexicon" type for vocabulary words,
-// which writes to a separate "lexicon" sheet tab.
+// existing deployment). v7 adds a Merriam-Webster lookup proxy so MW API
+// keys can live in Script Properties instead of being exposed in the
+// public site JS. Set two Script Properties before deploying:
+//   MW_COLLEGIATE_KEY = <key from dictionaryapi.com>
+//   MW_LEARNERS_KEY   = <key from dictionaryapi.com>
 
 const SHEET_NAME = 'braindrain';
 const HEADERS = ['timestamp', 'text', 'context', 'category'];
@@ -142,6 +145,9 @@ function findRowByTimestamp(timestamp) {
 }
 
 function doGet(e) {
+  if (e && e.parameter && e.parameter.type === 'lookup') {
+    return mwLookup(e.parameter.word, e.parameter.dict);
+  }
   if (e && e.parameter && e.parameter.type === 'lexicon') {
     return getLexicon();
   }
@@ -193,6 +199,46 @@ function getSheet() {
     }
   }
   return sheet;
+}
+
+// Proxy a Merriam-Webster lookup so API keys stay server-side. Returns
+// definitions normalized to the same shape the client already understands:
+// [{ meanings: [{ partOfSpeech, definitions: [{ definition }] }] }].
+// Results are cached for 24h to stay under the free 1000/day quota.
+function mwLookup(word, dict) {
+  const w = String(word || '').trim().toLowerCase();
+  const d = dict === 'learners' ? 'learners' : 'collegiate';
+  if (!w) return jsonResponse({ entries: [] });
+  const keyName = d === 'learners' ? 'MW_LEARNERS_KEY' : 'MW_COLLEGIATE_KEY';
+  const apiKey = PropertiesService.getScriptProperties().getProperty(keyName);
+  if (!apiKey) return jsonResponse({ entries: [], error: 'no key configured' });
+  const cache = CacheService.getScriptCache();
+  const cacheKey = `mw:${d}:${w}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return jsonResponse(JSON.parse(cached));
+  const url = `https://www.dictionaryapi.com/api/v3/references/${d}/json/${encodeURIComponent(w)}?key=${apiKey}`;
+  let payload = { entries: [] };
+  try {
+    const res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+    const code = res.getResponseCode();
+    if (code === 200) {
+      const data = JSON.parse(res.getContentText());
+      if (Array.isArray(data) && data.length && typeof data[0] === 'object') {
+        const meanings = [];
+        for (const entry of data) {
+          const pos = entry.fl || '';
+          const defs = (entry.shortdef || []).map(s => ({ definition: s }));
+          if (defs.length) meanings.push({ partOfSpeech: pos, definitions: defs });
+        }
+        if (meanings.length) payload = { entries: [{ meanings }] };
+      }
+    }
+  } catch (err) {
+    return jsonResponse({ entries: [], error: String(err) });
+  }
+  // Cache both hits and misses for 24h to spare the daily quota.
+  cache.put(cacheKey, JSON.stringify(payload), 86400);
+  return jsonResponse(payload);
 }
 
 function jsonResponse(obj) {
