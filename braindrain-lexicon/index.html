@@ -7,8 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik+Beastly&family=Inter:wght@400;500;600&family=Work+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../braindrain/braindrain.css?v=17">
-  <link rel="stylesheet" href="../braindrain-mainline/braindrainmain.css?v=14">
+  <link rel="stylesheet" href="../braindrain/braindrain.css?v=22">
+  <link rel="stylesheet" href="../braindrain-mainline/braindrainmain.css?v=15">
   <link rel="stylesheet" href="lexicon.css?v=5">
 </head>
 <body>
@@ -53,6 +53,36 @@
         d += (i === 0 ? `M ${x} ${y}` : ` L ${x} ${y}`);
       }
       path.setAttribute('d', d);
+    })();
+
+    // Click the swirl → swirl spirals into itself → navigate to the input.
+    (() => {
+      const swirl = document.querySelector('.rings');
+      if (!swirl) return;
+      swirl.classList.add('clickable');
+      swirl.setAttribute('role', 'link');
+      swirl.setAttribute('aria-label', 'back to brain drain');
+      swirl.setAttribute('tabindex', '0');
+      let draining = false;
+      const drain = () => {
+        if (draining) return;
+        draining = true;
+        swirl.classList.add('draining');
+        const main = document.querySelector('main');
+        if (main) {
+          const s = swirl.getBoundingClientRect();
+          const m = main.getBoundingClientRect();
+          main.style.transformOrigin =
+            (s.left + s.width / 2 - m.left) + 'px ' +
+            (s.top + s.height / 2 - m.top) + 'px';
+          main.classList.add('draining-content');
+        }
+        setTimeout(() => { window.location.href = '/braindrain'; }, 820);
+      };
+      swirl.addEventListener('click', drain);
+      swirl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); drain(); }
+      });
     })();
   </script>
 

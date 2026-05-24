@@ -520,12 +520,13 @@ body {
     left: 0;
   }
   .folder-tab-side {
-    padding: 14px 7px;
-    font-size: 0.8rem;
-    letter-spacing: 0.12em;
+    padding: 9px 5px;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    border-radius: 7px;
   }
   .folder-tab-side:hover,
   .folder-tab-side:active {
-    padding: 14px 10px;
+    padding: 9px 7px;
   }
 }

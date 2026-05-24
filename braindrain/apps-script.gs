@@ -246,3 +246,12 @@ function jsonResponse(obj) {
     .createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
 }
+
+// One-time helper: run this from the Apps Script editor (Run button) to
+// trigger the UrlFetchApp authorization popup. The editor's Run button
+// invokes mwLookup() with no args, which exits early before fetching, so
+// no permission dialog fires. This wrapper calls it with a real word.
+// Safe to leave in place; no caller depends on it.
+function authorizeLookup() {
+  return mwLookup('cat', 'collegiate');
+}
