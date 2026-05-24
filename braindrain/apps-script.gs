@@ -13,6 +13,7 @@ function doPost(e) {
     const data = JSON.parse(e.postData.contents);
     if (data.type === 'lexicon') {
       if (data.action === 'delete') return deleteLexiconEntry(data);
+      if (data.action === 'update') return updateLexiconEntry(data);
       return createLexiconEntry(data);
     }
     if (data.action === 'update') return updateEntry(data);
@@ -21,6 +22,33 @@ function doPost(e) {
   } catch (err) {
     return jsonResponse({ ok: false, error: String(err) });
   }
+}
+
+function updateLexiconEntry(data) {
+  const sheet = getLexiconSheet();
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return jsonResponse({ ok: false, error: 'empty' });
+  const targetTs = String(data.timestamp || '');
+  const stamps = sheet.getRange(2, 1, lastRow - 1, 1).getValues();
+  for (let i = 0; i < stamps.length; i++) {
+    const cell = stamps[i][0];
+    const cellTs = cell instanceof Date ? cell.toISOString() : String(cell);
+    if (cellTs === targetTs) {
+      const row = i + 2;
+      const word = String(data.word || '').trim().toLowerCase();
+      const definition = String(data.definition || '');
+      if (word) sheet.getRange(row, 2).setValue(word);
+      sheet.getRange(row, 3).setValue(definition);
+      // Re-sort since the word may have changed.
+      const lastR = sheet.getLastRow();
+      if (lastR > 2) {
+        sheet.getRange(2, 1, lastR - 1, sheet.getLastColumn())
+          .sort({ column: 2, ascending: true });
+      }
+      return jsonResponse({ ok: true, updated: row });
+    }
+  }
+  return jsonResponse({ ok: false, error: 'not found' });
 }
 
 function deleteLexiconEntry(data) {

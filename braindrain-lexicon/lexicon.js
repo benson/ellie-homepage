@@ -6,6 +6,7 @@ const tidyBtn = document.getElementById('tidy-btn');
 
 let allEntries = [];
 let tidyMode = false;
+let editingTimestamp = null;
 
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({
@@ -69,14 +70,36 @@ function renderLexicon() {
     return;
   }
   const sorted = [...allEntries].sort((a, b) => a.word.localeCompare(b.word));
-  const rows = sorted.map(e => `
-    <li class="lexicon-entry${tidyMode ? ' tidy' : ''}" data-timestamp="${escapeAttr(e.timestamp || '')}" data-word="${escapeAttr(e.word)}">
-      <div class="lex-word">${escapeHtml(e.word)}</div>
-      <div class="lex-definition">${formatDefinition(e.definition || '— no definition —')}</div>
-      ${tidyMode ? '<button type="button" class="lex-delete" aria-label="delete">&times;</button>' : ''}
-    </li>
-  `).join('');
+  const rows = sorted.map(e => {
+    const isEditing = tidyMode && editingTimestamp && e.timestamp === editingTimestamp;
+    if (isEditing) {
+      return `
+        <li class="lexicon-entry tidy editing" data-timestamp="${escapeAttr(e.timestamp || '')}" data-word="${escapeAttr(e.word)}">
+          <input class="edit-word" type="text" value="${escapeAttr(e.word)}" autocapitalize="none" autocorrect="off">
+          <textarea class="edit-definition" rows="4" autocapitalize="sentences">${escapeHtml(e.definition || '')}</textarea>
+          <div class="edit-actions">
+            <button type="button" class="link-btn edit-cancel">cancel</button>
+            <button type="button" class="link-btn edit-save">save</button>
+          </div>
+        </li>
+      `;
+    }
+    return `
+      <li class="lexicon-entry${tidyMode ? ' tidy' : ''}" data-timestamp="${escapeAttr(e.timestamp || '')}" data-word="${escapeAttr(e.word)}">
+        <div class="lex-word">${escapeHtml(e.word)}</div>
+        <div class="lex-definition">${formatDefinition(e.definition || '— no definition —')}</div>
+        ${tidyMode ? '<button type="button" class="lex-delete" aria-label="delete">&times;</button>' : ''}
+      </li>
+    `;
+  }).join('');
   body.innerHTML = `<ul class="lexicon-list">${rows}</ul>`;
+  if (editingTimestamp) {
+    const editingLi = body.querySelector('.lexicon-entry.editing');
+    if (editingLi) {
+      const input = editingLi.querySelector('.edit-word');
+      if (input) input.focus();
+    }
+  }
 }
 
 async function deleteEntry(word, timestamp) {
@@ -107,20 +130,77 @@ async function deleteEntry(word, timestamp) {
 if (tidyBtn) {
   tidyBtn.addEventListener('click', () => {
     tidyMode = !tidyMode;
+    if (!tidyMode) editingTimestamp = null;
     tidyBtn.classList.toggle('active', tidyMode);
-    // Label stays "− tidy"; active state is conveyed via italic via CSS.
     renderLexicon();
   });
 }
 
 body.addEventListener('click', (e) => {
   if (!tidyMode) return;
-  const btn = e.target.closest('.lex-delete');
-  if (!btn) return;
-  const li = btn.closest('.lexicon-entry');
+  // Delete button takes priority
+  const delBtn = e.target.closest('.lex-delete');
+  if (delBtn) {
+    const li = delBtn.closest('.lexicon-entry');
+    if (li) deleteEntry(li.dataset.word, li.dataset.timestamp);
+    return;
+  }
+  // Edit-mode buttons inside an editing entry
+  const li = e.target.closest('.lexicon-entry');
   if (!li) return;
-  deleteEntry(li.dataset.word, li.dataset.timestamp);
+  if (e.target.classList.contains('edit-cancel')) {
+    editingTimestamp = null;
+    renderLexicon();
+    return;
+  }
+  if (e.target.classList.contains('edit-save')) {
+    saveEdit(li);
+    return;
+  }
+  // Already editing? Don't re-enter on clicks inside the form
+  if (li.classList.contains('editing')) return;
+  // Otherwise: open this entry for editing
+  const ts = li.dataset.timestamp;
+  if (!ts) return;
+  editingTimestamp = ts;
+  renderLexicon();
 });
+
+async function saveEdit(li) {
+  const word = (li.querySelector('.edit-word').value || '').trim().toLowerCase();
+  const definition = (li.querySelector('.edit-definition').value || '').trim();
+  if (!word) return;
+  const ts = editingTimestamp;
+  const saveBtn = li.querySelector('.edit-save');
+  saveBtn.disabled = true;
+  saveBtn.textContent = 'saving…';
+  // Update in memory + local cache immediately
+  const idx = allEntries.findIndex(e => e.timestamp === ts);
+  if (idx >= 0) allEntries[idx] = { ...allEntries[idx], word, definition };
+  const local = loadLocalLexicon();
+  const localIdx = local.findIndex(e => e.timestamp === ts);
+  if (localIdx >= 0) {
+    local[localIdx] = { ...local[localIdx], word, definition };
+  } else {
+    // Wasn't in local cache (cloud-only entry) — add it so edits persist.
+    local.push({ word, definition, timestamp: ts });
+  }
+  local.sort((a, b) => String(a.word || '').localeCompare(String(b.word || '')));
+  saveLocalLexicon(local);
+  editingTimestamp = null;
+  renderLexicon();
+  // Best-effort cloud update — needs the redeployed Apps Script.
+  if (BRAINDRAIN_API_URL) {
+    try {
+      await fetch(BRAINDRAIN_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ type: 'lexicon', action: 'update', timestamp: ts, word, definition }),
+      });
+    } catch (err) {
+      console.error('cloud update failed', err);
+    }
+  }
+}
 
 (async () => {
   body.innerHTML = '<p class="archive-empty">loading…</p>';
