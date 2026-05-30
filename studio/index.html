@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>studio · ellie centeno</title>
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="stylesheet" href="../style.css?v=86">
+  <link rel="stylesheet" href="studio.css?v=1">
+</head>
+<body class="studio">
+  <header class="studio-header">
+    <a class="back-link" href="../">← home</a>
+    <h1 class="studio-title">studio</h1>
+    <p class="studio-sub">private uploader — entries go live on your homepage and archives</p>
+  </header>
+
+  <div class="mode-tabs" role="tablist">
+    <button class="mode-tab active" data-mode="making" role="tab">making</button>
+    <button class="mode-tab" data-mode="walking" role="tab">walking</button>
+  </div>
+
+  <form class="entry-form" id="entry-form">
+    <!-- photo upload zone -->
+    <label class="upload-zone" for="photo-input">
+      <span class="upload-zone-text">
+        drop photo(s) here<br>
+        <span class="upload-zone-hint">or click to choose · multiple allowed</span>
+      </span>
+      <input id="photo-input" type="file" accept="image/*" multiple hidden>
+    </label>
+    <div class="photo-previews" id="photo-previews"></div>
+
+    <!-- date -->
+    <div class="form-row">
+      <label for="date-input">date</label>
+      <input id="date-input" type="date" name="date">
+    </div>
+
+    <!-- alltrails link, walking only -->
+    <div class="form-row mode-only mode-only-walking">
+      <label for="link-input">alltrails link <span class="optional">(optional)</span></label>
+      <input id="link-input" type="url" name="link" placeholder="https://www.alltrails.com/...">
+    </div>
+
+    <!-- caption -->
+    <div class="form-row">
+      <label for="caption-input">
+        caption
+        <span class="hint"><code>**bold**</code> · <code>*italic*</code> · <code>[text](url)</code> · linebreaks ok</span>
+      </label>
+      <textarea id="caption-input" name="caption" rows="5" placeholder="write something about this entry..."></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="publish-btn">publish</button>
+      <span class="form-status" id="form-status"></span>
+    </div>
+  </form>
+
+  <script src="studio.js?v=1"></script>
+</body>
+</html>

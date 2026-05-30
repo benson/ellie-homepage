@@ -1,0 +1,290 @@
+/* studio uploader page — private admin UI */
+
+body.studio {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 60px 30px 80px;
+}
+
+.studio-header {
+  margin-bottom: 32px;
+}
+
+.back-link {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 18px;
+  letter-spacing: 0.04em;
+}
+
+.back-link:hover {
+  color: var(--text-bright);
+  text-decoration: underline;
+}
+
+.studio-title {
+  font-family: "Obra Letra", "KC Obra Letra", "UnifrakturMaguntia", "Old English Text MT", serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1;
+  color: #000;
+  -webkit-text-stroke: 3px #d4a017;
+  paint-order: stroke fill;
+  margin-bottom: 8px;
+}
+
+.studio-sub {
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* mode tabs */
+.mode-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid rgba(244, 237, 228, 0.18);
+}
+
+.mode-tab {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 0.85rem;
+  text-transform: lowercase;
+  letter-spacing: 0.08em;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease;
+  margin-bottom: -1px;
+}
+
+.mode-tab:hover {
+  color: var(--text-main);
+}
+
+.mode-tab.active {
+  color: var(--text-bright);
+  border-bottom-color: var(--text-bright);
+}
+
+/* form layout */
+.entry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-row label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 600;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.form-row .hint,
+.form-row .optional {
+  font-size: 0.65rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  color: rgba(244, 237, 228, 0.4);
+  font-style: italic;
+}
+
+.form-row .hint code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.7rem;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 1px 5px;
+  border-radius: 2px;
+  font-style: normal;
+}
+
+.form-row input[type="date"],
+.form-row input[type="url"],
+.form-row textarea {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(244, 237, 228, 0.18);
+  border-radius: 3px;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 10px 12px;
+  width: 100%;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.form-row input[type="date"]:focus,
+.form-row input[type="url"]:focus,
+.form-row textarea:focus {
+  outline: none;
+  border-color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.form-row textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.5;
+}
+
+.form-row input[type="date"] {
+  color-scheme: dark;
+}
+
+/* upload zone */
+.upload-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  padding: 24px;
+  border: 1.5px dashed rgba(244, 237, 228, 0.3);
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+  text-align: center;
+}
+
+.upload-zone:hover,
+.upload-zone.dragover {
+  border-color: var(--text-bright);
+  background: rgba(0, 0, 0, 0.25);
+  transform: scale(1.005);
+}
+
+.upload-zone-text {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.upload-zone-hint {
+  font-size: 0.7rem;
+  font-style: italic;
+  color: rgba(244, 237, 228, 0.4);
+}
+
+.photo-previews {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.photo-previews:empty { display: none; }
+
+.photo-preview {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid rgba(244, 237, 228, 0.18);
+}
+
+.photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-preview-remove {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  color: var(--text-bright);
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.photo-preview-remove:hover {
+  background: rgba(60, 0, 0, 0.85);
+}
+
+/* mode-only rows */
+.mode-only { display: none; }
+body.studio[data-mode="walking"] .mode-only-walking { display: flex; }
+body.studio[data-mode="making"]  .mode-only-making  { display: flex; }
+
+/* actions */
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.publish-btn {
+  background: var(--text-main);
+  color: #2d3826;
+  border: none;
+  border-radius: 3px;
+  padding: 12px 28px;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.publish-btn:hover {
+  background: var(--text-bright);
+  transform: translateY(-1px);
+}
+
+.publish-btn:active {
+  transform: translateY(0);
+}
+
+.publish-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.form-status {
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.form-status.success { color: #a8d99b; }
+.form-status.error   { color: #d99b9b; }
+
+@media (max-width: 600px) {
+  body.studio { padding: 32px 18px 60px; }
+  .studio-title { font-size: 2.5rem; -webkit-text-stroke: 2px #d4a017; }
+}
