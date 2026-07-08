@@ -9,10 +9,6 @@
   const tabs = document.querySelectorAll('.mode-tab');
   const form = document.getElementById('entry-form');
   const dateInput = document.getElementById('date-input');
-  const dateOptional = document.getElementById('date-optional');
-  let dateTouched = false;
-
-  function todayStr() { return new Date().toISOString().slice(0, 10); }
   const photoInput = document.getElementById('photo-input');
   const uploadZone = document.querySelector('.upload-zone');
   const previews = document.getElementById('photo-previews');
@@ -20,15 +16,12 @@
   const publishBtn = form.querySelector('.publish-btn');
 
   // -- mode tabs (making / walking) ---------------------------------
-  // making pre-fills today; walking leaves date blank (it's optional).
+  // date is optional in both modes — left blank by default.
   function setMode(mode) {
     body.dataset.mode = mode;
     tabs.forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
-    if (dateOptional) dateOptional.hidden = mode !== 'walking';
-    if (!dateTouched) dateInput.value = mode === 'walking' ? '' : todayStr();
     try { localStorage.setItem('studio-mode', mode); } catch (e) {}
   }
-  dateInput.addEventListener('input', () => { dateTouched = true; });
   tabs.forEach(t => t.addEventListener('click', () => setMode(t.dataset.mode)));
   let savedMode = 'making';
   try { savedMode = localStorage.getItem('studio-mode') || 'making'; } catch (e) {}
@@ -171,8 +164,7 @@
         form.querySelector('#caption-input').value = '';
         form.querySelector('#link-input').value = '';
         if (stateInput) stateInput.value = '';
-        dateTouched = false;
-        dateInput.value = mode === 'walking' ? '' : todayStr();
+        dateInput.value = '';
         pendingFiles = [];
         renderPreviews();
       } else {
