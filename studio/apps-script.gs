@@ -24,30 +24,38 @@
 const SHEET_ID  = 'REPLACE_WITH_YOUR_SHEET_ID';
 const FOLDER_ID = 'REPLACE_WITH_YOUR_FOLDER_ID';
 
+// column layout per type (order matters — must match the header row)
+const COLUMNS = {
+  making:  ['timestamp', 'date', 'caption', 'link', 'photoIds'],
+  walking: ['timestamp', 'date', 'caption', 'link', 'photoIds', 'state'],
+};
+
 // ---------- READ: GET ?type=making|walking[&limit=N] ----------
 function doGet(e) {
   try {
     const type = (e.parameter.type || 'making').toLowerCase();
-    if (type !== 'making' && type !== 'walking') {
-      return jsonOut({ error: 'invalid type' });
-    }
+    if (!COLUMNS[type]) return jsonOut({ error: 'invalid type' });
 
     const ss = SpreadsheetApp.openById(SHEET_ID);
     const sheet = ss.getSheetByName(type);
     if (!sheet || sheet.getLastRow() < 2) return jsonOut({ entries: [] });
 
+    const cols = COLUMNS[type];
     const limit = Math.min(parseInt(e.parameter.limit, 10) || 100, 500);
-    const rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, 5).getValues();
+    const rows = sheet.getRange(2, 1, sheet.getLastRow() - 1, cols.length).getValues();
     const entries = rows
-      .map(row => ({
-        timestamp: row[0] instanceof Date ? row[0].toISOString() : String(row[0]),
-        date:      String(row[1] || ''),
-        caption:   String(row[2] || ''),
-        link:      String(row[3] || ''),
-        photoUrls: String(row[4] || '').split(',').filter(Boolean).map(id =>
+      .map(row => {
+        const rec = {};
+        cols.forEach((name, i) => {
+          const val = row[i];
+          rec[name] = val instanceof Date ? val.toISOString() : String(val || '');
+        });
+        rec.photoUrls = String(rec.photoIds || '').split(',').filter(Boolean).map(id =>
           'https://lh3.googleusercontent.com/d/' + id + '=s1200'
-        ),
-      }))
+        );
+        delete rec.photoIds;
+        return rec;
+      })
       .reverse() // newest first
       .slice(0, limit);
 
@@ -57,20 +65,19 @@ function doGet(e) {
   }
 }
 
-// ---------- WRITE: POST JSON { type, date, caption, link, photos[] } ----------
+// ---------- WRITE: POST JSON { type, date, caption, link, state, photos[] } ----------
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
     const type = (data.type || '').toLowerCase();
-    if (type !== 'making' && type !== 'walking') {
-      return jsonOut({ error: 'invalid type' });
-    }
+    if (!COLUMNS[type]) return jsonOut({ error: 'invalid type' });
 
+    const cols = COLUMNS[type];
     const ss = SpreadsheetApp.openById(SHEET_ID);
     let sheet = ss.getSheetByName(type);
     if (!sheet) {
       sheet = ss.insertSheet(type);
-      sheet.appendRow(['timestamp', 'date', 'caption', 'link', 'photoIds']);
+      sheet.appendRow(cols);
     }
 
     const folder = DriveApp.getFolderById(FOLDER_ID);
@@ -92,13 +99,15 @@ function doPost(e) {
       }
     }
 
-    sheet.appendRow([
-      new Date().toISOString(),
-      data.date    || '',
-      data.caption || '',
-      data.link    || '',
-      photoIds.join(','),
-    ]);
+    const values = {
+      timestamp: new Date().toISOString(),
+      date:      data.date    || '',
+      caption:   data.caption || '',
+      link:      data.link    || '',
+      photoIds:  photoIds.join(','),
+      state:     (data.state  || '').toUpperCase(),
+    };
+    sheet.appendRow(cols.map(name => values[name] || ''));
 
     return jsonOut({ ok: true, photoCount: photoIds.length });
   } catch (err) {

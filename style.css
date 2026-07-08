@@ -351,6 +351,36 @@ section.compact + section.compact {
   text-decoration-color: var(--text-main);
 }
 
+.archive-link {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  letter-spacing: 0.04em;
+}
+
+.craft-btn {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 5px 12px;
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  color: var(--text-main);
+  text-decoration: none;
+  border: 1px solid rgba(244, 237, 228, 0.35);
+  border-radius: 999px;
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+
+.craft-btn:hover {
+  border-color: var(--text-main);
+  background: rgba(244, 237, 228, 0.08);
+}
+
+.craft-date {
+  font-style: normal;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
 .image-zoom-overlay {
   position: fixed;
   top: 50%;

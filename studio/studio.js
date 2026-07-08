@@ -1,15 +1,18 @@
 /* studio uploader page — making/walking entries
-   posts to the apps script backend (see apps-script.gs for setup). */
-
-// PASTE THE DEPLOYED APPS SCRIPT /exec URL HERE once you've deployed it.
-// e.g. 'https://script.google.com/macros/s/AKfycb.../exec'
-const STUDIO_API_URL = '';
+   posts to the apps script backend (see apps-script.gs for setup).
+   URL is configured in ../studio-config.js (shared with homepage). */
 
 (function () {
+  const STUDIO_API_URL = window.STUDIO_API_URL || '';
+
   const body = document.body;
   const tabs = document.querySelectorAll('.mode-tab');
   const form = document.getElementById('entry-form');
   const dateInput = document.getElementById('date-input');
+  const dateOptional = document.getElementById('date-optional');
+  let dateTouched = false;
+
+  function todayStr() { return new Date().toISOString().slice(0, 10); }
   const photoInput = document.getElementById('photo-input');
   const uploadZone = document.querySelector('.upload-zone');
   const previews = document.getElementById('photo-previews');
@@ -17,19 +20,45 @@ const STUDIO_API_URL = '';
   const publishBtn = form.querySelector('.publish-btn');
 
   // -- mode tabs (making / walking) ---------------------------------
+  // making pre-fills today; walking leaves date blank (it's optional).
   function setMode(mode) {
     body.dataset.mode = mode;
     tabs.forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
+    if (dateOptional) dateOptional.hidden = mode !== 'walking';
+    if (!dateTouched) dateInput.value = mode === 'walking' ? '' : todayStr();
     try { localStorage.setItem('studio-mode', mode); } catch (e) {}
   }
+  dateInput.addEventListener('input', () => { dateTouched = true; });
   tabs.forEach(t => t.addEventListener('click', () => setMode(t.dataset.mode)));
   let savedMode = 'making';
   try { savedMode = localStorage.getItem('studio-mode') || 'making'; } catch (e) {}
   setMode(savedMode === 'walking' ? 'walking' : 'making');
 
-  // -- default date to today ----------------------------------------
-  const today = new Date();
-  dateInput.value = today.toISOString().slice(0, 10);
+  // -- populate state dropdown (walking) ----------------------------
+  const stateInput = document.getElementById('state-input');
+  const US_STATES = [
+    ['AL','Alabama'],['AK','Alaska'],['AZ','Arizona'],['AR','Arkansas'],
+    ['CA','California'],['CO','Colorado'],['CT','Connecticut'],['DE','Delaware'],
+    ['FL','Florida'],['GA','Georgia'],['HI','Hawaii'],['ID','Idaho'],
+    ['IL','Illinois'],['IN','Indiana'],['IA','Iowa'],['KS','Kansas'],
+    ['KY','Kentucky'],['LA','Louisiana'],['ME','Maine'],['MD','Maryland'],
+    ['MA','Massachusetts'],['MI','Michigan'],['MN','Minnesota'],['MS','Mississippi'],
+    ['MO','Missouri'],['MT','Montana'],['NE','Nebraska'],['NV','Nevada'],
+    ['NH','New Hampshire'],['NJ','New Jersey'],['NM','New Mexico'],['NY','New York'],
+    ['NC','North Carolina'],['ND','North Dakota'],['OH','Ohio'],['OK','Oklahoma'],
+    ['OR','Oregon'],['PA','Pennsylvania'],['RI','Rhode Island'],['SC','South Carolina'],
+    ['SD','South Dakota'],['TN','Tennessee'],['TX','Texas'],['UT','Utah'],
+    ['VT','Vermont'],['VA','Virginia'],['WA','Washington'],['WV','West Virginia'],
+    ['WI','Wisconsin'],['WY','Wyoming'],
+  ];
+  if (stateInput) {
+    US_STATES.forEach(([code, name]) => {
+      const opt = document.createElement('option');
+      opt.value = code;
+      opt.textContent = name.toLowerCase();
+      stateInput.appendChild(opt);
+    });
+  }
 
   // -- photo upload (file input + drag/drop) ------------------------
   // pendingFiles holds { file, dataUrl } — we pre-read to base64 so submit is fast.
@@ -110,6 +139,7 @@ const STUDIO_API_URL = '';
       date: fd.get('date'),
       caption: fd.get('caption') || '',
       link: mode === 'walking' ? (fd.get('link') || '') : '',
+      state: mode === 'walking' ? (fd.get('state') || '') : '',
       photos: pendingFiles.map(p => p.dataUrl),
     };
 
@@ -140,6 +170,9 @@ const STUDIO_API_URL = '';
         // reset form for next entry
         form.querySelector('#caption-input').value = '';
         form.querySelector('#link-input').value = '';
+        if (stateInput) stateInput.value = '';
+        dateTouched = false;
+        dateInput.value = mode === 'walking' ? '' : todayStr();
         pendingFiles = [];
         renderPreviews();
       } else {

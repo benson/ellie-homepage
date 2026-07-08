@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>studio · ellie centeno</title>
   <meta name="robots" content="noindex,nofollow">
-  <link rel="stylesheet" href="../style.css?v=86">
-  <link rel="stylesheet" href="studio.css?v=1">
+  <link rel="stylesheet" href="../style.css?v=88">
+  <link rel="stylesheet" href="studio.css?v=2">
 </head>
 <body class="studio">
   <header class="studio-header">
@@ -33,7 +33,7 @@
 
     <!-- date -->
     <div class="form-row">
-      <label for="date-input">date</label>
+      <label for="date-input">date <span class="optional" id="date-optional" hidden>(optional)</span></label>
       <input id="date-input" type="date" name="date">
     </div>
 
@@ -41,6 +41,16 @@
     <div class="form-row mode-only mode-only-walking">
       <label for="link-input">alltrails link <span class="optional">(optional)</span></label>
       <input id="link-input" type="url" name="link" placeholder="https://www.alltrails.com/...">
+    </div>
+
+    <!-- state, walking only — drops a pin on the map -->
+    <div class="form-row mode-only mode-only-walking">
+      <label for="state-input">state
+        <span class="hint">drops a pin on this state's map</span>
+      </label>
+      <select id="state-input" name="state">
+        <option value="">— pick a state —</option>
+      </select>
     </div>
 
     <!-- caption -->
@@ -58,6 +68,7 @@
     </div>
   </form>
 
-  <script src="studio.js?v=1"></script>
+  <script src="../studio-config.js?v=1"></script>
+  <script src="studio.js?v=2"></script>
 </body>
 </html>

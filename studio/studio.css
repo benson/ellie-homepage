@@ -121,6 +121,8 @@ body.studio {
 
 .form-row input[type="date"],
 .form-row input[type="url"],
+.form-row input[type="text"],
+.form-row select,
 .form-row textarea {
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(244, 237, 228, 0.18);
@@ -135,10 +137,18 @@ body.studio {
 
 .form-row input[type="date"]:focus,
 .form-row input[type="url"]:focus,
+.form-row input[type="text"]:focus,
+.form-row select:focus,
 .form-row textarea:focus {
   outline: none;
   border-color: var(--text-muted);
   background: rgba(0, 0, 0, 0.3);
+}
+
+.form-row select {
+  color-scheme: dark;
+  cursor: pointer;
+  text-transform: lowercase;
 }
 
 .form-row textarea {
