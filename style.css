@@ -338,6 +338,25 @@ section.compact + section.compact {
   margin-top: 24px;
 }
 
+/* homepage quadrant rows — two sections side by side on desktop only */
+.section-row + .section-row {
+  margin-top: 40px;
+}
+
+@media (min-width: 900px) {
+  .section-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 64px;
+    align-items: start;
+  }
+  .section-row > section { min-width: 0; }
+  .section-row > section + section,
+  .section-row > section.compact + section.compact {
+    margin-top: 0;
+  }
+}
+
 .reading-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
