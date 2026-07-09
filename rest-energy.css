@@ -257,5 +257,24 @@ body.re-lb-open { overflow: hidden; }
   .re-acc-title { font-size: 1.6rem; }
   .re-acc-count::after { content: ""; }
   .re-grid { gap: 4px; }
-  .re-lb-nav { width: 40px; height: 52px; font-size: 1.8rem; }
+
+  /* float the slideshow arrows over the photo edges (side-by-side layout
+     squeezes them off-screen on phones) */
+  .re-lightbox { padding: 16px; }
+  .re-lb-img { max-width: 92vw; }
+  .re-lb-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 42px;
+    height: 56px;
+    font-size: 2rem;
+    color: #f3e7bb;
+    background: rgba(20, 24, 18, 0.45);
+    border-radius: 4px;
+  }
+  .re-lb-nav:hover { transform: translateY(-50%); }
+  .re-lb-prev { left: 6px; }
+  .re-lb-next { right: 6px; }
 }

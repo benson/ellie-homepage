@@ -9,8 +9,8 @@
   <meta property="og:description" content="">
   <meta property="og:url" content="https://elliexcenteno.com">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="style.css?v=94">
-  <link rel="stylesheet" href="photobox.css?v=1">
+  <link rel="stylesheet" href="style.css?v=95">
+  <link rel="stylesheet" href="photobox.css?v=2">
 </head>
 <body>
   <header>
@@ -108,14 +108,14 @@
 
   <!-- studio: fetch latest making + walking entries, replace static fallback -->
   <script src="studio-config.js?v=1"></script>
-  <script src="studio-render.js?v=1"></script>
+  <script src="studio-render.js?v=2"></script>
   <script>
   (function () {
     if (!window.STUDIO_API_URL) return; // no backend yet — keep static fallback
 
     function renderEntry(entry, type) {
       const photos = (entry.photoUrls || []).slice(0, 4);
-      const polaroids = photos.map(function (u) {
+      const photoImgs = photos.map(function (u) {
         return '<img src="' + u + '" alt="" class="craft-photo">';
       }).join('');
       const wrapClass = 'craft-photo-wrap' + (photos.length > 1 ? ' photo-stack' : '');
@@ -128,7 +128,7 @@
       const archiveHref = type === 'making' ? 'making-archive/' : 'walking-archive/';
       const archiveText = type === 'making' ? "what i've made" : "where i've walked";
       return (
-        '<div class="' + wrapClass + '" data-cap="' + encodeURIComponent(captionHtml || '') + '">' + polaroids + '</div>' +
+        '<div class="' + wrapClass + '" data-cap="' + encodeURIComponent(captionHtml || '') + '">' + photoImgs + '</div>' +
         '<div class="craft-text">' +
           (dateStr ? '<p class="craft-caption craft-date">' + dateStr + '</p>' : '') +
           '<p class="craft-caption">' + captionHtml + '</p>' +
@@ -138,11 +138,24 @@
       );
     }
 
-    async function loadLatest(type, containerId) {
-      const entries = await window.studioFetchEntries(type, 1);
-      if (!entries.length) return; // keep static fallback if none yet
+    // render the last-known entry instantly from localStorage (the backend can
+    // take a few seconds to wake up, and the static fallback goes stale), then
+    // fetch fresh and re-render + update the cache
+    function renderInto(containerId, entry, type) {
       const el = document.getElementById(containerId);
-      if (el) el.innerHTML = renderEntry(entries[0], type);
+      if (el) el.innerHTML = renderEntry(entry, type);
+    }
+
+    async function loadLatest(type, containerId) {
+      const cacheKey = 'studio-latest-' + type;
+      try {
+        const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+        if (cached) renderInto(containerId, cached, type);
+      } catch (e) {}
+      const entries = await window.studioFetchEntries(type, 1);
+      if (!entries.length) return; // keep cached/static fallback if none yet
+      renderInto(containerId, entries[0], type);
+      try { localStorage.setItem(cacheKey, JSON.stringify(entries[0])); } catch (e) {}
     }
 
     loadLatest('making', 'making-content');

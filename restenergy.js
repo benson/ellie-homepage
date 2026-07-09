@@ -213,9 +213,9 @@
     rzT = setTimeout(justifyAll, 120);
   });
 
-  // apply a saved arrangement (order + removals) over the static manifest.
-  // any photo not named in the saved order (e.g. newly added) is appended, so
-  // adds still show; a missing/empty arrangement leaves the static order as-is.
+  // apply a saved arrangement (order + removals + captions) over the static
+  // manifest. any photo not named in the saved order (e.g. newly added) is
+  // appended, so adds still show; a missing/empty arrangement is a no-op.
   function applyArrangement(arr) {
     if (!arr || typeof arr !== 'object') return;
     manifest.collections.forEach(col => {
@@ -225,11 +225,18 @@
       col.photos.forEach(e => { byFile[(typeof e === 'string') ? e : e.file] = e; });
       const removeSet = {};
       (o.remove || []).forEach(f => { removeSet[f] = true; });
+      const caps = o.captions || {};
+      function withCaption(f, e) {
+        const c = caps[f];
+        if (!c) return e;
+        const base = (typeof e === 'string') ? { file: e } : e;
+        return Object.assign({}, base, { title: c.title || '', caption: c.caption || '' });
+      }
       const ordered = [];
-      o.order.forEach(f => { if (byFile[f] && !removeSet[f]) { ordered.push(byFile[f]); delete byFile[f]; } });
+      o.order.forEach(f => { if (byFile[f] && !removeSet[f]) { ordered.push(withCaption(f, byFile[f])); delete byFile[f]; } });
       col.photos.forEach(e => {
         const f = (typeof e === 'string') ? e : e.file;
-        if (byFile[f] && !removeSet[f]) { ordered.push(byFile[f]); delete byFile[f]; }
+        if (byFile[f] && !removeSet[f]) { ordered.push(withCaption(f, byFile[f])); delete byFile[f]; }
       });
       col.photos = ordered;
     });

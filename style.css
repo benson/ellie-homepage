@@ -408,82 +408,6 @@ section.compact + section.compact {
 .craft-photo-wrap.photo-stack .craft-photo:nth-child(4) { transform: rotate(4deg);    z-index: 4; top: 8px;  left: 42px; }
 .craft-photo-wrap.photo-stack .craft-photo:hover { z-index: 10; }
 
-/* ---------- polaroid photo component (shared: homepage, gallery, map) ---------- */
-.polaroid {
-  position: relative;
-  display: inline-block;
-  background: #ece7d6;
-  padding: 8px 8px 22px;
-  border-radius: 5px;
-  border: 1px solid rgba(0, 0, 0, 0.10);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-  transform: rotate(var(--tilt, -2deg));
-}
-
-.pol-ph {
-  position: relative;
-  display: block;
-  overflow: hidden;
-  border-radius: 2px;
-}
-
-.pol-ph img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: sepia(0.22) contrast(0.93) saturate(0.88);
-}
-
-.pol-ph::after {              /* inner vignette */
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  box-shadow: inset 0 0 26px rgba(55, 40, 18, 0.42);
-}
-
-.polaroid::after {            /* aged tint + scuff on the frame */
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  border-radius: 5px;
-  background:
-    radial-gradient(circle at 15% 90%, rgba(140, 110, 50, 0.14), transparent 40%),
-    radial-gradient(circle at 90% 12%, rgba(120, 90, 40, 0.13), transparent 36%),
-    radial-gradient(circle at 70% 80%, rgba(110, 80, 35, 0.10), transparent 22%),
-    radial-gradient(circle at 30% 25%, rgba(120, 95, 50, 0.07), transparent 18%),
-    linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.10) 43%, transparent 46%);
-}
-
-.pol-corner {                /* dog-eared bottom-right corner */
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 20px;
-  height: 20px;
-  z-index: 2;
-  background: linear-gradient(315deg, #ddd8c6 46%, rgba(0, 0, 0, 0.22) 50%, transparent 52%);
-  border-bottom-right-radius: 5px;
-}
-
-/* tight pile — 2+ photos stacked at slight angles */
-.pol-stack {
-  position: relative;
-}
-
-.pol-stack .polaroid {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.pol-stack .polaroid:nth-child(1) { --tilt: -6deg;   z-index: 1; top: 8px; left: 0; }
-.pol-stack .polaroid:nth-child(2) { --tilt: 5deg;    z-index: 2; top: 4px; left: 26px; }
-.pol-stack .polaroid:nth-child(3) { --tilt: -1.5deg; z-index: 3; top: 0;   left: 13px; }
-.pol-stack .polaroid:nth-child(4) { --tilt: 3.5deg;  z-index: 4; top: 6px; left: 34px; }
-
 .craft-caption {
   font-size: 0.7rem;
   font-style: italic;
@@ -538,50 +462,6 @@ section.compact + section.compact {
   font-style: normal;
   letter-spacing: 0.04em;
   color: var(--text-muted);
-}
-
-.image-zoom-overlay {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 1000;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.18s ease;
-  padding: 14px;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 6px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
-}
-
-.image-zoom-overlay.visible {
-  opacity: 1;
-}
-
-.image-zoom-img {
-  display: block;
-  border-radius: 3px;
-  background: #f1f0ec;
-}
-
-.image-zoom-overlay[data-type="album"] .image-zoom-img {
-  width: 360px;
-  height: 360px;
-  object-fit: cover;
-}
-
-.image-zoom-overlay[data-type="book"] .image-zoom-img {
-  width: 320px;
-  height: 480px;
-  object-fit: cover;
-}
-
-.image-zoom-overlay[data-type="photo"] .image-zoom-img {
-  width: min(72vw, 640px);
-  height: min(72vw, 640px);
-  object-fit: cover;
 }
 
 @media (max-width: 600px) {

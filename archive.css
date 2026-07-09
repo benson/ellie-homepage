@@ -137,27 +137,39 @@ body.archive {
   width: 100%;
 }
 
-/* gallery photos use the shared .polaroid component (style.css) */
+/* gallery photos = simple prints, natural aspect (matches homepage) */
 .gal-photos { display: block; }
 
-.gal-photos .polaroid {
-  --tilt: -1.5deg;
+.gal-photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  cursor: zoom-in;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
-.gal-photos .pol-ph { width: 190px; height: 190px; max-width: 100%; }
-
-.gal-photo { width: 100%; height: 100%; cursor: zoom-in; }
-
-/* single photo lifts on hover */
-.gal-photos:not(.pol-stack) .polaroid:hover {
-  transform: rotate(var(--tilt)) translateY(-3px);
-  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.5);
+.gal-photo:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.55);
 }
 
-/* multiple photos = tight, slightly uneven pile */
-.gal-photos.pol-stack { position: relative; height: 210px; }
-.gal-photos.pol-stack .pol-ph { width: 150px; height: 150px; }
-.gal-photos.pol-stack .polaroid:hover { z-index: 10; }
+/* multiple photos = loose stack, slightly askew (matches homepage) */
+.gal-photos.photo-pile { position: relative; height: 200px; }
+.gal-photos.photo-pile .gal-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: auto;
+  max-width: 68%;
+  max-height: 160px;
+}
+.gal-photos.photo-pile .gal-photo:nth-child(1) { transform: rotate(-6deg); z-index: 1; top: 12px; left: 0; }
+.gal-photos.photo-pile .gal-photo:nth-child(2) { transform: rotate(5deg);  z-index: 2; top: 6px;  left: 26%; }
+.gal-photos.photo-pile .gal-photo:nth-child(3) { transform: rotate(-2deg); z-index: 3; top: 0;    left: 13%; }
+.gal-photos.photo-pile .gal-photo:nth-child(4) { transform: rotate(4deg);  z-index: 4; top: 10px; left: 32%; }
+.gal-photos.photo-pile .gal-photo:hover { z-index: 10; transform: translateY(-2px); }
 
 .gal-date {
   font-size: 0.62rem;
@@ -178,83 +190,12 @@ body.archive {
 .gal-caption strong { font-style: normal; font-weight: 700; }
 .gal-caption em { font-style: italic; }
 
-/* lightbox */
-.gal-lightbox {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  background: rgba(20, 24, 18, 0.93);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 40px;
-}
-
-.gal-lightbox[hidden] { display: none; }
-
-body.gal-lb-open { overflow: hidden; }
-
-.gal-lb-figure {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  max-width: 90vw;
-}
-
-.gal-lb-img {
-  max-width: 86vw;
-  max-height: 78vh;
-  object-fit: contain;
-  border-radius: 3px;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5), 0 12px 44px rgba(0, 0, 0, 0.55);
-}
-
-.gal-lb-caption {
-  font-size: 0.85rem;
-  font-style: italic;
-  color: var(--text-main);
-  max-width: 620px;
-  text-align: center;
-  line-height: 1.55;
-}
-
-.gal-lb-close {
-  position: absolute;
-  top: 16px;
-  right: 22px;
-  background: none;
-  border: none;
-  color: var(--text-bright);
-  font-size: 2.1rem;
-  line-height: 1;
-  cursor: pointer;
-  padding: 4px 10px;
-}
-
-.gal-lb-nav {
-  background: rgba(0, 0, 0, 0.3);
-  border: none;
-  color: var(--text-bright);
-  font-size: 2.4rem;
-  line-height: 1;
-  width: 52px;
-  height: 64px;
-  border-radius: 4px;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.gal-lb-nav:hover { background: rgba(0, 0, 0, 0.55); }
+/* (photo viewing uses the shared slideshow — photobox.css) */
 
 @media (max-width: 600px) {
   .gal-grid { columns: 2 130px; column-gap: 12px; }
-  .gal-photos .pol-ph { width: 110px; height: 110px; }
-  .gal-photos.pol-stack { height: 150px; }
-  .gal-photos.pol-stack .pol-ph { width: 96px; height: 96px; }
-  .gal-lb-nav { width: 40px; height: 52px; font-size: 1.8rem; }
+  .gal-photos.photo-pile { height: 140px; }
+  .gal-photos.photo-pile .gal-photo { max-height: 110px; }
 }
 
 /* ---------- walking map (US states + pins) ---------- */
@@ -350,7 +291,7 @@ body.walk-pop-open { overflow: hidden; }
   margin-top: 3px;
 }
 
-/* popup photos use the shared .polaroid component (style.css) */
+/* popup photos = simple prints, natural aspect (matches homepage) */
 .walk-pop-photos {
   display: flex;
   justify-content: center;
@@ -358,19 +299,43 @@ body.walk-pop-open { overflow: hidden; }
 }
 .walk-pop-photos[hidden] { display: none; }
 
-.walk-pop-photos .polaroid { --tilt: -1.5deg; }
-.walk-pop-photos .pol-ph { width: 200px; height: 200px; }
-.walk-pop-photos img { width: 100%; height: 100%; }
+.walk-pop-photo {
+  display: block;
+  max-width: 100%;
+  max-height: 230px;
+  width: auto;
+  height: auto;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  cursor: zoom-in;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.walk-pop-photo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.55);
+}
 
-/* multiple photos = tight, slightly uneven pile */
-.walk-pop-photos.pol-stack {
+/* multiple photos = loose stack, slightly askew (matches homepage) */
+.walk-pop-photos.photo-pile {
   display: block;
   position: relative;
-  width: 240px;
-  height: 230px;
+  width: 260px;
+  height: 210px;
   margin: 18px auto;
 }
-.walk-pop-photos.pol-stack .pol-ph { width: 175px; height: 175px; }
+.walk-pop-photos.photo-pile .walk-pop-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 64%;
+  max-height: 165px;
+}
+.walk-pop-photos.photo-pile .walk-pop-photo:nth-child(1) { transform: rotate(-6deg); z-index: 1; top: 14px; left: 0; }
+.walk-pop-photos.photo-pile .walk-pop-photo:nth-child(2) { transform: rotate(5deg);  z-index: 2; top: 6px;  left: 28%; }
+.walk-pop-photos.photo-pile .walk-pop-photo:nth-child(3) { transform: rotate(-2deg); z-index: 3; top: 0;    left: 14%; }
+.walk-pop-photos.photo-pile .walk-pop-photo:nth-child(4) { transform: rotate(4deg);  z-index: 4; top: 12px; left: 34%; }
+.walk-pop-photos.photo-pile .walk-pop-photo:hover { z-index: 10; }
 
 .walk-pop-caption {
   font-size: 0.82rem;

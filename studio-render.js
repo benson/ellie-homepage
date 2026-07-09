@@ -29,11 +29,14 @@
   // returns a promise of an array of entries, or [] on any error.
   window.studioFetchEntries = async function (type, limit) {
     if (!window.STUDIO_API_URL) return [];
+    // cache-buster + no-store: without these, browsers re-serve a cached
+    // response and pages keep showing pre-edit entries
     const url = window.STUDIO_API_URL +
       '?type=' + encodeURIComponent(type) +
-      '&limit=' + encodeURIComponent(limit || 1);
+      '&limit=' + encodeURIComponent(limit || 1) +
+      '&t=' + Date.now();
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) return [];
       const data = await res.json();
       return Array.isArray(data.entries) ? data.entries : [];

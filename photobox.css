@@ -82,7 +82,24 @@ body.pb-open { overflow: hidden; }
 }
 .pb-nav:hover { color: #fff; transform: scale(1.18); }
 
+/* on small screens the side arrows would be squeezed off-screen —
+   float them over the photo edges instead */
 @media (max-width: 600px) {
-  .pb-lightbox { padding: 20px; }
-  .pb-nav { width: 40px; height: 52px; font-size: 1.8rem; }
+  .pb-lightbox { padding: 16px; }
+  .pb-img { max-width: 92vw; }
+  .pb-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 42px;
+    height: 56px;
+    font-size: 2rem;
+    color: #f3e7bb;
+    background: rgba(20, 24, 18, 0.45);
+    border-radius: 4px;
+  }
+  .pb-nav:hover { transform: translateY(-50%); }
+  .pb-prev { left: 6px; }
+  .pb-next { right: 6px; }
 }

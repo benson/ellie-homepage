@@ -50,15 +50,13 @@
     const photosEl = pop.querySelector('.walk-pop-photos');
     const photos = entry.photoUrls || [];
     const capHtml = window.studioRenderCaption(entry.caption);
-    photosEl.className = 'walk-pop-photos' + (photos.length > 1 ? ' pol-stack' : '');
+    photosEl.className = 'walk-pop-photos' + (photos.length > 1 ? ' photo-pile' : '');
     photosEl.innerHTML = photos
-      .map(u => '<div class="polaroid"><div class="pol-ph"><img src="' + u +
-        '" alt="" loading="lazy"></div><div class="pol-corner"></div></div>').join('');
+      .map(u => '<img class="walk-pop-photo" src="' + u + '" alt="" loading="lazy">').join('');
     photosEl.hidden = !photos.length;
     // click any photo (incl. ones stacked underneath) to open the slideshow
     const lbList = photos.map(u => ({ src: u, captionHtml: capHtml }));
-    Array.prototype.forEach.call(photosEl.querySelectorAll('.pol-ph img'), (im, i) => {
-      im.style.cursor = 'zoom-in';
+    Array.prototype.forEach.call(photosEl.querySelectorAll('.walk-pop-photo'), (im, i) => {
       im.addEventListener('click', () => window.openPhotoLightbox(lbList, i));
     });
     const capEl = pop.querySelector('.walk-pop-caption');

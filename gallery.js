@@ -19,27 +19,15 @@
 
     if (photos.length) {
       const grid = document.createElement('div');
-      grid.className = 'gal-photos' + (photos.length > 1 ? ' pol-stack' : '');
+      grid.className = 'gal-photos' + (photos.length > 1 ? ' photo-pile' : '');
       photos.forEach((url, i) => {
-        const pol = document.createElement('div');
-        pol.className = 'polaroid';
-
-        const ph = document.createElement('div');
-        ph.className = 'pol-ph';
         const img = document.createElement('img');
         img.className = 'gal-photo';
         img.src = url;
         img.alt = '';
         img.loading = 'lazy';
         img.addEventListener('click', () => window.openPhotoLightbox(lbList, i));
-        ph.appendChild(img);
-        pol.appendChild(ph);
-
-        const corner = document.createElement('div');
-        corner.className = 'pol-corner';
-        pol.appendChild(corner);
-
-        grid.appendChild(pol);
+        grid.appendChild(img);
       });
       card.appendChild(grid);
     }
