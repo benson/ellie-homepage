@@ -368,17 +368,45 @@ section.compact + section.compact {
 
 .craft-photo-wrap {
   flex: 0 0 auto;
-  padding: 6px 6px 4px;
 }
 
-/* homepage photo = a single polaroid */
-.craft-photo-wrap .polaroid { --tilt: -2.5deg; }
-.craft-photo-wrap .pol-ph { width: 104px; height: 104px; }
-.craft-photo { cursor: zoom-in; }
+/* homepage photo = a simple print, natural aspect, slight tilt */
+.craft-photo {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 168px;
+  max-height: 150px;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45);
+  cursor: zoom-in;
+  transform: rotate(-2.5deg);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.craft-photo:hover {
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.55);
+}
 
-/* homepage: multiple photos = small tight pile */
-.craft-photo-wrap.pol-stack { position: relative; width: 148px; height: 138px; padding: 0; }
-.craft-photo-wrap.pol-stack .pol-ph { width: 90px; height: 90px; }
+/* homepage: multiple photos = loose stack, slightly askew */
+.craft-photo-wrap.photo-stack {
+  position: relative;
+  width: 182px;
+  min-height: 150px;
+}
+.craft-photo-wrap.photo-stack .craft-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 140px;
+  max-height: 128px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+.craft-photo-wrap.photo-stack .craft-photo:nth-child(1) { transform: rotate(-6deg);   z-index: 1; top: 10px; left: 0; }
+.craft-photo-wrap.photo-stack .craft-photo:nth-child(2) { transform: rotate(5deg);    z-index: 2; top: 4px;  left: 32px; }
+.craft-photo-wrap.photo-stack .craft-photo:nth-child(3) { transform: rotate(-2deg);   z-index: 3; top: 0;    left: 16px; }
+.craft-photo-wrap.photo-stack .craft-photo:nth-child(4) { transform: rotate(4deg);    z-index: 4; top: 8px;  left: 42px; }
+.craft-photo-wrap.photo-stack .craft-photo:hover { z-index: 10; }
 
 /* ---------- polaroid photo component (shared: homepage, gallery, map) ---------- */
 .polaroid {

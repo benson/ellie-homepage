@@ -9,7 +9,7 @@
   <meta property="og:description" content="">
   <meta property="og:url" content="https://elliexcenteno.com">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="style.css?v=93">
+  <link rel="stylesheet" href="style.css?v=94">
 </head>
 <body>
   <header>
@@ -65,7 +65,7 @@
     <h2><img class="section-icon section-icon-hand" data-tunable="hand" src="icons/hand-clean.png?v=8" alt=""><img class="section-label-img" data-tunable="making" src="labels/making.png?v=2" alt="making"></h2>
     <div class="craft-content" id="making-content">
       <!-- CRAFT_START -->
-      <div class="craft-photo-wrap"><div class="polaroid"><div class="pol-ph"><img src="craft/current.jpg?v=3" alt="current craft" class="craft-photo"></div><div class="pol-corner"></div></div></div>
+      <div class="craft-photo-wrap"><img src="craft/current.jpg?v=3" alt="current craft" class="craft-photo"></div>
       <div class="craft-text">
         <p class="craft-caption">felt textile art, inspired by a great egret in the everglades. all hand drawn, cut, sewn. 85% done!</p>
         <p class="craft-caption"><a class="craft-btn" href="making-archive/">what i've made &#8599;</a></p>
@@ -78,7 +78,7 @@
     <h2><img class="section-icon section-icon-foot" data-tunable="foot" src="icons/foot-clean.png?v=12" alt=""><img class="section-label-img" data-tunable="walking" src="labels/walking.png?v=3" alt="walking"></h2>
     <div class="craft-content" id="walking-content">
       <!-- HIKE_START -->
-      <div class="craft-photo-wrap"><div class="polaroid"><div class="pol-ph"><img src="hike/current.jpg?v=1" alt="bull hill full loop, april 16" class="craft-photo"></div><div class="pol-corner"></div></div></div>
+      <div class="craft-photo-wrap"><img src="hike/current.jpg?v=1" alt="bull hill full loop, april 16" class="craft-photo"></div>
       <div class="craft-text">
         <p class="craft-caption">april 16, bull hill full loop in cold spring, ny. mid-70s and beautiful. saw an eastern racer and a wild turkey on the trail :)</p>
         <p class="craft-caption"><a class="craft-link" href="https://www.alltrails.com/explore/recording/afternoon-hike-at-bull-hill-full-loop-8ccd293" target="_blank">alltrails &#8599;</a></p>
@@ -150,9 +150,9 @@
     function renderEntry(entry, type) {
       const photos = (entry.photoUrls || []).slice(0, 4);
       const polaroids = photos.map(function (u) {
-        return '<div class="polaroid"><div class="pol-ph"><img src="' + u + '" alt="" class="craft-photo"></div><div class="pol-corner"></div></div>';
+        return '<img src="' + u + '" alt="" class="craft-photo">';
       }).join('');
-      const wrapClass = 'craft-photo-wrap' + (photos.length > 1 ? ' pol-stack' : '');
+      const wrapClass = 'craft-photo-wrap' + (photos.length > 1 ? ' photo-stack' : '');
       const dateStr = window.studioFormatDate(entry.date);
       const captionHtml = window.studioRenderCaption(entry.caption);
       const linkHtml = entry.link

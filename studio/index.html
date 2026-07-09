@@ -5,22 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>studio · ellie centeno</title>
   <meta name="robots" content="noindex,nofollow">
-  <link rel="stylesheet" href="../style.css?v=88">
-  <link rel="stylesheet" href="studio.css?v=2">
+  <link rel="stylesheet" href="../style.css?v=94">
+  <link rel="stylesheet" href="studio.css?v=4">
 </head>
 <body class="studio">
   <header class="studio-header">
     <a class="back-link" href="../">← home</a>
     <h1 class="studio-title">studio</h1>
     <p class="studio-sub">private uploader — entries go live on your homepage and archives</p>
+    <p class="studio-tools">
+      <a href="../rest-energy/arrange.html">arrange rest energy photos &#8599;</a>
+    </p>
   </header>
 
   <div class="mode-tabs" role="tablist">
     <button class="mode-tab active" data-mode="making" role="tab">making</button>
     <button class="mode-tab" data-mode="walking" role="tab">walking</button>
+    <button class="mode-tab mode-tab-manage" data-mode="manage" role="tab">manage</button>
   </div>
 
   <form class="entry-form" id="entry-form">
+    <div class="edit-banner" id="edit-banner" hidden>
+      <span>editing an entry — changes replace the original.</span>
+      <button type="button" id="cancel-edit" class="cancel-edit">cancel</button>
+    </div>
     <!-- photo upload zone -->
     <label class="upload-zone" for="photo-input">
       <span class="upload-zone-text">
@@ -68,7 +76,13 @@
     </div>
   </form>
 
+  <section class="manage-panel" id="manage-panel" hidden>
+    <p class="manage-status" id="manage-status">loading your entries…</p>
+    <div class="manage-list" id="manage-list"></div>
+  </section>
+
   <script src="../studio-config.js?v=1"></script>
-  <script src="studio.js?v=2"></script>
+  <script src="../studio-render.js?v=1"></script>
+  <script src="studio.js?v=3"></script>
 </body>
 </html>
