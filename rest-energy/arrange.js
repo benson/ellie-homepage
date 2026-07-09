@@ -157,8 +157,9 @@
     tile.dataset.file = file;
     tile.dataset.slug = slug;
 
+    // src is deferred (data-src) — photos only load when the collection opens
     const img = document.createElement('img');
-    img.src = thumb(slug, file);
+    img.dataset.src = thumb(slug, file);
     img.alt = '';
     img.loading = 'lazy';
     tile.appendChild(img);
@@ -202,7 +203,7 @@
       row.dataset.file = file;
 
       const img = document.createElement('img');
-      img.src = thumb(slug, file);
+      img.dataset.src = thumb(slug, file);
       img.alt = '';
       img.loading = 'lazy';
       row.appendChild(img);
@@ -229,14 +230,34 @@
     });
   }
 
+  // load a section's photos only once it's opened (keeps the page light)
+  function hydrate(section) {
+    Array.prototype.forEach.call(section.querySelectorAll('img[data-src]'), img => {
+      img.src = img.dataset.src;
+      delete img.dataset.src;
+    });
+  }
+
+  function toggleSection(section, slug) {
+    const open = section.classList.toggle('open');
+    if (open) {
+      if (mode === 'captions') buildCapsList(slug);
+      hydrate(section);
+    }
+  }
+
   function setMode(m) {
     mode = m;
     document.body.classList.toggle('mode-captions', m === 'captions');
     Array.prototype.forEach.call(document.querySelectorAll('.arr-mode'), b =>
       b.classList.toggle('active', b.dataset.mode === m));
     if (m === 'captions') {
-      // rebuild rows from the current tile order so both views stay in sync
-      Object.keys(state).forEach(buildCapsList);
+      // rebuild rows (from current tile order) for the OPEN sections only
+      Array.prototype.forEach.call(document.querySelectorAll('.arr-col.open'), sec => {
+        const slug = sec.querySelector('.arr-grid').dataset.slug;
+        buildCapsList(slug);
+        hydrate(sec);
+      });
     }
     updateStatus();
   }
@@ -273,12 +294,15 @@
       const section = document.createElement('section');
       section.className = 'arr-col';
 
-      const head = document.createElement('div');
+      const head = document.createElement('button');
+      head.type = 'button';
       head.className = 'arr-col-head';
       head.innerHTML =
         '<span class="arr-col-title">' + col.title + '</span>' +
         '<span class="arr-col-count">' + files.length + ' photos</span>' +
-        '<span class="arr-col-changed" id="arr-changed-' + col.slug + '" hidden></span>';
+        '<span class="arr-col-changed" id="arr-changed-' + col.slug + '" hidden></span>' +
+        '<span class="arr-col-chev" aria-hidden="true"></span>';
+      head.addEventListener('click', () => toggleSection(section, col.slug));
       section.appendChild(head);
 
       const grid = document.createElement('div');

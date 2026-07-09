@@ -41,10 +41,9 @@ body.arrange { padding-bottom: 120px; }
   border-color: var(--text-main);
 }
 
-/* captions mode: swap grids for editable rows */
+/* captions mode: swap grids for editable rows (open collections only) */
 .arr-caps { display: none; }
-body.mode-captions .arr-caps { display: flex; flex-direction: column; gap: 10px; }
-body.mode-captions .arr-grid { display: none; }
+body.mode-captions .arr-col.open .arr-caps { display: flex; flex-direction: column; gap: 10px; }
 
 .arr-cap-row {
   display: flex;
@@ -93,10 +92,35 @@ body.mode-captions .arr-grid { display: none; }
   display: flex;
   align-items: baseline;
   gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
   border-bottom: 1px solid rgba(233, 218, 177, 0.16);
-  padding-bottom: 10px;
+  padding: 0 0 10px;
   margin-bottom: 16px;
+  font-family: inherit;
+  text-align: left;
+  color: var(--text-main);
+  cursor: pointer;
 }
+.arr-col-head:hover .arr-col-title { color: #fff; }
+
+/* collections start closed — photos only load when opened */
+.arr-col-chev {
+  margin-left: auto;
+  align-self: center;
+  width: 9px;
+  height: 9px;
+  border-right: 2px solid var(--text-muted);
+  border-bottom: 2px solid var(--text-muted);
+  transform: rotate(45deg);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+.arr-col.open .arr-col-chev { transform: rotate(-135deg); }
+
+.arr-col:not(.open) .arr-grid { display: none; }
+body.mode-captions .arr-grid { display: none; }
 .arr-col-title {
   font-family: 'Cutive Mono', monospace;
   font-size: 1.4rem;
@@ -115,6 +139,7 @@ body.mode-captions .arr-grid { display: none; }
   font-style: italic;
   color: #d4a017;
 }
+.arr-col-changed:not([hidden]) + .arr-col-chev { margin-left: 12px; }
 .arr-col-changed[hidden] { display: none; }
 
 .arr-grid {
