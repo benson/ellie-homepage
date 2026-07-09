@@ -41,6 +41,13 @@ const COLUMNS = {
 function doGet(e) {
   try {
     const type = (e.parameter.type || 'making').toLowerCase();
+    // rest energy photo arrangement (order + removals) lives in Script Properties
+    if (type === 'restenergy') {
+      const raw = PropertiesService.getScriptProperties().getProperty('RESTENERGY_ARRANGEMENT');
+      let arrangement = {};
+      if (raw) { try { arrangement = JSON.parse(raw); } catch (e2) { arrangement = {}; } }
+      return jsonOut({ arrangement: arrangement, apiVersion: API_VERSION });
+    }
     if (!COLUMNS[type]) return jsonOut({ error: 'invalid type', apiVersion: API_VERSION });
 
     const ss = SpreadsheetApp.openById(SHEET_ID);
@@ -80,12 +87,22 @@ function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
     const action = (data.action || 'create').toLowerCase();
+    if (action === 'setarrangement') return setArrangement(data);
     if (action === 'update') return editEntry(data);
     if (action === 'delete') return deleteEntry(data);
     return createEntry(data);
   } catch (err) {
     return jsonOut({ error: String(err) });
   }
+}
+
+// store the rest energy photo arrangement: { arrangement: { slug: {order:[],remove:[]} } }
+function setArrangement(data) {
+  const arr = data.arrangement;
+  if (!arr || typeof arr !== 'object') return jsonOut({ error: 'no arrangement' });
+  PropertiesService.getScriptProperties()
+    .setProperty('RESTENERGY_ARRANGEMENT', JSON.stringify(arr));
+  return jsonOut({ ok: true });
 }
 
 function createEntry(data) {

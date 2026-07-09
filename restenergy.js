@@ -213,12 +213,51 @@
     rzT = setTimeout(justifyAll, 120);
   });
 
+  // apply a saved arrangement (order + removals) over the static manifest.
+  // any photo not named in the saved order (e.g. newly added) is appended, so
+  // adds still show; a missing/empty arrangement leaves the static order as-is.
+  function applyArrangement(arr) {
+    if (!arr || typeof arr !== 'object') return;
+    manifest.collections.forEach(col => {
+      const o = arr[col.slug];
+      if (!o || !o.order) return;
+      const byFile = {};
+      col.photos.forEach(e => { byFile[(typeof e === 'string') ? e : e.file] = e; });
+      const removeSet = {};
+      (o.remove || []).forEach(f => { removeSet[f] = true; });
+      const ordered = [];
+      o.order.forEach(f => { if (byFile[f] && !removeSet[f]) { ordered.push(byFile[f]); delete byFile[f]; } });
+      col.photos.forEach(e => {
+        const f = (typeof e === 'string') ? e : e.file;
+        if (byFile[f] && !removeSet[f]) { ordered.push(byFile[f]); delete byFile[f]; }
+      });
+      col.photos = ordered;
+    });
+  }
+
+  // fetch the saved arrangement from the backend, but never let it stall the
+  // gallery — bail to the static manifest after a short timeout or any error
+  async function fetchArrangement() {
+    if (!window.STUDIO_API_URL) return null;
+    try {
+      const res = await Promise.race([
+        fetch(window.STUDIO_API_URL + '?type=restenergy'),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 1800)),
+      ]);
+      const data = await res.json();
+      return (data && data.arrangement) ? data.arrangement : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
   (async function load() {
     root.innerHTML = '<p class="re-loading">loading…</p>';
     try {
-      const [mRes, rRes] = await Promise.all([
+      const [mRes, rRes, arrangement] = await Promise.all([
         fetch('manifest.json?v=' + Date.now()),
         fetch('ratios.json?v=' + Date.now()).catch(() => null),
+        fetchArrangement(),
       ]);
       manifest = await mRes.json();
       if (rRes) { try { ratios = await rRes.json(); } catch (e) { ratios = {}; } }
@@ -226,6 +265,7 @@
         root.innerHTML = '<p class="re-empty">no photos yet.</p>';
         return;
       }
+      applyArrangement(arrangement);
       render();
     } catch (err) {
       root.innerHTML = '<p class="re-empty">couldn’t load the galleries.</p>';

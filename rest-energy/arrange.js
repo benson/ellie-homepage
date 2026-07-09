@@ -50,12 +50,57 @@
       if (order.join(',') !== state[slug].orig.join(',')) reordered += 1;
       removing += state[slug].remove.size;
     });
-    const el = document.getElementById('arr-status');
+    const el = document.getElementById('arr-status-text');
+    if (!el) return;
     if (!reordered && !removing) {
       el.innerHTML = 'no changes yet — drag to reorder, or × to mark a photo for removal.';
     } else {
       el.innerHTML = '<strong>' + reordered + '</strong> collection(s) reordered · <strong>' +
-        removing + '</strong> photo(s) marked for removal. &nbsp; tell claude “save the arrangement.”';
+        removing + '</strong> photo(s) marked for removal — hit <strong>publish changes</strong> to go live.';
+    }
+    const btn = document.getElementById('arr-publish');
+    if (btn) btn.disabled = !(reordered || removing);
+  }
+
+  async function doPublish() {
+    const btn = document.getElementById('arr-publish');
+    const txt = document.getElementById('arr-status-text');
+    if (!window.STUDIO_API_URL) { txt.textContent = 'no backend configured yet.'; return; }
+    btn.disabled = true;
+    txt.textContent = 'publishing…';
+    try {
+      const capRes = await fetch(window.STUDIO_API_URL + '?type=restenergy');
+      const cap = await capRes.json();
+      if (!(cap && cap.apiVersion >= 2)) {
+        txt.innerHTML = 'almost — the backend update needs its one-time switch-on first (same redeploy as studio editing). tell claude and it’s a 30-second step.';
+        btn.disabled = false;
+        return;
+      }
+      const res = await fetch(window.STUDIO_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'setArrangement', arrangement: window.getArrangement() }),
+      });
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.error || 'unknown error');
+      // clear the marked-for-removal tiles and reset the baselines
+      Object.keys(state).forEach(slug => {
+        const grid = document.getElementById('arr-grid-' + slug);
+        state[slug].remove.forEach(f => {
+          const t = grid.querySelector('[data-file="' + f + '"]');
+          if (t) t.remove();
+        });
+        state[slug].remove.clear();
+        state[slug].orig = Array.prototype.map.call(grid.children, t => t.dataset.file);
+        renumber(grid);
+      });
+      Object.keys(state).forEach(markChanged);
+      txt.innerHTML = '<strong>published!</strong> your gallery updates in a moment.';
+    } catch (e) {
+      txt.textContent = 'publish failed: ' + (e.message || e);
+    } finally {
+      const b = document.getElementById('arr-publish');
+      if (b) b.disabled = false;
     }
   }
 
@@ -156,6 +201,15 @@
     const status = document.createElement('div');
     status.className = 'arr-status';
     status.id = 'arr-status';
+    status.innerHTML = '<span class="arr-status-text" id="arr-status-text"></span>';
+    const publish = document.createElement('button');
+    publish.type = 'button';
+    publish.className = 'arr-publish';
+    publish.id = 'arr-publish';
+    publish.textContent = 'publish changes';
+    publish.disabled = true;
+    publish.addEventListener('click', doPublish);
+    status.appendChild(publish);
     document.body.appendChild(status);
     updateStatus();
   }
