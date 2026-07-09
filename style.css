@@ -369,11 +369,15 @@ section.compact + section.compact {
 .craft-photo-wrap .pol-ph { width: 104px; height: 104px; }
 .craft-photo { cursor: zoom-in; }
 
+/* homepage: multiple photos = small tight pile */
+.craft-photo-wrap.pol-stack { position: relative; width: 148px; height: 138px; padding: 0; }
+.craft-photo-wrap.pol-stack .pol-ph { width: 90px; height: 90px; }
+
 /* ---------- polaroid photo component (shared: homepage, gallery, map) ---------- */
 .polaroid {
   position: relative;
   display: inline-block;
-  background: #e6dcc2;
+  background: #ece7d6;
   padding: 8px 8px 22px;
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 0, 0.10);
@@ -411,10 +415,10 @@ section.compact + section.compact {
   pointer-events: none;
   border-radius: 5px;
   background:
-    radial-gradient(circle at 15% 90%, rgba(140, 110, 50, 0.22), transparent 40%),
-    radial-gradient(circle at 90% 12%, rgba(120, 90, 40, 0.20), transparent 36%),
-    radial-gradient(circle at 70% 80%, rgba(110, 80, 35, 0.16), transparent 22%),
-    radial-gradient(circle at 30% 25%, rgba(120, 95, 50, 0.10), transparent 18%),
+    radial-gradient(circle at 15% 90%, rgba(140, 110, 50, 0.14), transparent 40%),
+    radial-gradient(circle at 90% 12%, rgba(120, 90, 40, 0.13), transparent 36%),
+    radial-gradient(circle at 70% 80%, rgba(110, 80, 35, 0.10), transparent 22%),
+    radial-gradient(circle at 30% 25%, rgba(120, 95, 50, 0.07), transparent 18%),
     linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.10) 43%, transparent 46%);
 }
 
@@ -425,7 +429,7 @@ section.compact + section.compact {
   width: 20px;
   height: 20px;
   z-index: 2;
-  background: linear-gradient(315deg, #d3c7a8 46%, rgba(0, 0, 0, 0.22) 50%, transparent 52%);
+  background: linear-gradient(315deg, #ddd8c6 46%, rgba(0, 0, 0, 0.22) 50%, transparent 52%);
   border-bottom-right-radius: 5px;
 }
 
