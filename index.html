@@ -10,6 +10,7 @@
   <meta property="og:url" content="https://elliexcenteno.com">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="style.css?v=94">
+  <link rel="stylesheet" href="photobox.css?v=1">
 </head>
 <body>
   <header>
@@ -88,56 +89,20 @@
     </div>
   </section>
 
+  <script src="photobox.js?v=1"></script>
   <script>
-  (function () {
-    let overlay, imgEl;
-
-    function ensure() {
-      if (overlay) return;
-      overlay = document.createElement('div');
-      overlay.className = 'image-zoom-overlay';
-      imgEl = document.createElement('img');
-      imgEl.className = 'image-zoom-img';
-      imgEl.alt = '';
-      overlay.appendChild(imgEl);
-      document.body.appendChild(overlay);
-    }
-
-    function show(srcEl) {
-      ensure();
-      let type = 'photo';
-      if (srcEl.classList.contains('album-icon')) type = 'album';
-      else if (srcEl.classList.contains('book-icon')) type = 'book';
-      overlay.dataset.type = type;
-      imgEl.src = srcEl.src;
-      overlay.classList.add('visible');
-    }
-
-    function hide() {
-      if (overlay) overlay.classList.remove('visible');
-    }
-
-    document.addEventListener('mouseover', e => {
-      const img = e.target.closest('.craft-photo');
-      if (img) show(img);
-    });
-    document.addEventListener('mouseout', e => {
-      const img = e.target.closest('.craft-photo');
-      if (img) hide();
-    });
-
-    // Tap support for touch devices: tap a photo to expand, tap anywhere to dismiss
-    document.addEventListener('click', e => {
-      const img = e.target.closest('.craft-photo');
-      const isVisible = overlay && overlay.classList.contains('visible');
-      if (img) {
-        e.preventDefault();
-        if (isVisible) hide(); else show(img);
-      } else if (isVisible) {
-        hide();
-      }
-    });
-  })();
+  // click any making/walking photo to open the shared slideshow
+  document.addEventListener('click', function (e) {
+    const img = e.target.closest('.craft-photo');
+    if (!img) return;
+    const wrap = img.closest('.craft-photo-wrap');
+    if (!wrap) return;
+    const imgs = Array.prototype.slice.call(wrap.querySelectorAll('.craft-photo'));
+    let captionHtml = '';
+    if (wrap.dataset.cap) { try { captionHtml = decodeURIComponent(wrap.dataset.cap); } catch (err) {} }
+    const list = imgs.map(function (im) { return { src: im.src, captionHtml: captionHtml }; });
+    window.openPhotoLightbox(list, imgs.indexOf(img));
+  });
   </script>
 
   <!-- studio: fetch latest making + walking entries, replace static fallback -->
@@ -162,7 +127,7 @@
       const archiveHref = type === 'making' ? 'making-archive/' : 'walking-archive/';
       const archiveText = type === 'making' ? "what i've made" : "where i've walked";
       return (
-        '<div class="' + wrapClass + '">' + polaroids + '</div>' +
+        '<div class="' + wrapClass + '" data-cap="' + encodeURIComponent(captionHtml || '') + '">' + polaroids + '</div>' +
         '<div class="craft-text">' +
           (dateStr ? '<p class="craft-caption craft-date">' + dateStr + '</p>' : '') +
           '<p class="craft-caption">' + captionHtml + '</p>' +

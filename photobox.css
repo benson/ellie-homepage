@@ -1,0 +1,88 @@
+/* shared click-to-open photo slideshow (making, walking, homepage) —
+   same look as the rest energy slideshow: crisp corners, light hairline,
+   minimal chevron arrows, centered caption + count. */
+
+.pb-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(20, 24, 18, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px;
+}
+.pb-lightbox[hidden] { display: none; }
+body.pb-open { overflow: hidden; }
+
+.pb-figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 90vw;
+}
+.pb-img {
+  max-width: 88vw;
+  max-height: 78vh;
+  object-fit: contain;
+  border-radius: 0;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.6), 0 18px 50px rgba(0, 0, 0, 0.62);
+}
+
+.pb-cap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+  max-width: 70ch;
+}
+.pb-caption {
+  font-size: 0.86rem;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--text-main);
+}
+.pb-caption[hidden] { display: none; }
+.pb-caption strong { font-style: normal; font-weight: 700; }
+.pb-caption a { color: var(--text-bright); }
+.pb-count {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.pb-close {
+  position: absolute;
+  top: 16px;
+  right: 22px;
+  background: none;
+  border: none;
+  color: var(--text-bright);
+  font-size: 2.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 10px;
+}
+.pb-nav {
+  background: none;
+  border: none;
+  color: rgba(243, 231, 187, 0.7);
+  font-size: 2.8rem;
+  line-height: 1;
+  width: 46px;
+  height: 46px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.16s ease, transform 0.16s ease;
+}
+.pb-nav:hover { color: #fff; transform: scale(1.18); }
+
+@media (max-width: 600px) {
+  .pb-lightbox { padding: 20px; }
+  .pb-nav { width: 40px; height: 52px; font-size: 1.8rem; }
+}
