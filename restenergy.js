@@ -154,7 +154,23 @@
         if (open) requestAnimationFrame(() => justifyGrid(grid));
       });
 
+      // preview strip — a right-aligned taste of the collection, shown while
+      // it's closed (hidden via CSS once open); clicking it opens the panel
+      const strip = document.createElement('div');
+      strip.className = 're-strip';
+      photos.slice(0, 6).forEach(p => {
+        const im = document.createElement('img');
+        im.src = p.thumb;
+        im.alt = '';
+        im.loading = 'lazy';
+        const r = parseFloat(ratios[col.slug + '/' + p.file]);
+        if (r) im.style.aspectRatio = r; // sizes correctly at any strip height, avoids reflow
+        strip.appendChild(im);
+      });
+      strip.addEventListener('click', () => head.click());
+
       section.appendChild(head);
+      section.appendChild(strip);
       section.appendChild(panel);
       root.appendChild(section);
     });

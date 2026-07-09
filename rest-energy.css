@@ -103,6 +103,28 @@ body.rest-energy {
 }
 .re-acc.open .re-acc-icon { transform: rotate(-135deg); }
 
+/* preview strip — right-aligned taste of each collection while closed */
+.re-strip {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 2px 6px 26px;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  cursor: pointer;
+}
+.re-strip img {
+  height: 104px;
+  width: auto;
+  flex-shrink: 0;
+  border-radius: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  transition: filter 0.18s ease;
+}
+.re-strip:hover img { filter: brightness(1.08); }
+.re-acc.open .re-strip { display: none; }
+
 /* drop-down panel — animates height via grid-template-rows */
 .re-acc-panel {
   display: grid;
@@ -256,6 +278,8 @@ body.re-lb-open { overflow: hidden; }
   .re-title img.section-label-img { height: 72px; }
   .re-acc-title { font-size: 1.6rem; }
   .re-acc-count::after { content: ""; }
+  .re-strip { gap: 6px; padding-bottom: 20px; }
+  .re-strip img { height: 68px; }
   .re-grid { gap: 4px; }
 
   /* on phones the side arrows move to a row at the bottom, centered under
