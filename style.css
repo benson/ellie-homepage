@@ -9,6 +9,13 @@
 body {
   font-family: "Neue Machina", "Space Grotesk", system-ui, -apple-system, sans-serif;
   background-color: #2d3826; /* forest */
+  background-image:
+    linear-gradient(rgba(30, 38, 26, 0.82), rgba(30, 38, 26, 0.88)),
+    url('bg/current.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   /* text palette — vanilla cream */
   --text-main: #e9dab1;
   --text-muted: #c1b287;
