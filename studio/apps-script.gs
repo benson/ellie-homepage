@@ -23,18 +23,21 @@
 //
 // v2 (2026-07) adds EDIT + DELETE. doPost now dispatches on data.action:
 //   'update' → editEntry, 'delete' → deleteEntry, anything else → createEntry.
-//   doGet responses now include apiVersion:2 so the client can tell whether
-//   this newer backend is live before it offers editing. AFTER PASTING THIS
-//   YOU MUST REDEPLOY (step above) or the edit features stay dark.
+//   doGet responses now include apiVersion so the client can tell whether
+//   this newer backend is live before it offers editing.
+// v3 (2026-07) adds archiveOnly — a "straight to archive" flag (new last
+//   column) so backfilled past entries don't take over the homepage.
+//   AFTER PASTING THIS YOU MUST REDEPLOY (step above) or new features stay dark.
 
 const SHEET_ID  = 'REPLACE_WITH_YOUR_SHEET_ID';
 const FOLDER_ID = 'REPLACE_WITH_YOUR_FOLDER_ID';
-const API_VERSION = 2;
+const API_VERSION = 3;
 
-// column layout per type (order matters — must match the header row)
+// column layout per type (order matters — must match the header row;
+// archiveOnly is appended last so older rows/sheets stay compatible)
 const COLUMNS = {
-  making:  ['timestamp', 'date', 'caption', 'link', 'photoIds'],
-  walking: ['timestamp', 'date', 'caption', 'link', 'photoIds', 'state'],
+  making:  ['timestamp', 'date', 'caption', 'link', 'photoIds', 'archiveOnly'],
+  walking: ['timestamp', 'date', 'caption', 'link', 'photoIds', 'state', 'archiveOnly'],
 };
 
 // ---------- READ: GET ?type=making|walking[&limit=N] ----------
@@ -125,6 +128,7 @@ function createEntry(data) {
     link:      data.link    || '',
     photoIds:  photoIds.join(','),
     state:     (data.state  || '').toUpperCase(),
+    archiveOnly: data.archiveOnly ? 'yes' : '',
   };
   sheet.appendRow(cols.map(name => values[name] || ''));
 
@@ -168,6 +172,7 @@ function editEntry(data) {
   write('caption', data.caption || '');
   write('link', data.link || '');
   write('state', (data.state || '').toUpperCase());
+  write('archiveOnly', data.archiveOnly ? 'yes' : '');
   write('photoIds', finalIds.join(','));
 
   return jsonOut({ ok: true, updated: rowNum, photoCount: finalIds.length });

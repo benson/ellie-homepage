@@ -267,6 +267,26 @@ body.studio {
 body.studio[data-mode="walking"] .mode-only-walking { display: flex; }
 body.studio[data-mode="making"]  .mode-only-making  { display: flex; }
 
+/* straight-to-archive checkbox */
+.form-row-check .check-label {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  text-transform: none;
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--text-main);
+  cursor: pointer;
+}
+.form-row-check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #d4a017;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 /* actions */
 .form-actions {
   display: flex;
@@ -427,6 +447,7 @@ body.studio[data-mode="making"]  .mode-only-making  { display: flex; }
 }
 .manage-badge-walking { background: #9ab98a; }
 .manage-badge-making { background: #d4c08a; }
+.manage-badge-archive { background: none; border: 1px solid rgba(244, 237, 228, 0.4); color: var(--text-muted); }
 .manage-date {
   font-size: 0.62rem;
   letter-spacing: 0.1em;

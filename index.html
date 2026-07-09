@@ -156,10 +156,13 @@
         const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
         if (cached) renderInto(containerId, cached, type);
       } catch (e) {}
-      const entries = await window.studioFetchEntries(type, 1);
-      if (!entries.length) return; // keep cached/static fallback if none yet
-      renderInto(containerId, entries[0], type);
-      try { localStorage.setItem(cacheKey, JSON.stringify(entries[0])); } catch (e) {}
+      // fetch a handful and feature the newest entry that isn't archive-only
+      // (backfilled past projects/hikes go straight to the archives)
+      const entries = await window.studioFetchEntries(type, 15);
+      const entry = entries.find(en => !en.archiveOnly);
+      if (!entry) return; // keep cached/static fallback if none yet
+      renderInto(containerId, entry, type);
+      try { localStorage.setItem(cacheKey, JSON.stringify(entry)); } catch (e) {}
     }
 
     loadLatest('making', 'making-content');

@@ -175,6 +175,8 @@
     dateInput.value = entry.date || '';
     form.querySelector('#caption-input').value = entry.caption || '';
     form.querySelector('#link-input').value = entry.link || '';
+    const archBox = document.getElementById('archive-only-input');
+    if (archBox) archBox.checked = !!entry.archiveOnly;
     if (stateInput) stateInput.value = entry.state || '';
     keptPhotos = (entry.photoUrls || []).map(url => ({ id: photoIdFromUrl(url), url }));
     pendingFiles = [];
@@ -197,13 +199,24 @@
   }
 
   async function fetchType(type) {
-    const url = STUDIO_API_URL + '?type=' + encodeURIComponent(type) + '&limit=500';
-    const res = await fetch(url);
+    const url = STUDIO_API_URL + '?type=' + encodeURIComponent(type) + '&limit=500&t=' + Date.now();
+    const res = await fetch(url, { cache: 'no-store' });
     const data = await res.json();
     if (typeof data.apiVersion === 'number') backendVersion = data.apiVersion;
     const entries = Array.isArray(data.entries) ? data.entries : [];
     entries.forEach(e => { e.type = type; });
     return entries;
+  }
+
+  // check the backend version on demand (used to gate newer features)
+  async function ensureBackendVersion() {
+    if (backendVersion !== null) return backendVersion;
+    try {
+      const res = await fetch(STUDIO_API_URL + '?type=making&limit=1&t=' + Date.now(), { cache: 'no-store' });
+      const data = await res.json();
+      if (typeof data.apiVersion === 'number') backendVersion = data.apiVersion;
+    } catch (e) {}
+    return backendVersion;
   }
 
   // -- manage view --------------------------------------------------
@@ -271,6 +284,7 @@
       const dateStr = window.studioFormatDate ? window.studioFormatDate(entry.date) : (entry.date || '');
       meta.innerHTML =
         '<div class="manage-tags"><span class="manage-badge manage-badge-' + entry.type + '">' + badge + '</span>' +
+        (entry.archiveOnly ? '<span class="manage-badge manage-badge-archive">archive</span>' : '') +
         (dateStr ? '<span class="manage-date">' + dateStr + '</span>' : '') + '</div>' +
         '<div class="manage-caption">' +
           (window.studioRenderCaption ? window.studioRenderCaption(entry.caption || '') : (entry.caption || '')) +
@@ -318,12 +332,14 @@
     const fd = new FormData(form);
     const mode = editing ? editing.type : body.dataset.mode;
 
+    const archiveOnly = !!fd.get('archiveOnly');
     const base = {
       type: mode,
       date: fd.get('date') || '',
       caption: fd.get('caption') || '',
       link: mode === 'walking' ? (fd.get('link') || '') : '',
       state: mode === 'walking' ? (fd.get('state') || '') : '',
+      archiveOnly: archiveOnly ? 'yes' : '',
       photos: pendingFiles.map(p => p.dataUrl),
     };
 
@@ -338,6 +354,17 @@
       status.className = 'form-status error';
       status.textContent = 'editing needs the backend update (redeploy apps-script.gs).';
       return;
+    }
+
+    // straight-to-archive needs the v3 backend — block rather than silently
+    // publishing an entry that would take over the homepage
+    if (archiveOnly) {
+      const v = await ensureBackendVersion();
+      if (v !== null && v < 3) {
+        status.className = 'form-status error';
+        status.textContent = '"straight to archive" needs the backend update — redeploy apps-script.gs first (30 seconds).';
+        return;
+      }
     }
 
     publishBtn.disabled = true;
@@ -367,6 +394,8 @@
           form.querySelector('#link-input').value = '';
           if (stateInput) stateInput.value = '';
           dateInput.value = '';
+          const archBox = document.getElementById('archive-only-input');
+          if (archBox) archBox.checked = false;
           pendingFiles = [];
           renderPreviews();
         }

@@ -6,7 +6,7 @@
   <title>studio · ellie centeno</title>
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="../style.css?v=96">
-  <link rel="stylesheet" href="studio.css?v=4">
+  <link rel="stylesheet" href="studio.css?v=5">
 </head>
 <body class="studio">
   <header class="studio-header">
@@ -14,7 +14,7 @@
     <h1 class="studio-title">studio</h1>
     <p class="studio-sub">private uploader — entries go live on your homepage and archives</p>
     <p class="studio-tools">
-      <a href="../rest-energy/arrange.html">arrange rest energy photos &#8599;</a>
+      <a href="../rest-energy/arrange.html">rest energy</a>
     </p>
   </header>
 
@@ -70,6 +70,15 @@
       <textarea id="caption-input" name="caption" rows="5" placeholder="write something about this entry..."></textarea>
     </div>
 
+    <!-- straight to archive: for backfilling past projects/hikes -->
+    <div class="form-row form-row-check">
+      <label class="check-label" for="archive-only-input">
+        <input id="archive-only-input" type="checkbox" name="archiveOnly">
+        straight to archive
+        <span class="hint">won't replace the latest on your homepage — for adding past projects/hikes</span>
+      </label>
+    </div>
+
     <div class="form-actions">
       <button type="submit" class="publish-btn">publish</button>
       <span class="form-status" id="form-status"></span>
@@ -83,6 +92,6 @@
 
   <script src="../studio-config.js?v=1"></script>
   <script src="../studio-render.js?v=2"></script>
-  <script src="studio.js?v=3"></script>
+  <script src="studio.js?v=4"></script>
 </body>
 </html>
