@@ -106,7 +106,7 @@
     let captionHtml = '';
     if (wrap.dataset.cap) { try { captionHtml = decodeURIComponent(wrap.dataset.cap); } catch (err) {} }
     const list = imgs.map(function (im) { return { src: im.src, captionHtml: captionHtml }; });
-    window.openPhotoLightbox(list, imgs.indexOf(img));
+    window.openPhotoLightbox(list, 0); // always start at 1/N
   });
   </script>
 

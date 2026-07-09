@@ -57,7 +57,7 @@
     // click any photo (incl. ones stacked underneath) to open the slideshow
     const lbList = photos.map(u => ({ src: u, captionHtml: capHtml }));
     Array.prototype.forEach.call(photosEl.querySelectorAll('.walk-pop-photo'), (im, i) => {
-      im.addEventListener('click', () => window.openPhotoLightbox(lbList, i));
+      im.addEventListener('click', () => window.openPhotoLightbox(lbList, 0)); // always start at 1/N
     });
     const capEl = pop.querySelector('.walk-pop-caption');
     capEl.innerHTML = capHtml;

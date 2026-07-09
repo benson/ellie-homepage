@@ -26,7 +26,7 @@
         img.src = url;
         img.alt = '';
         img.loading = 'lazy';
-        img.addEventListener('click', () => window.openPhotoLightbox(lbList, i));
+        img.addEventListener('click', () => window.openPhotoLightbox(lbList, 0)); // always start at 1/N
         grid.appendChild(img);
       });
       card.appendChild(grid);
