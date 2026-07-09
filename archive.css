@@ -6,16 +6,21 @@ body.archive {
   padding: 60px 30px 100px;
 }
 
+/* centered header — same arrangement as the rest energy page */
 .archive-header {
-  margin-bottom: 40px;
+  position: relative;
+  text-align: center;
+  margin-bottom: 44px;
+  padding-top: 4px;
 }
 
 .archive-back {
-  display: inline-block;
+  position: absolute;
+  left: 0;
+  top: 0;
   font-size: 0.75rem;
   color: var(--text-muted);
   text-decoration: none;
-  margin-bottom: 22px;
   letter-spacing: 0.04em;
 }
 
@@ -25,22 +30,23 @@ body.archive {
 }
 
 .archive-title {
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 14px;
-}
-
-.archive-title img.section-icon {
-  width: 52px;
-  height: 52px;
-  flex-shrink: 0;
-  object-fit: contain;
+  gap: 10px;
+  margin-top: 34px;
 }
 
 .archive-title img.section-label-img {
-  height: 56px;
+  height: 100px;
   width: auto;
   display: block;
+}
+
+.archive-subtitle {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--text-muted);
 }
 
 .archive-empty {
@@ -193,6 +199,7 @@ body.archive {
 /* (photo viewing uses the shared slideshow — photobox.css) */
 
 @media (max-width: 600px) {
+  .archive-title img.section-label-img { height: 72px; }
   .gal-grid { columns: 2 130px; column-gap: 12px; }
   .gal-photos.photo-pile { height: 140px; }
   .gal-photos.photo-pile .gal-photo { max-height: 110px; }
