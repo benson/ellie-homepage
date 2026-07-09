@@ -2,3 +2,8 @@ node_modules/
 .DS_Store
 *.log
 .env
+
+# photo build scratch (originals + one-off scripts, not served)
+_incoming/
+_process_photos.sh
+_gen_manifest.sh

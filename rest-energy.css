@@ -1,0 +1,172 @@
+/* Rest Energy — ellie's photography portfolio page */
+
+body.rest-energy {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 60px 30px 100px;
+}
+
+.re-header { margin-bottom: 46px; }
+
+.re-back {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  margin-bottom: 22px;
+  letter-spacing: 0.04em;
+}
+.re-back:hover { color: var(--text-bright); text-decoration: underline; }
+
+.re-title {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.re-title img.section-label-img { height: 60px; width: auto; display: block; }
+.re-subtitle {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* ---- a collection ---- */
+.re-collection { margin-bottom: 64px; }
+
+.re-col-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(233, 218, 177, 0.16);
+  padding-bottom: 10px;
+}
+
+.re-col-title {
+  font-size: 1.35rem;
+  color: var(--text-bright);
+  letter-spacing: 0.01em;
+  text-transform: lowercase;
+  font-weight: 500;
+}
+
+.re-prints {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  text-decoration: none;
+  border: 1px solid rgba(233, 218, 177, 0.35);
+  border-radius: 999px;
+  padding: 6px 14px;
+  transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
+.re-prints:hover {
+  color: var(--text-bright);
+  border-color: var(--text-bright);
+  background: rgba(244, 237, 228, 0.06);
+}
+
+/* ---- masonry photo grid ---- */
+.re-grid {
+  columns: 3 280px;
+  column-gap: 14px;
+}
+
+.re-photo {
+  width: 100%;
+  display: block;
+  margin: 0 0 14px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.28);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+  cursor: zoom-in;
+  break-inside: avoid;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+  filter: brightness(0.97);
+}
+.re-photo:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.5);
+  filter: brightness(1.04);
+}
+
+/* ---- lightbox ---- */
+.re-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(20, 24, 18, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px;
+}
+.re-lightbox[hidden] { display: none; }
+body.re-lb-open { overflow: hidden; }
+
+.re-lb-figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  max-width: 90vw;
+}
+.re-lb-img {
+  max-width: 88vw;
+  max-height: 82vh;
+  object-fit: contain;
+  border-radius: 3px;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.5), 0 12px 44px rgba(0, 0, 0, 0.55);
+}
+.re-lb-count {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.re-lb-close {
+  position: absolute;
+  top: 16px;
+  right: 22px;
+  background: none;
+  border: none;
+  color: var(--text-bright);
+  font-size: 2.1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 10px;
+}
+.re-lb-nav {
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: var(--text-bright);
+  font-size: 2.4rem;
+  line-height: 1;
+  width: 52px;
+  height: 64px;
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.re-lb-nav:hover { background: rgba(0, 0, 0, 0.55); }
+
+.re-loading, .re-empty {
+  font-style: italic;
+  color: var(--text-muted);
+  padding: 40px 0;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  body.rest-energy { padding: 44px 20px 80px; }
+  .re-grid { columns: 2 150px; column-gap: 10px; }
+  .re-photo { margin-bottom: 10px; }
+  .re-title img.section-label-img { height: 48px; }
+  .re-lb-nav { width: 40px; height: 52px; font-size: 1.8rem; }
+}
