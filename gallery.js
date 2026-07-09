@@ -73,15 +73,27 @@
 
     if (photos.length) {
       const grid = document.createElement('div');
-      grid.className = 'gal-photos';
+      grid.className = 'gal-photos' + (photos.length > 1 ? ' pol-stack' : '');
       photos.forEach((url, i) => {
+        const pol = document.createElement('div');
+        pol.className = 'polaroid';
+
+        const ph = document.createElement('div');
+        ph.className = 'pol-ph';
         const img = document.createElement('img');
         img.className = 'gal-photo';
         img.src = url;
         img.alt = '';
         img.loading = 'lazy';
         img.addEventListener('click', () => showLightbox(photos, captionHtml, i));
-        grid.appendChild(img);
+        ph.appendChild(img);
+        pol.appendChild(ph);
+
+        const corner = document.createElement('div');
+        corner.className = 'pol-corner';
+        pol.appendChild(corner);
+
+        grid.appendChild(pol);
       });
       card.appendChild(grid);
     }
@@ -106,7 +118,7 @@
     list.className = 'gal-grid';
     list.innerHTML = '';
     if (!entries || !entries.length) {
-      list.innerHTML = '<p class="archive-empty">no entries yet. publish your first one from <a class="archive-link" href="../studio/">the studio</a>.</p>';
+      list.innerHTML = '<p class="archive-empty">no entries yet.</p>';
       return;
     }
     entries.forEach(e => list.appendChild(renderEntry(e)));

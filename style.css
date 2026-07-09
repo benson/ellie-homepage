@@ -210,13 +210,62 @@ h2 {
   width: 110px;
 }
 
-.album-icon {
+/* ---------- albums = cd jewel case with the disc peeking out ---------- */
+.album-wrap {
+  position: relative;
+}
+
+.album-icon {              /* the jewel-case front (album cover) */
+  position: relative;
+  z-index: 2;
   width: 64px;
   height: 64px;
-  border-radius: 3px;
+  border-radius: 4px;
   display: block;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.65), 0 4px 14px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.album-wrap::before {      /* plastic sheen across the case */
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 4px;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(115deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.15) 100%);
+}
+
+.album-wrap::after {       /* iridescent disc sliding out the right */
+  content: "";
+  position: absolute;
+  left: 40px;
+  top: 9px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 50%,
+      #2d3826 0 5px,
+      rgba(255, 255, 255, 0.4) 5px 8px,
+      transparent 8px 10px),
+    conic-gradient(from 0deg,
+      #c9d6e8, #e8d4e0, #d4e8d8, #e8e0c9,
+      #d0d8ec, #e6d2e2, #c9d6e8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: left 0.25s ease;
+}
+
+.album-wrap:hover::after { /* disc slides out a touch more on hover */
+  left: 46px;
 }
 
 .book-icon {
@@ -311,19 +360,90 @@ section.compact + section.compact {
 }
 
 .craft-photo-wrap {
-  flex: 0 0 96px;
+  flex: 0 0 auto;
+  padding: 6px 6px 4px;
 }
 
-.craft-photo {
-  width: 96px;
-  height: 96px;
-  display: block;
-  object-fit: cover;
-  border-radius: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.3);
-  cursor: zoom-in;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.65), 0 4px 14px rgba(0, 0, 0, 0.2);
+/* homepage photo = a single polaroid */
+.craft-photo-wrap .polaroid { --tilt: -2.5deg; }
+.craft-photo-wrap .pol-ph { width: 104px; height: 104px; }
+.craft-photo { cursor: zoom-in; }
+
+/* ---------- polaroid photo component (shared: homepage, gallery, map) ---------- */
+.polaroid {
+  position: relative;
+  display: inline-block;
+  background: #e6dcc2;
+  padding: 8px 8px 22px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  transform: rotate(var(--tilt, -2deg));
 }
+
+.pol-ph {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.pol-ph img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: sepia(0.22) contrast(0.93) saturate(0.88);
+}
+
+.pol-ph::after {              /* inner vignette */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  box-shadow: inset 0 0 26px rgba(55, 40, 18, 0.42);
+}
+
+.polaroid::after {            /* aged tint + scuff on the frame */
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 5px;
+  background:
+    radial-gradient(circle at 15% 90%, rgba(140, 110, 50, 0.22), transparent 40%),
+    radial-gradient(circle at 90% 12%, rgba(120, 90, 40, 0.20), transparent 36%),
+    radial-gradient(circle at 70% 80%, rgba(110, 80, 35, 0.16), transparent 22%),
+    radial-gradient(circle at 30% 25%, rgba(120, 95, 50, 0.10), transparent 18%),
+    linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.10) 43%, transparent 46%);
+}
+
+.pol-corner {                /* dog-eared bottom-right corner */
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  z-index: 2;
+  background: linear-gradient(315deg, #d3c7a8 46%, rgba(0, 0, 0, 0.22) 50%, transparent 52%);
+  border-bottom-right-radius: 5px;
+}
+
+/* tight pile — 2+ photos stacked at slight angles */
+.pol-stack {
+  position: relative;
+}
+
+.pol-stack .polaroid {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.pol-stack .polaroid:nth-child(1) { --tilt: -6deg;   z-index: 1; top: 8px; left: 0; }
+.pol-stack .polaroid:nth-child(2) { --tilt: 5deg;    z-index: 2; top: 4px; left: 26px; }
+.pol-stack .polaroid:nth-child(3) { --tilt: -1.5deg; z-index: 3; top: 0;   left: 13px; }
+.pol-stack .polaroid:nth-child(4) { --tilt: 3.5deg;  z-index: 4; top: 6px; left: 34px; }
 
 .craft-caption {
   font-size: 0.7rem;
@@ -451,6 +571,22 @@ section.compact + section.compact {
   .album-icon {
     width: 56px;
     height: 56px;
+  }
+
+  .album-wrap::before {
+    width: 56px;
+    height: 56px;
+  }
+
+  .album-wrap::after {
+    left: 34px;
+    top: 8px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .album-wrap:hover::after {
+    left: 40px;
   }
 
   .book-icon {

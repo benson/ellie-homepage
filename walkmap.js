@@ -48,9 +48,12 @@
     const d = window.studioFormatDate(entry.date);
     pop.querySelector('.walk-pop-date').textContent = d || '';
     const photosEl = pop.querySelector('.walk-pop-photos');
-    photosEl.innerHTML = (entry.photoUrls || [])
-      .map(u => '<img src="' + u + '" alt="" loading="lazy">').join('');
-    photosEl.hidden = !(entry.photoUrls || []).length;
+    const photos = entry.photoUrls || [];
+    photosEl.className = 'walk-pop-photos' + (photos.length > 1 ? ' pol-stack' : '');
+    photosEl.innerHTML = photos
+      .map(u => '<div class="polaroid"><div class="pol-ph"><img src="' + u +
+        '" alt="" loading="lazy"></div><div class="pol-corner"></div></div>').join('');
+    photosEl.hidden = !photos.length;
     const capEl = pop.querySelector('.walk-pop-caption');
     capEl.innerHTML = window.studioRenderCaption(entry.caption);
     capEl.hidden = !entry.caption;
