@@ -9,10 +9,38 @@
   <meta property="og:description" content="">
   <meta property="og:url" content="https://elliexcenteno.com">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="style.css?v=96">
+  <link rel="stylesheet" href="style.css?v=98">
   <link rel="stylesheet" href="photobox.css?v=3">
 </head>
 <body>
+  <!-- welcome popup — shows once per visit (session) -->
+  <div class="welcome-overlay" id="welcome-overlay">
+    <div class="welcome-card" role="dialog" aria-label="welcome">
+      <div class="welcome-screen">
+        <div class="welcome-text">welcome to my brain.<br>enjoy your stay.</div>
+        <button type="button" class="welcome-btn" id="welcome-btn">enter</button>
+      </div>
+      <div class="welcome-light" aria-hidden="true"></div>
+    </div>
+  </div>
+  <script>
+  (function () {
+    var ov = document.getElementById('welcome-overlay');
+    try {
+      if (sessionStorage.getItem('welcomed')) { ov.remove(); return; }
+    } catch (e) {}
+    document.documentElement.classList.add('welcome-open');
+    document.getElementById('welcome-btn').addEventListener('click', function () {
+      try { sessionStorage.setItem('welcomed', '1'); } catch (e) {}
+      ov.classList.add('closing');
+      setTimeout(function () {
+        ov.remove();
+        document.documentElement.classList.remove('welcome-open');
+      }, 420);
+    });
+  })();
+  </script>
+
   <header>
     <div class="header-top">
       <h1>ellie centeno</h1>
