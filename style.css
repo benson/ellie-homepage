@@ -347,11 +347,15 @@ section.compact + section.compact {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  /* reverse vignette — darkest behind the snail, easing out to the edges */
+  /* reverse vignette — deepest behind the snail, easing smoothly outward,
+     with a soft blur so the homepage recedes without going black */
   background: radial-gradient(circle at 50% 48%,
-    rgba(14, 18, 11, 0.88) 0%,
-    rgba(14, 18, 11, 0.74) 42%,
-    rgba(14, 18, 11, 0.45) 100%);
+    rgba(12, 16, 10, 0.92) 0%,
+    rgba(12, 16, 10, 0.86) 30%,
+    rgba(12, 16, 10, 0.72) 60%,
+    rgba(12, 16, 10, 0.52) 100%);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   transition: opacity 0.4s ease;
 }
 .welcome-overlay.closing { opacity: 0; }
@@ -405,6 +409,22 @@ html.welcome-open { overflow: hidden; }
   background: rgba(233, 218, 177, 0.65);
   color: #2d3826;
   transform: translate(-50%, -50%) rotate(-25deg) translateX(5px);  /* inches up the body */
+}
+
+@media (max-width: 600px) {
+  .welcome-snailpop { width: 96vw; }
+  .welcome-chip-text {         /* stays inside the shell whorls */
+    font-size: 0.56rem;
+    line-height: 1.45;
+    padding: 4px 7px;
+    max-width: 27%;
+    border-radius: 6px;
+  }
+  .welcome-chip-btn {
+    font-size: 0.54rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
 }
 
 /* homepage quadrant rows — two sections side by side on desktop only */
