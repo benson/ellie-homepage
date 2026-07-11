@@ -347,7 +347,7 @@ section.compact + section.compact {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(18, 23, 15, 0.8);
+  background: rgba(18, 23, 15, 0.55);
   transition: opacity 0.4s ease;
 }
 .welcome-overlay.closing { opacity: 0; }
@@ -384,23 +384,23 @@ html.welcome-open { overflow: hidden; }
   left: 37.5%;
   top: 47%;
   transform: translate(-50%, -50%);
-  font-size: clamp(0.78rem, 2.6vw, 0.95rem);
+  font-size: clamp(0.66rem, 2.1vw, 0.8rem);
   text-align: center;
   pointer-events: none;
 }
 
-.welcome-chip-btn {            /* riding the body */
+.welcome-chip-btn {            /* riding the body, tilted to its slope */
   left: 68%;
   top: 68%;
-  transform: translate(-50%, -50%);
-  font-size: clamp(0.74rem, 2.3vw, 0.85rem);
+  transform: translate(-50%, -50%) rotate(-16deg);
+  font-size: clamp(0.64rem, 1.9vw, 0.74rem);
   letter-spacing: 0.03em;
   cursor: pointer;
   transition: background 0.16s ease, transform 0.25s ease;
 }
 .welcome-chip-btn:hover {
   background: var(--text-bright);
-  transform: translate(-50%, -50%) translateX(5px);  /* inches forward */
+  transform: translate(-50%, -50%) rotate(-16deg) translateX(5px);  /* inches up the body */
 }
 
 /* homepage quadrant rows — two sections side by side on desktop only */
