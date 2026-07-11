@@ -65,6 +65,20 @@
     }
     list.innerHTML = '<p class="archive-loading">loading…</p>';
     const entries = await window.studioFetchEntries(type, 500);
-    window.renderGallery(entries);
+    window.renderGallery(orderForDisplay(entries));
   })();
+
+  // the current piece (newest non-archive entry, same one the homepage
+  // features) leads; everything else lands in a fresh random order each visit
+  function orderForDisplay(entries) {
+    if (!entries || entries.length < 2) return entries || [];
+    const idx = entries.findIndex(e => !e.archiveOnly);
+    const lead = idx === -1 ? null : entries[idx];
+    const rest = entries.filter((e, i) => i !== idx);
+    for (let i = rest.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = rest[i]; rest[i] = rest[j]; rest[j] = t;
+    }
+    return lead ? [lead].concat(rest) : rest;
+  }
 })();
