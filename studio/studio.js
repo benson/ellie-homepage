@@ -78,13 +78,47 @@
   }
 
   // -- photo previews (kept existing + new pending) -----------------
-  function fileToDataUrl(file) {
+  function readFileAsDataUrl(file) {
     return new Promise((resolve, reject) => {
       const r = new FileReader();
       r.onload = () => resolve(r.result);
       r.onerror = () => reject(r.error);
       r.readAsDataURL(file);
     });
+  }
+
+  function loadImage(src) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  }
+
+  // downscale + re-encode before upload. phone photos are 4-8MB each and the
+  // backend chokes on multi-photo payloads that big ("failed" uploads from
+  // mobile); the site never displays wider than ~1200px, so 2000px is plenty.
+  const MAX_UPLOAD_DIM = 2000;
+  async function fileToDataUrl(file) {
+    const original = await readFileAsDataUrl(file);
+    try {
+      const img = await loadImage(original);
+      const w = img.naturalWidth, h = img.naturalHeight;
+      if (!w || !h) return original;
+      const scale = Math.min(1, MAX_UPLOAD_DIM / Math.max(w, h));
+      const alreadySmallJpeg = scale === 1 && /^data:image\/jpe?g/i.test(original) && original.length < 2500000;
+      if (alreadySmallJpeg) return original;
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(w * scale);
+      canvas.height = Math.round(h * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      const out = canvas.toDataURL('image/jpeg', 0.85);
+      // if re-encoding somehow made it bigger, keep the smaller one
+      return out.length < original.length ? out : original;
+    } catch (e) {
+      return original; // decoding failed — send as-is rather than block her
+    }
   }
 
   function photoIdFromUrl(url) {
