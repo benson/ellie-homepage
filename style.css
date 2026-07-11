@@ -353,71 +353,54 @@ section.compact + section.compact {
 .welcome-overlay.closing { opacity: 0; }
 html.welcome-open { overflow: hidden; }
 
-.welcome-card {                /* the flat bezel frame */
+.welcome-snailpop {            /* the popup IS a snail — no card, no box */
   position: relative;
-  max-width: 440px;
+  width: min(92vw, 600px);
+  aspect-ratio: 560 / 300;
+  color: var(--text-main);
+}
+
+.welcome-snail {
+  display: block;
   width: 100%;
-  background: #2c3624;
-  border: 1px solid rgba(233, 218, 177, 0.5);
-  padding: 8px;
+  height: 100%;
+  filter: drop-shadow(0 10px 26px rgba(0, 0, 0, 0.45));
 }
 
-.welcome-screen {              /* the inset screen */
-  position: relative;
-  background: #1a2214;
-  border: 1px solid rgba(233, 218, 177, 0.25);
-  padding: 38px 28px 34px;
-  text-align: center;
-}
-.welcome-screen::before {      /* subtle scanlines */
-  content: "";
+/* chips — cream tags pinned to the snail, like the site's solid buttons */
+.welcome-chip {
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(0deg,
-    rgba(255, 255, 255, 0.045) 0 1px, transparent 1px 3px);
-}
-
-.welcome-light {               /* little amber power light on the bezel */
-  position: absolute;
-  right: 7px;
-  bottom: 5px;
-  width: 7px;
-  height: 7px;
-  background: #d4a017;
-}
-
-.welcome-text {
-  font-family: inherit;        /* space grotesk, same as homepage contents */
-  font-size: 0.98rem;
-  line-height: 1.85;
-  letter-spacing: 0.02em;
-  color: var(--text-bright);
-}
-
-.welcome-btn {                 /* same pill style as the rest of the site */
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  margin-top: 22px;
+  background: var(--text-main);
+  color: #2d3826;
+  border: none;
+  border-radius: 9px;
+  padding: 9px 14px;
   font-family: inherit;
-  font-size: 0.78rem;
-  letter-spacing: 0.05em;
-  background: none;
-  border: 1px solid rgba(233, 218, 177, 0.4);
-  border-radius: 999px;
-  color: var(--text-muted);
-  padding: 8px 22px;
-  cursor: pointer;
-  transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+  line-height: 1.45;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
-.welcome-snail { transform: scaleX(-1); transition: transform 0.25s ease; }
-.welcome-btn:hover .welcome-snail { transform: scaleX(-1) translateX(-3px); }
-.welcome-btn:hover {
-  color: var(--text-bright);
-  border-color: var(--text-bright);
-  background: rgba(244, 237, 228, 0.06);
+
+.welcome-chip-text {           /* on the shell */
+  left: 37.5%;
+  top: 47%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(0.78rem, 2.6vw, 0.95rem);
+  text-align: center;
+  pointer-events: none;
+}
+
+.welcome-chip-btn {            /* riding the body */
+  left: 68%;
+  top: 68%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(0.74rem, 2.3vw, 0.85rem);
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: background 0.16s ease, transform 0.25s ease;
+}
+.welcome-chip-btn:hover {
+  background: var(--text-bright);
+  transform: translate(-50%, -50%) translateX(5px);  /* inches forward */
 }
 
 /* homepage quadrant rows — two sections side by side on desktop only */
