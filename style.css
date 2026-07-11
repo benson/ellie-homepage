@@ -358,8 +358,8 @@ html.welcome-open { overflow: hidden; }
   max-width: 440px;
   width: 100%;
   background: #2c3624;
-  border: 2px solid rgba(233, 218, 177, 0.5);
-  padding: 16px;
+  border: 1px solid rgba(233, 218, 177, 0.5);
+  padding: 8px;
 }
 
 .welcome-screen {              /* the inset screen */
@@ -388,15 +388,18 @@ html.welcome-open { overflow: hidden; }
 }
 
 .welcome-text {
-  font-family: 'Cutive Mono', monospace;
-  font-size: 1.02rem;
-  line-height: 1.95;
+  font-family: inherit;        /* space grotesk, same as homepage contents */
+  font-size: 0.98rem;
+  line-height: 1.85;
   letter-spacing: 0.02em;
   color: var(--text-bright);
 }
 
 .welcome-btn {                 /* same pill style as the rest of the site */
   position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
   margin-top: 22px;
   font-family: inherit;
   font-size: 0.78rem;
@@ -409,6 +412,8 @@ html.welcome-open { overflow: hidden; }
   cursor: pointer;
   transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease;
 }
+.welcome-snail { transform: scaleX(-1); transition: transform 0.25s ease; }
+.welcome-btn:hover .welcome-snail { transform: scaleX(-1) translateX(-3px); }
 .welcome-btn:hover {
   color: var(--text-bright);
   border-color: var(--text-bright);
