@@ -9,34 +9,35 @@
   <meta property="og:description" content="">
   <meta property="og:url" content="https://elliexcenteno.com">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="style.css?v=103">
+  <link rel="stylesheet" href="style.css?v=104">
   <link rel="stylesheet" href="photobox.css?v=3">
 </head>
 <body>
   <!-- welcome popup — shows once per visit (session) -->
   <div class="welcome-overlay" id="welcome-overlay">
     <div class="welcome-snailpop" role="dialog" aria-label="welcome">
-      <svg class="welcome-snail" viewBox="0 0 560 300" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true">
-        <!-- shell: nested whorls, slightly off-center for spiral feel -->
-        <circle cx="210" cy="145" r="95"/>
-        <circle cx="216" cy="150" r="68"/>
-        <circle cx="222" cy="155" r="44"/>
-        <!-- shell tick marks (engraving hint) -->
-        <path d="M210 50 V64 M290 92 L279 101 M303 145 H289 M287 199 L277 190 M210 240 V227 M133 199 L143 190 M117 145 H131 M133 92 L143 101" stroke-width="1.3" opacity="0.5"/>
-        <!-- body: thick neck rising to the head -->
-        <path d="M295 198 C355 188 408 168 440 130"/>
-        <path d="M302 240 C372 234 428 202 452 148"/>
-        <path d="M440 130 C447 124 456 127 457 136 C458 143 455 146 452 148"/>
-        <!-- antennae with bulbs -->
-        <path d="M447 127 C460 106 474 92 488 80"/>
-        <circle cx="491" cy="77" r="4"/>
-        <path d="M456 136 C476 124 494 116 511 110"/>
-        <circle cx="515" cy="108" r="4"/>
+      <svg class="welcome-snail" viewBox="0 0 560 300" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true">
+        <!-- shell: outer silhouette + true spiral coiling inward -->
+        <circle cx="210" cy="160" r="95"/>
+        <path d="M300 160 a72 68 0 1 1 -144 0 a52 50 0 1 1 104 0 a34 33 0 1 1 -68 0" stroke-width="2.2"/>
+        <!-- woodcut ribbing between the whorls -->
+        <path d="M250 229 257 241 M224 239 226 253 M196 239 194 253 M170 229 163 241 M149 211 138 220 M135 187 122 192 M130 160 116 160 M135 133 122 128 M149 109 138 100 M170 91 163 79 M196 81 194 67 M224 81 226 67 M250 91 257 79 M271 109 282 100 M285 133 298 128 M290 160 304 160 M285 187 298 192 M271 211 282 220" stroke-width="1.5" opacity="0.6"/>
+        <path d="M238 208 244 219 M210 216 210 228 M182 208 176 219 M161 188 151 194 M154 160 142 160" stroke-width="1.4" opacity="0.5"/>
+        <!-- body: one continuous line — neck, crown, face, jaw, belly -->
+        <path d="M298 196 C352 186 404 166 436 128 C443 121 452 123 454 132 C456 141 450 148 444 152 C434 162 424 172 410 182 C380 200 350 212 315 220"/>
+        <!-- neck cross-hatching -->
+        <path d="M360 208 C364 200 368 194 372 188 M382 200 C386 192 390 185 394 179 M404 189 C408 181 412 174 416 168 M424 174 C428 166 431 159 434 152" stroke-width="1.5" opacity="0.6"/>
+        <!-- antennae with inky bulbs -->
+        <path d="M450 124 C462 104 476 90 490 78" stroke-width="2.4"/>
+        <circle cx="493" cy="75" r="4" fill="currentColor" stroke="none"/>
+        <path d="M456 134 C476 122 495 114 512 108" stroke-width="2.4"/>
+        <circle cx="516" cy="106" r="4" fill="currentColor" stroke="none"/>
         <!-- eye -->
-        <circle cx="445" cy="137" r="1.7" fill="currentColor" stroke="none"/>
-        <!-- foot / underside -->
-        <path d="M70 245 C150 262 400 262 478 238 C486 234 488 229 483 226 C430 239 150 241 88 230 C76 232 66 240 70 245 Z"/>
-        <path d="M115 249 C220 259 390 258 462 241" stroke-width="1.3" opacity="0.5"/>
+        <circle cx="447" cy="138" r="1.8" fill="currentColor" stroke="none"/>
+        <!-- foot slab with carved ticks + tail curl -->
+        <path d="M84 240 C160 230 400 230 470 238 C482 240 486 246 480 250 C400 262 150 262 88 254 C76 252 74 244 84 240 Z"/>
+        <path d="M92 240 C80 238 74 232 80 226"/>
+        <path d="M140 244 136 254 M190 242 186 252 M240 241 236 251 M290 241 286 251 M340 242 336 252 M390 243 386 253 M435 245 431 255" stroke-width="1.4" opacity="0.55"/>
       </svg>
       <div class="welcome-chip welcome-chip-text">welcome to my brain.<br>enjoy your stay.</div>
       <button type="button" class="welcome-chip welcome-chip-btn" id="welcome-btn">crawl in --&gt;</button>

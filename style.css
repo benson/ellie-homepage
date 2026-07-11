@@ -347,7 +347,11 @@ section.compact + section.compact {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(18, 23, 15, 0.55);
+  /* reverse vignette — darkest behind the snail, easing out to the edges */
+  background: radial-gradient(circle at 50% 48%,
+    rgba(14, 18, 11, 0.88) 0%,
+    rgba(14, 18, 11, 0.74) 42%,
+    rgba(14, 18, 11, 0.45) 100%);
   transition: opacity 0.4s ease;
 }
 .welcome-overlay.closing { opacity: 0; }
@@ -382,7 +386,7 @@ html.welcome-open { overflow: hidden; }
 
 .welcome-chip-text {           /* on the shell */
   left: 37.5%;
-  top: 47%;
+  top: 53%;
   transform: translate(-50%, -50%);
   font-size: clamp(0.66rem, 2.1vw, 0.8rem);
   text-align: center;
