@@ -374,14 +374,13 @@ html.welcome-open { overflow: hidden; }
 /* chips — cream tags pinned to the snail, like the site's solid buttons */
 .welcome-chip {
   position: absolute;
-  background: var(--text-main);
-  color: #2d3826;
+  background: rgba(233, 218, 177, 0.4);
+  color: var(--text-bright);
   border: none;
   border-radius: 9px;
-  padding: 9px 14px;
+  padding: 7px 12px;
   font-family: inherit;
   line-height: 1.45;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
 .welcome-chip-text {           /* on the shell */
@@ -396,15 +395,16 @@ html.welcome-open { overflow: hidden; }
 .welcome-chip-btn {            /* riding the body, tilted to its slope */
   left: 68%;
   top: 68%;
-  transform: translate(-50%, -50%) rotate(-16deg);
+  transform: translate(-50%, -50%) rotate(-25deg);
   font-size: clamp(0.64rem, 1.9vw, 0.74rem);
   letter-spacing: 0.03em;
   cursor: pointer;
-  transition: background 0.16s ease, transform 0.25s ease;
+  transition: background 0.16s ease, color 0.16s ease, transform 0.25s ease;
 }
 .welcome-chip-btn:hover {
-  background: var(--text-bright);
-  transform: translate(-50%, -50%) rotate(-16deg) translateX(5px);  /* inches up the body */
+  background: rgba(233, 218, 177, 0.65);
+  color: #2d3826;
+  transform: translate(-50%, -50%) rotate(-25deg) translateX(5px);  /* inches up the body */
 }
 
 /* homepage quadrant rows — two sections side by side on desktop only */
