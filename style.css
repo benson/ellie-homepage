@@ -348,23 +348,24 @@ section.compact + section.compact {
   justify-content: center;
   padding: 24px;
   /* reverse vignette — deepest behind the snail, easing smoothly outward,
-     with a soft blur so the homepage recedes without going black */
+     with a soft blur so the homepage recedes without going black
+     (darkness 34% + blur 6px — ellie-tuned) */
   background: radial-gradient(circle at 50% 48%,
-    rgba(12, 16, 10, 0.92) 0%,
-    rgba(12, 16, 10, 0.86) 30%,
-    rgba(12, 16, 10, 0.72) 60%,
-    rgba(12, 16, 10, 0.52) 100%);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
+    rgba(12, 16, 10, 0.34) 0%,
+    rgba(12, 16, 10, 0.318) 30%,
+    rgba(12, 16, 10, 0.266) 60%,
+    rgba(12, 16, 10, 0.192) 100%);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   transition: opacity 0.4s ease;
 }
 .welcome-overlay.closing { opacity: 0; }
 html.welcome-open { overflow: hidden; }
 
-.welcome-snailpop {            /* the popup IS a snail — no card, no box */
+.welcome-snailpop {            /* the popup IS a snail — ellie's own drawing */
   position: relative;
-  width: min(92vw, 600px);
-  aspect-ratio: 560 / 300;
+  width: min(92vw, 646px);
+  aspect-ratio: 1454 / 745;
   color: var(--text-main);
 }
 
@@ -372,58 +373,57 @@ html.welcome-open { overflow: hidden; }
   display: block;
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 10px 26px rgba(0, 0, 0, 0.45));
+  /* tint the ink to linen (same technique as the section icons) + soft shadow */
+  filter: var(--label-filter) drop-shadow(0 10px 26px rgba(0, 0, 0, 0.45));
 }
 
 /* chips — cream tags pinned to the snail, like the site's solid buttons */
 .welcome-chip {
   position: absolute;
-  background: rgba(233, 218, 177, 0.4);
-  color: var(--text-bright);
+  background: rgba(233, 218, 177, 0.92);
+  color: #4a0c1e;            /* burgundy, bold — ellie-tuned */
+  font-weight: 600;
   border: none;
-  border-radius: 9px;
-  padding: 7px 12px;
+  border-radius: 999px;      /* same pill roundness as the site's buttons */
+  padding: 7px 14px;
   font-family: inherit;
   line-height: 1.45;
+  white-space: nowrap;       /* the two message lines never rewrap */
 }
 
 .welcome-chip-text {           /* on the shell */
-  left: 37.5%;
-  top: 53%;
+  left: 34.5%;
+  top: 45%;
   transform: translate(-50%, -50%);
-  font-size: clamp(0.66rem, 2.1vw, 0.8rem);
+  font-size: 17px;
   text-align: center;
   pointer-events: none;
 }
 
-.welcome-chip-btn {            /* riding the body, tilted to its slope */
-  left: 68%;
-  top: 68%;
-  transform: translate(-50%, -50%) rotate(-25deg);
-  font-size: clamp(0.64rem, 1.9vw, 0.74rem);
+.welcome-chip-btn {            /* riding the lower body, flat */
+  left: 55.9%;
+  top: 80.5%;
+  transform: translate(-50%, -50%);
+  font-size: 15.6px;
   letter-spacing: 0.03em;
   cursor: pointer;
-  transition: background 0.16s ease, color 0.16s ease, transform 0.25s ease;
+  transition: background 0.16s ease, transform 0.25s ease;
 }
 .welcome-chip-btn:hover {
-  background: rgba(233, 218, 177, 0.65);
-  color: #2d3826;
-  transform: translate(-50%, -50%) rotate(-25deg) translateX(5px);  /* inches up the body */
+  background: rgba(233, 218, 177, 1);
+  transform: translate(-50%, -50%) translateX(5px);  /* inches forward */
 }
 
 @media (max-width: 600px) {
   .welcome-snailpop { width: 96vw; }
-  .welcome-chip-text {         /* stays inside the shell whorls */
-    font-size: 0.56rem;
-    line-height: 1.45;
-    padding: 4px 7px;
-    max-width: 27%;
-    border-radius: 6px;
+  .welcome-chip-text {         /* two lines max, sized to the shell */
+    font-size: 0.6rem;
+    line-height: 1.5;
+    padding: 4px 10px;
   }
   .welcome-chip-btn {
-    font-size: 0.54rem;
-    padding: 4px 8px;
-    border-radius: 6px;
+    font-size: 0.56rem;
+    padding: 4px 9px;
   }
 }
 
