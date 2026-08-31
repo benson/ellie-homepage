@@ -38,6 +38,8 @@
   const lbCount = lb.querySelector('.re-lb-count');
   let lbPhotos = [];
   let lbIndex = 0;
+  // zoom + expand controls (photozoom.js); absent = slideshow still works as before
+  const zoom = window.attachPhotoZoom ? window.attachPhotoZoom({ lb: lb, img: lbImg }) : null;
 
   function openLightbox(photos, startIndex) {
     lbPhotos = photos;
@@ -48,6 +50,7 @@
   }
   function updateLightbox() {
     const p = lbPhotos[lbIndex] || {};
+    if (zoom) zoom.reset();          // a new photo always starts at 100%
     lbImg.src = p.src || '';
     lbTitle.textContent = p.title || '';
     lbTitle.hidden = !p.title;
@@ -59,6 +62,7 @@
     lb.querySelector('.re-lb-next').style.display = multi ? '' : 'none';
   }
   function closeLightbox() {
+    if (zoom) { zoom.collapse(); zoom.reset(); }
     lb.hidden = true;
     document.body.classList.remove('re-lb-open');
     lbImg.src = '';
@@ -75,7 +79,7 @@
   lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
   document.addEventListener('keydown', e => {
     if (lb.hidden) return;
-    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'Escape') { if (zoom && zoom.isExpanded()) zoom.collapse(); else closeLightbox(); }
     else if (e.key === 'ArrowLeft') step(-1);
     else if (e.key === 'ArrowRight') step(1);
   });
@@ -83,12 +87,16 @@
   // ---- helpers ----
   function normPhoto(col, entry) {
     const o = (typeof entry === 'string') ? { file: entry } : (entry || {});
+    // `src` lets a photo sit in a collection other than the folder it lives in
+    // (that's how the re-sorted collections work — no files get moved on disk)
+    const src = o.src || col.slug;
     return {
       file: o.file,
+      src: src,
       title: o.title || '',
       caption: o.caption || '',
-      thumb: 'img/' + col.slug + '/thumb/' + o.file + '.jpg',
-      large: 'img/' + col.slug + '/large/' + o.file + '.jpg'
+      thumb: 'img/' + src + '/thumb/' + o.file + '.jpg',
+      large: 'img/' + src + '/large/' + o.file + '.jpg'
     };
   }
 
@@ -126,7 +134,7 @@
         img.src = p.thumb;
         img.alt = p.title || '';
         img.loading = 'lazy';
-        img.dataset.ratio = ratios[col.slug + '/' + p.file] || '';
+        img.dataset.ratio = ratios[p.src + '/' + p.file] || '';
         img.addEventListener('click', () => openLightbox(lbList, i));
         img.addEventListener('load', () => { if (!img.dataset.ratio) justifyGrid(grid); });
         grid.appendChild(img);
@@ -163,7 +171,7 @@
         im.src = p.thumb;
         im.alt = '';
         im.loading = 'lazy';
-        const r = parseFloat(ratios[col.slug + '/' + p.file]);
+        const r = parseFloat(ratios[p.src + '/' + p.file]);
         if (r) im.style.aspectRatio = r; // sizes correctly at any strip height, avoids reflow
         strip.appendChild(im);
       });
@@ -229,6 +237,37 @@
     rzT = setTimeout(justifyAll, 120);
   });
 
+  // collections built in the arrange page's sort mode. they live entirely in
+  // the saved arrangement — each photo just points at the folder it already
+  // sits in, so re-sorting never moves a file. a photo pulled into one of
+  // these is taken out of the collection it came from.
+  function applyCustomCollections(arr) {
+    const list = arr && arr._collections;
+    if (!Array.isArray(list) || !list.length) return;
+
+    const moved = {};
+    list.forEach(c => (c.photos || []).forEach(p => {
+      if (!p || !p.src || !p.file) return;
+      (moved[p.src] || (moved[p.src] = {}))[p.file] = true;
+    }));
+    manifest.collections.forEach(col => {
+      const m = moved[col.slug];
+      if (!m) return;
+      col.photos = col.photos.filter(e => !m[(typeof e === 'string') ? e : e.file]);
+    });
+
+    list.forEach(c => {
+      const photos = (c.photos || []).filter(p => p && p.src && p.file);
+      if (!c.title || !c.slug || !photos.length) return;
+      manifest.collections.push({
+        title: c.title,
+        slug: c.slug,
+        prints: c.prints || '',
+        photos: photos.map(p => ({ file: p.file, src: p.src })),
+      });
+    });
+  }
+
   // apply a saved arrangement (order + removals + captions) over the static
   // manifest. any photo not named in the saved order (e.g. newly added) is
   // appended, so adds still show; a missing/empty arrangement is a no-op.
@@ -288,6 +327,7 @@
         root.innerHTML = '<p class="re-empty">no photos yet.</p>';
         return;
       }
+      applyCustomCollections(arrangement);
       applyArrangement(arrangement);
       render();
     } catch (err) {

@@ -1,7 +1,11 @@
 /* Rest Energy — arrange/edit tool.
-   two modes:
+   three modes:
      arrange  — drag tiles to reorder; × marks a photo for removal (toggle)
      captions — every photo gets title + caption fields, all editable at once
+     sort     — tap a photo to move it into a new collection you name here;
+                tap it again in there to send it home. no files move on disk —
+                the new collection just points at where each photo already
+                lives (photo.src), so it's pure data and fully reversible.
    loads manifest.json AND the saved server arrangement (so it always starts
    from what's actually live), and publishes order + removals + captions back
    to the backend in one go via the "publish changes" button.
@@ -13,10 +17,19 @@
 
   let manifest = null;
   const state = {};      // slug -> { remove:Set, orig:[file...], captions:{}, origCaptionsJson }
+  const srcOf = {};      // file -> the collection folder its image actually lives in
   let mode = 'arrange';
 
+  // the re-sorted collection built in sort mode (one for now; stored as a list
+  // in the saved arrangement so more can be added later without a format change)
+  const NEW_SLUG = 'sorted-1';
+  const custom = { title: '', prints: '' };
+  let customOrig = { title: '', prints: '' };
+
   function fileOf(entry) { return (typeof entry === 'string') ? entry : entry.file; }
-  function thumb(slug, file) { return 'img/' + slug + '/thumb/' + file + '.jpg'; }
+  // photos keep their original folder wherever they end up, so a re-sorted
+  // collection needs no file moves at all
+  function thumb(slug, file) { return 'img/' + (srcOf[file] || slug) + '/thumb/' + file + '.jpg'; }
 
   function cleanCaptions(caps) {
     // keep only photos that actually have text
@@ -68,20 +81,37 @@
       if (JSON.stringify(cleanCaptions(st.captions)) !== st.origCaptionsJson) caps += 1;
     });
     const el = document.getElementById('arr-status-text');
+    const btn = document.getElementById('arr-publish');
     if (!el) return;
-    if (!changes && !removing && !caps) {
+
+    const newFiles = state[NEW_SLUG] ? currentOrder(NEW_SLUG) : [];
+    const named = custom.title.trim().length > 0;
+    const nameEdited = custom.title.trim() !== customOrig.title || custom.prints.trim() !== customOrig.prints;
+
+    // a collection with no name can't go live — say so instead of a dead button
+    if (newFiles.length && !named) {
+      el.innerHTML = '<strong>' + newFiles.length + '</strong> photo' + (newFiles.length === 1 ? '' : 's') +
+        ' picked — <strong>name your new collection</strong> to publish it.';
+      if (btn) btn.disabled = true;
+      return;
+    }
+
+    const anything = changes || removing || caps || nameEdited;
+    if (!anything) {
       el.innerHTML = mode === 'captions'
         ? 'type titles/captions under any photos — one publish saves them all.'
-        : 'no changes yet — drag to reorder, × to mark for removal, or switch to captions.';
+        : mode === 'sort'
+          ? 'tap any photo to move it into your new collection · tap it again there to send it home.'
+          : 'no changes yet — drag to reorder, × to mark for removal, or switch to captions.';
     } else {
       const bits = [];
+      if (newFiles.length && named) bits.push('<strong>' + newFiles.length + '</strong> in “' + custom.title.trim() + '”');
       if (changes) bits.push('<strong>' + changes + '</strong> reordered');
       if (removing) bits.push('<strong>' + removing + '</strong> to remove');
       if (caps) bits.push('<strong>captions</strong> edited');
       el.innerHTML = bits.join(' · ') + ' — hit <strong>publish changes</strong> to go live.';
     }
-    const btn = document.getElementById('arr-publish');
-    if (btn) btn.disabled = !(changes || removing || caps);
+    if (btn) btn.disabled = !anything;
   }
 
   async function doPublish() {
@@ -109,6 +139,7 @@
         });
         state[slug].remove.clear();
         state[slug].orig = currentOrder(slug);
+        customOrig = { title: custom.title.trim(), prints: custom.prints.trim() };
         state[slug].origCaptionsJson = JSON.stringify(cleanCaptions(state[slug].captions));
         renumber(grid);
         markChanged(slug);
@@ -194,6 +225,7 @@
   }
 
   function onPointerDown(e) {
+    if (mode !== 'arrange') return;      // in sort mode a tap moves the photo instead
     if (drag || e.button > 0) return;
     if (e.target.closest('.arr-remove')) return;          // the × button is its own thing
     if (this.classList.contains('removing')) return;      // don't shuffle photos already marked
@@ -258,16 +290,63 @@
     rm.title = 'mark for removal';
     rm.addEventListener('click', e => {
       e.stopPropagation();
-      const st = state[slug];
+      const s = tile.dataset.slug;          // not `slug` — sort mode can move the tile
+      const st = state[s];
       if (st.remove.has(file)) { st.remove.delete(file); tile.classList.remove('removing'); rm.textContent = '×'; }
       else { st.remove.add(file); tile.classList.add('removing'); rm.textContent = '↺'; }
       renumber(tile.parentElement);
-      markChanged(slug);
+      markChanged(s);
     });
     tile.appendChild(rm);
 
     tile.addEventListener('pointerdown', onPointerDown);
+    tile.addEventListener('click', e => {
+      if (mode !== 'sort') return;
+      if (e.target.closest('.arr-remove')) return;
+      moveTile(tile);
+    });
     return tile;
+  }
+
+  // ---- sort mode: tap a photo to send it to the new collection, or home ----
+  function moveTile(tile) {
+    if (tile.classList.contains('removing')) return;   // un-mark it first
+    const file = tile.dataset.file;
+    const from = tile.parentElement;
+    const fromSlug = from.dataset.slug;
+    const toSlug = (fromSlug === NEW_SLUG) ? (srcOf[file] || fromSlug) : NEW_SLUG;
+    if (toSlug === fromSlug) return;
+    const to = document.getElementById('arr-grid-' + toSlug);
+    if (!to) return;
+
+    // a caption belongs to the photo, so carry it across with the tile
+    const cap = state[fromSlug].captions[file];
+    if (cap) { state[toSlug].captions[file] = cap; delete state[fromSlug].captions[file]; }
+
+    to.appendChild(tile);
+    tile.dataset.slug = toSlug;
+    tile.classList.add('just-moved');
+    setTimeout(() => tile.classList.remove('just-moved'), 400);
+
+    renumber(from);
+    renumber(to);
+    markChanged(fromSlug);
+    markChanged(toSlug);
+    refreshNewSection();
+  }
+
+  // the new collection's section is the drop destination, so it's always there
+  // in sort mode; elsewhere it only shows once it actually holds photos
+  function refreshNewSection() {
+    const sec = document.getElementById('arr-sec-' + NEW_SLUG);
+    if (!sec) return;
+    const n = currentOrder(NEW_SLUG).length;
+    sec.hidden = (mode !== 'sort') && !n;
+    const count = sec.querySelector('.arr-col-count');
+    if (count) count.textContent = n + (n === 1 ? ' photo' : ' photos');
+    const empty = sec.querySelector('.arr-new-empty');
+    if (empty) empty.hidden = n > 0;
+    if (n && !sec.classList.contains('open')) { sec.classList.add('open'); hydrate(sec); }
   }
 
   // ---- captions mode: one editable row per photo, all at once ----
@@ -329,8 +408,17 @@
   function setMode(m) {
     mode = m;
     document.body.classList.toggle('mode-captions', m === 'captions');
+    document.body.classList.toggle('mode-sort', m === 'sort');
     Array.prototype.forEach.call(document.querySelectorAll('.arr-mode'), b =>
       b.classList.toggle('active', b.dataset.mode === m));
+    refreshNewSection();
+    if (m === 'sort') {
+      // every collection needs to be reachable to pick from, so open them all
+      Array.prototype.forEach.call(document.querySelectorAll('.arr-col'), sec => {
+        sec.classList.add('open');
+        hydrate(sec);
+      });
+    }
     if (m === 'captions') {
       // rebuild rows (from current tile order) for the OPEN sections only
       Array.prototype.forEach.call(document.querySelectorAll('.arr-col.open'), sec => {
@@ -342,63 +430,120 @@
     updateStatus();
   }
 
-  function render() {
+  function makeSection(slug, title, files, opts) {
+    opts = opts || {};
+    const section = document.createElement('section');
+    section.className = 'arr-col' + (opts.isNew ? ' arr-col-new' : '');
+    section.id = 'arr-sec-' + slug;
+
+    const head = document.createElement('button');
+    head.type = 'button';
+    head.className = 'arr-col-head';
+    head.innerHTML =
+      '<span class="arr-col-title">' + title + '</span>' +
+      '<span class="arr-col-count">' + files.length + ' photos</span>' +
+      '<span class="arr-col-changed" id="arr-changed-' + slug + '" hidden></span>' +
+      '<span class="arr-col-chev" aria-hidden="true"></span>';
+    head.addEventListener('click', () => toggleSection(section, slug));
+    section.appendChild(head);
+
+    if (opts.isNew) section.appendChild(buildNewFields(head));
+
+    const grid = document.createElement('div');
+    grid.className = 'arr-grid';
+    grid.id = 'arr-grid-' + slug;
+    grid.dataset.slug = slug;
+    files.forEach(f => grid.appendChild(buildTile(slug, f)));
+    section.appendChild(grid);
+
+    if (opts.isNew) {
+      const empty = document.createElement('p');
+      empty.className = 'arr-new-empty';
+      empty.textContent = 'tap photos below to gather them in here.';
+      section.appendChild(empty);
+    }
+
+    const caps = document.createElement('div');
+    caps.className = 'arr-caps';
+    caps.id = 'arr-caps-' + slug;
+    section.appendChild(caps);
+
+    root.appendChild(section);
+    renumber(grid);
+    return section;
+  }
+
+  // name (and optional prints link) for the collection being built in sort mode
+  function buildNewFields(head) {
+    const wrap = document.createElement('div');
+    wrap.className = 'arr-new-fields';
+
+    const name = document.createElement('input');
+    name.type = 'text';
+    name.className = 'arr-new-name';
+    name.placeholder = 'name this collection…';
+    name.value = custom.title;
+    name.addEventListener('click', e => e.stopPropagation());
+    name.addEventListener('input', () => {
+      custom.title = name.value;
+      const t = head.querySelector('.arr-col-title');
+      t.textContent = custom.title.trim() || 'new collection';
+      t.classList.toggle('arr-untitled', !custom.title.trim());
+      updateStatus();
+    });
+
+    const prints = document.createElement('input');
+    prints.type = 'url';
+    prints.className = 'arr-new-prints';
+    prints.placeholder = 'prints link (optional)';
+    prints.value = custom.prints;
+    prints.addEventListener('click', e => e.stopPropagation());
+    prints.addEventListener('input', () => { custom.prints = prints.value; updateStatus(); });
+
+    wrap.appendChild(name);
+    wrap.appendChild(prints);
+    return wrap;
+  }
+
+  function seedState(slug, photos) {
+    const files = photos.map(fileOf);
+    const captions = {};
+    photos.forEach(e => {
+      if (typeof e !== 'string' && (e.title || e.caption)) {
+        captions[e.file] = { title: e.title || '', caption: e.caption || '' };
+      }
+    });
+    state[slug] = {
+      remove: new Set(),
+      orig: files.slice(),
+      captions: captions,
+      origCaptionsJson: JSON.stringify(cleanCaptions(captions)),
+    };
+    return files;
+  }
+
+  function render(customPhotos) {
     root.innerHTML = '';
 
     const modes = document.createElement('div');
     modes.className = 'arr-modes';
     modes.innerHTML =
       '<button type="button" class="arr-mode active" data-mode="arrange">arrange</button>' +
-      '<button type="button" class="arr-mode" data-mode="captions">captions</button>';
+      '<button type="button" class="arr-mode" data-mode="captions">captions</button>' +
+      '<button type="button" class="arr-mode" data-mode="sort">sort</button>';
     modes.addEventListener('click', e => {
       const b = e.target.closest('.arr-mode');
       if (b) setMode(b.dataset.mode);
     });
     root.appendChild(modes);
 
+    // the collection being assembled sits at the top, where it's easy to see fill up
+    const newFiles = seedState(NEW_SLUG, customPhotos || []);
+    const newSec = makeSection(NEW_SLUG, custom.title.trim() || 'new collection', newFiles, { isNew: true });
+    if (!custom.title.trim()) newSec.querySelector('.arr-col-title').classList.add('arr-untitled');
+
     manifest.collections.forEach(col => {
-      const files = col.photos.map(fileOf);
-      const captions = {};
-      col.photos.forEach(e => {
-        if (typeof e !== 'string' && (e.title || e.caption)) {
-          captions[e.file] = { title: e.title || '', caption: e.caption || '' };
-        }
-      });
-      state[col.slug] = {
-        remove: new Set(),
-        orig: files.slice(),
-        captions: captions,
-        origCaptionsJson: JSON.stringify(cleanCaptions(captions)),
-      };
-
-      const section = document.createElement('section');
-      section.className = 'arr-col';
-
-      const head = document.createElement('button');
-      head.type = 'button';
-      head.className = 'arr-col-head';
-      head.innerHTML =
-        '<span class="arr-col-title">' + col.title + '</span>' +
-        '<span class="arr-col-count">' + files.length + ' photos</span>' +
-        '<span class="arr-col-changed" id="arr-changed-' + col.slug + '" hidden></span>' +
-        '<span class="arr-col-chev" aria-hidden="true"></span>';
-      head.addEventListener('click', () => toggleSection(section, col.slug));
-      section.appendChild(head);
-
-      const grid = document.createElement('div');
-      grid.className = 'arr-grid';
-      grid.id = 'arr-grid-' + col.slug;
-      grid.dataset.slug = col.slug;
-      files.forEach(f => grid.appendChild(buildTile(col.slug, f)));
-      section.appendChild(grid);
-
-      const caps = document.createElement('div');
-      caps.className = 'arr-caps';
-      caps.id = 'arr-caps-' + col.slug;
-      section.appendChild(caps);
-
-      root.appendChild(section);
-      renumber(grid);
+      makeSection(col.slug, col.title, seedState(col.slug, col.photos));
     });
 
     const status = document.createElement('div');
@@ -414,6 +559,7 @@
     publish.addEventListener('click', doPublish);
     status.appendChild(publish);
     document.body.appendChild(status);
+    refreshNewSection();
     updateStatus();
   }
 
@@ -429,6 +575,18 @@
         captions: cleanCaptions(st.captions),
       };
     });
+    // the re-sorted collection, as pointers to where each photo already lives.
+    // no name or no photos = nothing to publish, and it quietly disappears.
+    const picked = (out[NEW_SLUG] && out[NEW_SLUG].order) || [];
+    const title = custom.title.trim();
+    if (title && picked.length) {
+      out._collections = [{
+        slug: NEW_SLUG,
+        title: title,
+        prints: custom.prints.trim(),
+        photos: picked.map(f => ({ src: srcOf[f], file: f })),
+      }];
+    }
     return out;
   };
   // convenience: copy the arrangement JSON to the clipboard
@@ -463,6 +621,38 @@
     });
   }
 
+  // every photo's home folder, indexed before anything is pulled out of a
+  // collection — this is what lets a re-sorted photo still find its image
+  function indexSources() {
+    manifest.collections.forEach(col => {
+      col.photos.forEach(e => { srcOf[fileOf(e)] = col.slug; });
+    });
+  }
+
+  // rebuild the sorted collection saved last time: take its photos back out of
+  // the collections they came from, and hand them to render()
+  function applyCustom(arr) {
+    const c = (arr && Array.isArray(arr._collections)) ? arr._collections[0] : null;
+    if (!c) return [];
+    custom.title = c.title || '';
+    custom.prints = c.prints || '';
+    customOrig = { title: custom.title.trim(), prints: custom.prints.trim() };
+
+    const photos = (c.photos || []).filter(p => p && p.file && srcOf[p.file]);
+    const moved = {};
+    photos.forEach(p => { const h = srcOf[p.file]; (moved[h] || (moved[h] = {}))[p.file] = true; });
+    manifest.collections.forEach(col => {
+      const m = moved[col.slug];
+      if (m) col.photos = col.photos.filter(e => !m[fileOf(e)]);
+    });
+
+    const caps = (arr[NEW_SLUG] && arr[NEW_SLUG].captions) || {};
+    return photos.map(p => {
+      const cap = caps[p.file];
+      return cap ? { file: p.file, title: cap.title || '', caption: cap.caption || '' } : p.file;
+    });
+  }
+
   async function fetchSaved() {
     if (!window.STUDIO_API_URL) return null;
     try {
@@ -483,8 +673,10 @@
         root.innerHTML = '<p class="re-empty">no photos yet.</p>';
         return;
       }
+      indexSources();
+      const customPhotos = applyCustom(saved);
       applySaved(saved);
-      render();
+      render(customPhotos);
     } catch (err) {
       root.innerHTML = '<p class="re-empty">couldn’t load the galleries.</p>';
     }

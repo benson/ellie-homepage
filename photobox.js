@@ -5,7 +5,7 @@
    energy slideshow look (photobox.css). */
 
 (function () {
-  let lb, img, capEl, countEl, prevBtn, nextBtn;
+  let lb, img, capEl, countEl, prevBtn, nextBtn, zoom;
   let photos = [];
   let idx = 0;
   let built = false;
@@ -34,6 +34,8 @@
     prevBtn = lb.querySelector('.pb-prev');
     nextBtn = lb.querySelector('.pb-next');
 
+    zoom = window.attachPhotoZoom ? window.attachPhotoZoom({ lb: lb, img: img }) : null;
+
     lb.querySelector('.pb-close').addEventListener('click', close);
     prevBtn.addEventListener('click', e => { e.stopPropagation(); step(-1); });
     nextBtn.addEventListener('click', e => { e.stopPropagation(); step(1); });
@@ -42,7 +44,10 @@
     // popup/map underneath it
     document.addEventListener('keydown', e => {
       if (lb.hidden) return;
-      if (e.key === 'Escape') { e.stopPropagation(); close(); }
+      if (e.key === 'Escape') {
+        e.stopPropagation();
+        if (zoom && zoom.isExpanded()) zoom.collapse(); else close();
+      }
       else if (e.key === 'ArrowLeft') { step(-1); }
       else if (e.key === 'ArrowRight') { step(1); }
     }, true);
@@ -52,6 +57,7 @@
 
   function update() {
     const p = photos[idx] || {};
+    if (zoom) zoom.reset();          // a new photo always starts at 100%
     img.src = p.src || '';
     if (p.captionHtml) { capEl.innerHTML = p.captionHtml; capEl.hidden = false; }
     else if (p.caption) { capEl.textContent = p.caption; capEl.hidden = false; }
@@ -70,6 +76,7 @@
 
   function close() {
     if (!lb) return;
+    if (zoom) { zoom.collapse(); zoom.reset(); }
     lb.hidden = true;
     document.body.classList.remove('pb-open');
     img.src = '';

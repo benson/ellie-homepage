@@ -1,0 +1,77 @@
+/* zoom + expand chrome shared by both photo slideshows (photozoom.js).
+   deliberately bare — same cream-on-dark, no boxes, as the close × and the
+   chevron arrows it sits alongside. */
+
+.re-lightbox, .pb-lightbox { transition: background 0.25s ease; }
+
+.pz-bar {
+  position: absolute;
+  top: 16px;
+  left: 22px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pz-btn {
+  background: none;
+  border: none;
+  color: rgba(243, 231, 187, 0.72);
+  font-family: inherit;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  transition: color 0.16s ease, transform 0.16s ease, opacity 0.16s ease;
+}
+.pz-btn:hover:not(:disabled) { color: #fff; transform: scale(1.15); }
+.pz-btn:disabled { opacity: 0.3; cursor: default; }
+.pz-btn svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pz-expand { margin-left: 4px; }
+.pz-level {
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: rgba(243, 231, 187, 0.6);
+  min-width: 40px;
+  text-align: center;
+  user-select: none;
+}
+
+/* the photo itself */
+.pz-img {
+  transform-origin: center center;
+  transition: transform 0.2s ease;
+  touch-action: none;
+  will-change: transform;
+}
+.pz-img.pz-dragging { transition: none; }
+.pz-zoomed .pz-img { cursor: grab; }
+.pz-zoomed .pz-img.pz-dragging { cursor: grabbing; }
+
+/* expanded: the photo takes the screen and the background drops away */
+.re-lightbox.pz-expanded,
+.pb-lightbox.pz-expanded { background: rgba(8, 10, 7, 0.985); }
+.pz-expanded .re-lb-img,
+.pz-expanded .pb-img { max-width: 96vw; max-height: 86vh; }
+.pz-expanded .re-lb-cap,
+.pz-expanded .pb-cap { opacity: 0.72; }
+
+@media (max-width: 600px) {
+  .pz-bar { top: 12px; left: 14px; gap: 6px; }
+  .pz-btn { font-size: 1.45rem; padding: 6px 8px; }
+  .pz-btn svg { width: 20px; height: 20px; }
+  .pz-level { min-width: 36px; }
+  .pz-expanded .re-lb-img,
+  .pz-expanded .pb-img { max-width: 99vw; max-height: 88vh; }
+}

@@ -321,3 +321,81 @@ body.arr-dragging .arr-tile { cursor: grabbing; }
   .arr-status-text { font-size: 0.74rem; }
   body.arrange { padding-bottom: 150px; }
 }
+
+/* ---- sort mode: build a new collection by tapping photos ---- */
+.arr-col[hidden] { display: none; }
+
+.arr-col-new {
+  border: 1px dashed rgba(233, 218, 177, 0.32);
+  border-radius: 6px;
+  padding: 16px 16px 6px;
+  background: rgba(0, 0, 0, 0.16);
+}
+.arr-col-new .arr-col-head { border-bottom-color: rgba(233, 218, 177, 0.22); }
+.arr-col-title.arr-untitled { color: var(--text-muted); font-style: italic; }
+
+.arr-new-fields {
+  display: flex;
+  gap: 10px;
+  margin: 0 0 16px;
+  flex-wrap: wrap;
+}
+.arr-new-fields input {
+  background: rgba(0, 0, 0, 0.24);
+  border: 1px solid rgba(244, 237, 228, 0.2);
+  border-radius: 3px;
+  color: var(--text-main);
+  font-family: inherit;
+  padding: 9px 11px;
+  transition: border-color 0.16s ease;
+}
+.arr-new-fields input:focus { outline: none; border-color: var(--text-muted); }
+.arr-new-name {
+  flex: 2 1 220px;
+  font-family: 'Cutive Mono', monospace;
+  font-size: 1.05rem;
+}
+.arr-new-prints { flex: 1 1 180px; font-size: 0.8rem; }
+
+.arr-new-empty {
+  margin: 4px 0 10px;
+  font-size: 0.78rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+.arr-new-empty[hidden] { display: none; }
+
+/* in sort mode a tap moves the photo, so the drag/remove affordances step back */
+body.mode-sort .arr-tile { cursor: pointer; }
+body.mode-sort .arr-remove { display: none; }
+body.mode-sort .arr-tile::after {
+  content: "+";
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 2;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(20, 24, 18, 0.78);
+  color: var(--text-bright);
+  font-size: 0.9rem;
+  line-height: 22px;
+  text-align: center;
+}
+body.mode-sort .arr-col-new .arr-tile::after { content: "\2212"; }
+body.mode-sort .arr-tile:hover::after { background: rgba(212, 160, 23, 0.9); color: #2d3826; }
+
+.arr-tile.just-moved { animation: arr-pop 0.4s ease; }
+@keyframes arr-pop {
+  0%   { transform: scale(0.82); box-shadow: 0 0 0 2px #d4a017; }
+  100% { transform: scale(1);    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35); }
+}
+
+@media (max-width: 600px) {
+  .arr-col-new { padding: 12px 12px 4px; }
+  .arr-new-fields { gap: 8px; }
+  .arr-new-fields input { font-size: 16px; }
+  .arr-new-name { font-size: 16px; }
+  body.mode-sort .arr-tile::after { width: 26px; height: 26px; line-height: 26px; font-size: 1rem; }
+}
