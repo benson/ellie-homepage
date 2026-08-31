@@ -13,7 +13,6 @@
 
   let manifest = null;
   const state = {};      // slug -> { remove:Set, orig:[file...], captions:{}, origCaptionsJson }
-  let dragged = null;
   let mode = 'arrange';
 
   function fileOf(entry) { return (typeof entry === 'string') ? entry : entry.file; }
@@ -123,37 +122,120 @@
     }
   }
 
-  // ---- drag reorder (within a grid) ----
-  function onDragStart(e) {
-    dragged = this;
-    this.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-    try { e.dataTransfer.setData('text/plain', this.dataset.file); } catch (err) {}
+  // ---- drag reorder (pointer-based, so it works with a mouse AND a finger) ----
+  // touch: press and hold a photo, then drag. moving before the hold = normal scrolling.
+  const HOLD_MS = 220;     // how long to hold on touch before a drag starts
+  const MOUSE_SLOP = 4;    // mouse: px of movement before a drag starts
+  const TOUCH_SLOP = 10;   // touch: moving further than this cancels the hold (they're scrolling)
+  let drag = null;         // active drag: { tile, grid, ghost, dx, dy, pointerId }
+  let pending = null;      // pointer is down but a drag hasn't started yet
+
+  function clearPending() {
+    if (pending && pending.timer) clearTimeout(pending.timer);
+    pending = null;
   }
-  function onDragEnd() {
-    if (dragged) dragged.classList.remove('dragging');
-    Array.prototype.forEach.call(root.querySelectorAll('.drop-target'), t => t.classList.remove('drop-target'));
-    const grid = this.parentElement;
+
+  function beginDrag(p, x, y) {
+    const tile = p.tile;
+    const grid = tile.parentElement;
+    const rect = tile.getBoundingClientRect();
+
+    // a floating copy follows the finger/cursor; the original stays put as a gap marker
+    const ghost = tile.cloneNode(true);
+    ghost.classList.add('arr-ghost');
+    ghost.classList.remove('dragging');
+    ghost.style.width = rect.width + 'px';
+    ghost.style.height = rect.height + 'px';
+    document.body.appendChild(ghost);
+
+    drag = { tile: tile, grid: grid, ghost: ghost, dx: x - rect.left, dy: y - rect.top, pointerId: p.pointerId };
+    tile.classList.add('dragging');
+    document.body.classList.add('arr-dragging');
+    // capture on the GRID (not the tile) — the tile gets moved around in the DOM,
+    // which would drop the capture and strand the drag mid-gesture.
+    try { grid.setPointerCapture(p.pointerId); } catch (err) {}
+    if (p.touch && navigator.vibrate) { try { navigator.vibrate(12); } catch (err) {} }
+    moveGhost(x, y);
+    clearPending();
+  }
+
+  function moveGhost(x, y) {
+    drag.ghost.style.left = (x - drag.dx) + 'px';
+    drag.ghost.style.top = (y - drag.dy) + 'px';
+  }
+
+  function dropInto(x, y) {
+    const under = document.elementFromPoint(x, y);
+    const target = under && under.closest ? under.closest('.arr-tile') : null;
+    if (!target || target === drag.tile) return;
+    if (target.parentElement !== drag.grid) return;   // same collection only
+    const rect = target.getBoundingClientRect();
+    const after = (x - rect.left) > rect.width / 2;
+    drag.grid.insertBefore(drag.tile, after ? target.nextSibling : target);
+  }
+
+  // nudge the page along when dragging near the top/bottom edge (long grids on a phone)
+  function edgeScroll(y) {
+    const zone = 72;
+    if (y < zone) window.scrollBy(0, -Math.ceil((zone - y) / 5));
+    else if (y > window.innerHeight - zone) window.scrollBy(0, Math.ceil((y - (window.innerHeight - zone)) / 5));
+  }
+
+  function endDrag() {
+    if (!drag) return;
+    try { drag.grid.releasePointerCapture(drag.pointerId); } catch (err) {}
+    drag.ghost.remove();
+    drag.tile.classList.remove('dragging');
+    document.body.classList.remove('arr-dragging');
+    const grid = drag.grid;
+    drag = null;
     renumber(grid);
     markChanged(grid.dataset.slug);
-    dragged = null;
   }
-  function onDragOver(e) {
-    if (!dragged || dragged === this) return;
-    if (dragged.parentElement !== this.parentElement) return; // same collection only
-    e.preventDefault();
-    const rect = this.getBoundingClientRect();
-    const after = (e.clientX - rect.left) > rect.width / 2;
-    this.classList.add('drop-target');
-    const ref = after ? this.nextSibling : this;
-    if (ref !== dragged) this.parentElement.insertBefore(dragged, after ? this.nextSibling : this);
+
+  function onPointerDown(e) {
+    if (drag || e.button > 0) return;
+    if (e.target.closest('.arr-remove')) return;          // the × button is its own thing
+    if (this.classList.contains('removing')) return;      // don't shuffle photos already marked
+    const touch = e.pointerType !== 'mouse';
+    pending = { tile: this, pointerId: e.pointerId, x: e.clientX, y: e.clientY, touch: touch, timer: null };
+    if (touch) {
+      const p = pending;
+      p.timer = setTimeout(function () { if (pending === p) beginDrag(p, p.x, p.y); }, HOLD_MS);
+    }
   }
-  function onDragLeave() { this.classList.remove('drop-target'); }
+
+  function onPointerMove(e) {
+    if (drag) {
+      if (e.pointerId !== drag.pointerId) return;
+      moveGhost(e.clientX, e.clientY);
+      dropInto(e.clientX, e.clientY);
+      edgeScroll(e.clientY);
+      return;
+    }
+    if (!pending || e.pointerId !== pending.pointerId) return;
+    const dist = Math.hypot(e.clientX - pending.x, e.clientY - pending.y);
+    if (pending.touch) { if (dist > TOUCH_SLOP) clearPending(); }        // a scroll, not a drag
+    else if (dist > MOUSE_SLOP) beginDrag(pending, e.clientX, e.clientY);
+  }
+
+  function onPointerUp(e) {
+    clearPending();
+    if (drag && e.pointerId === drag.pointerId) endDrag();
+  }
+
+  document.addEventListener('pointermove', onPointerMove);
+  document.addEventListener('pointerup', onPointerUp);
+  document.addEventListener('pointercancel', onPointerUp);
+  // once a drag is underway, stop the page scrolling under the finger.
+  // must be non-passive, and touch-action can't do it (it's fixed when the gesture starts).
+  document.addEventListener('touchmove', function (e) { if (drag) e.preventDefault(); }, { passive: false });
+  // no iOS copy/lookup bubble on a long press
+  document.addEventListener('contextmenu', function (e) { if (drag || pending) e.preventDefault(); });
 
   function buildTile(slug, file) {
     const tile = document.createElement('div');
     tile.className = 'arr-tile';
-    tile.draggable = true;
     tile.dataset.file = file;
     tile.dataset.slug = slug;
 
@@ -162,6 +244,7 @@
     img.dataset.src = thumb(slug, file);
     img.alt = '';
     img.loading = 'lazy';
+    img.draggable = false;
     tile.appendChild(img);
 
     const num = document.createElement('span');
@@ -183,10 +266,7 @@
     });
     tile.appendChild(rm);
 
-    tile.addEventListener('dragstart', onDragStart);
-    tile.addEventListener('dragend', onDragEnd);
-    tile.addEventListener('dragover', onDragOver);
-    tile.addEventListener('dragleave', onDragLeave);
+    tile.addEventListener('pointerdown', onPointerDown);
     return tile;
   }
 
