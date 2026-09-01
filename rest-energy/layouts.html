@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>layout options · rest energy</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="../style.css?v=110">
+<link rel="stylesheet" href="../rest-energy.css?v=16">
+<style>
+  .lo-bar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;gap:6px;justify-content:center;
+    padding:10px;background:rgba(20,24,18,.96);border-bottom:1px solid rgba(233,218,177,.18);flex-wrap:wrap}
+  .lo-bar button{background:none;border:1px solid rgba(233,218,177,.35);color:var(--text-muted);
+    border-radius:999px;padding:6px 16px;font-family:inherit;font-size:.72rem;letter-spacing:.06em;cursor:pointer}
+  .lo-bar button.on{background:var(--text-main);color:#2d3826;border-color:var(--text-main)}
+  .lo-now{align-self:center;margin-left:14px;font-size:.7rem;letter-spacing:.06em;
+    color:var(--text-muted);text-decoration:none;border-bottom:1px solid rgba(233,218,177,.3)}
+  .lo-now:hover{color:var(--text-bright)}
+  body.rest-energy{padding-top:74px}
+  .lo-col{margin-bottom:56px}
+  .lo-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid rgba(233,218,177,.16);
+    padding-bottom:10px;margin-bottom:22px}
+  .lo-title{font-family:'Cutive Mono',monospace;font-size:1.5rem;color:var(--text-bright);text-transform:lowercase}
+  .lo-count{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)}
+  .lo-wrap img{display:block;cursor:pointer}
+
+  /* A — masonry columns */
+  .lo-columns{column-count:3;column-gap:10px}
+  .lo-columns img{width:100%;margin:0 0 10px;break-inside:avoid}
+
+  /* B — uniform square grid */
+  .lo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+  .lo-grid img{width:100%;aspect-ratio:1;object-fit:cover}
+
+  /* C — big single column */
+  .lo-stack{display:flex;flex-direction:column;align-items:center;gap:64px}
+  .lo-stack img{max-width:min(78vw,860px);max-height:82vh;width:auto}
+
+  /* D — horizontal filmstrip */
+  .lo-strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:14px;scroll-snap-type:x proximity}
+  .lo-strip img{height:340px;width:auto;flex-shrink:0;scroll-snap-align:start}
+
+  @media(max-width:600px){
+    .lo-columns{column-count:2}
+    .lo-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}
+    .lo-stack{gap:36px}
+    .lo-stack img{max-width:92vw}
+    .lo-strip img{height:210px}
+  }
+</style>
+</head>
+<body class="rest-energy">
+<div class="lo-bar" id="lo-bar"><a class="lo-now" href="./">what you have now &rarr;</a></div>
+<header class="re-header">
+  <div class="re-title">
+    <img class="section-label-img" src="../labels/rest-energy.png?v=2" alt="rest energy">
+    <span class="re-subtitle">my visual reflections</span>
+  </div>
+</header>
+<div class="lo-wrap" id="lo-wrap"></div>
+<script>
+const MODES=[['columns','columns'],['grid','grid'],['stack','big'],['strip','filmstrip']];
+let manifest,ratios={},mode='columns';
+const bar=document.getElementById('lo-bar'),wrap=document.getElementById('lo-wrap');
+MODES.forEach(([k,label])=>{const b=document.createElement('button');b.textContent=label;b.dataset.k=k;
+  b.onclick=()=>{mode=k;draw();};bar.insertBefore(b,bar.querySelector('.lo-now'));});
+function fileOf(e){return typeof e==='string'?e:e.file}
+function draw(){
+  [...bar.children].forEach(b=>b.classList.toggle('on',b.dataset.k===mode));
+  wrap.innerHTML='';
+  manifest.collections.forEach(col=>{
+    const sec=document.createElement('section');sec.className='lo-col';
+    sec.innerHTML='<div class="lo-head"><span class="lo-title">'+col.title+'</span>'+
+      '<span class="lo-count">'+col.photos.length+' photos</span></div>';
+    const box=document.createElement('div');box.className='lo-'+mode;
+    col.photos.forEach(e=>{const f=fileOf(e);const im=new Image();
+      im.src='img/'+col.slug+'/thumb/'+f+'.jpg';im.loading='lazy';im.alt='';
+      const r=ratios[col.slug+'/'+f];if(r&&mode!=='grid')im.style.aspectRatio=r;
+      box.appendChild(im);});
+    sec.appendChild(box);wrap.appendChild(sec);
+  });
+  window.scrollTo(0,0);
+}
+(async()=>{
+  const [m,r]=await Promise.all([fetch('manifest.json?v='+Date.now()),fetch('ratios.json?v='+Date.now())]);
+  manifest=await m.json();ratios=await r.json();draw();
+})();
+</script>
+</body>
+</html>
