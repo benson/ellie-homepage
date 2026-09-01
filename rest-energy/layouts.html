@@ -3,231 +3,175 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>layout options · rest energy</title>
+<title>name font · rest energy</title>
 <meta name="robots" content="noindex,nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Fraunces:opsz,wght@9..144,300..700&family=Cormorant+Garamond:wght@300;400;500&family=EB+Garamond:wght@400;500&family=Syne:wght@400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,SOFT,WONK,wght@0,9..144,0..100,0..1,300..700;1,9..144,0..100,0..1,300..700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css?v=111">
 <link rel="stylesheet" href="../rest-energy.css?v=20">
 <style>
-  .lo-bar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;gap:6px;justify-content:center;
-    padding:10px;background:rgba(20,24,18,.96);border-bottom:1px solid rgba(233,218,177,.18);flex-wrap:wrap}
-  .lo-bar button{background:none;border:1px solid rgba(233,218,177,.35);color:var(--text-muted);
-    border-radius:999px;padding:6px 16px;font-family:inherit;font-size:.72rem;letter-spacing:.06em;cursor:pointer}
-  .lo-bar button.on{background:var(--text-main);color:#2d3826;border-color:var(--text-main)}
-  .lo-cols{display:none;align-items:center;gap:6px;margin-left:16px;
-    padding-left:16px;border-left:1px solid rgba(233,218,177,.22)}
-  body.has-cols .lo-cols{display:flex}
-  .lo-cols span{font-size:.66rem;letter-spacing:.08em;color:var(--text-muted)}
-  .lo-cols button{padding:5px 12px}
-  .lo-dial{display:flex;align-items:center;gap:6px;margin-left:16px;
-    padding-left:16px;border-left:1px solid rgba(233,218,177,.22)}
-  .lo-dial span{font-size:.66rem;letter-spacing:.08em;color:var(--text-muted)}
-  .lo-dial button{padding:5px 12px}
-  .lo-now{align-self:center;margin-left:14px;font-size:.7rem;letter-spacing:.06em;
-    color:var(--text-muted);text-decoration:none;border-bottom:1px solid rgba(233,218,177,.3)}
-  .lo-now:hover{color:var(--text-bright)}
-  body.rest-energy{padding-top:74px}
-  .lo-col{margin-bottom:56px}
-  .lo-head{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid rgba(233,218,177,.16);
-    padding-bottom:10px;margin-bottom:22px}
-  .lo-title{font-family:'Cutive Mono',monospace;font-size:1.5rem;color:var(--text-bright);text-transform:lowercase}
-  .lo-count{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)}
-  .lo-wrap img{display:block;cursor:pointer;transition:box-shadow .2s ease,transform .2s ease}
+  .fp-bar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;gap:6px;
+    justify-content:center;align-items:center;flex-wrap:wrap;padding:10px 12px;
+    background:rgba(12,14,10,.97);border-bottom:1px solid rgba(233,218,177,.18)}
+  .fp-bar span{font-size:.66rem;letter-spacing:.08em;color:var(--text-muted)}
+  .fp-bar button{background:none;border:1px solid rgba(233,218,177,.35);color:var(--text-muted);
+    border-radius:999px;padding:6px 14px;font-family:inherit;font-size:.72rem;
+    letter-spacing:.05em;cursor:pointer}
+  .fp-bar button.on{background:var(--text-main);color:#2d3826;border-color:var(--text-main)}
+  .fp-back{margin-left:10px;font-size:.7rem;color:var(--text-muted);text-decoration:none;
+    border-bottom:1px solid rgba(233,218,177,.3)}
+  body.rest-energy{padding-top:96px}
 
-  /* glow — how much the photos lift off the page */
-  body[data-glow="soft"]   .lo-wrap img{box-shadow:0 0 0 1px rgba(233,218,177,.16), 0 0 10px rgba(233,218,177,.09), 0 4px 14px rgba(0,0,0,.35)}
-  body[data-glow="medium"] .lo-wrap img{box-shadow:0 0 0 1px rgba(233,218,177,.26), 0 0 18px rgba(233,218,177,.15), 0 6px 20px rgba(0,0,0,.42)}
-  body[data-glow="strong"] .lo-wrap img{box-shadow:0 0 0 1px rgba(233,218,177,.4),  0 0 30px rgba(233,218,177,.26), 0 8px 26px rgba(0,0,0,.5)}
-  body:not([data-glow="none"]) .lo-wrap img:hover{transform:translateY(-2px)}
+  .fp-note{max-width:620px;margin:0 auto 34px;text-align:center;font-size:.76rem;
+    line-height:1.6;color:var(--text-muted);font-style:italic}
 
-  /* background — the page behind everything */
-  body[data-bg="dimleaf"]{background-image:linear-gradient(rgba(24,30,21,.93),rgba(24,30,21,.96)),url('../bg/current.jpg')}
-  body[data-bg="forest"]{background-image:none;background-color:#2d3826}
-  body[data-bg="deep"]{background-image:none;background-color:#1e2419}
-  body[data-bg="ink"]{background-image:none;background-color:#14170f}
-  body[data-bg="fade"]{background-image:linear-gradient(#2d3826,#191e15);background-color:#191e15}
+  /* ---- the eight variants, on both the collection names and photo titles ---- */
+  .fp-title,.sv-cap{font-family:'Cutive Mono',monospace}
 
-  /* A — masonry columns */
-  .lo-columns{column-count:var(--cols,3);column-gap:10px}
-  .lo-columns img{width:100%;margin:0 0 10px;break-inside:avoid}
+  body[data-f="fr-book"]   .fp-title, body[data-f="fr-book"]   .sv-cap{font-family:'Fraunces',serif;font-weight:400;font-size:1.8rem}
+  body[data-f="fr-light"]  .fp-title, body[data-f="fr-light"]  .sv-cap{font-family:'Fraunces',serif;font-weight:300;font-size:1.85rem}
+  body[data-f="fr-semi"]   .fp-title, body[data-f="fr-semi"]   .sv-cap{font-family:'Fraunces',serif;font-weight:600;font-size:1.7rem}
+  body[data-f="fr-italic"] .fp-title, body[data-f="fr-italic"] .sv-cap{font-family:'Fraunces',serif;font-weight:400;font-style:italic;font-size:1.8rem}
+  body[data-f="fr-wonky"]  .fp-title, body[data-f="fr-wonky"]  .sv-cap{font-family:'Fraunces',serif;font-weight:400;font-size:1.8rem;
+    font-variation-settings:'SOFT' 60,'WONK' 1}
 
-  /* B — uniform square grid */
-  .lo-grid{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:8px}
-  .lo-grid img{width:100%;aspect-ratio:1;object-fit:cover}
+  body[data-f="site"]      .fp-title, body[data-f="site"]      .sv-cap{font-family:inherit;font-weight:400;font-size:1.55rem}
+  body[data-f="site-wide"] .fp-title, body[data-f="site-wide"] .sv-cap{font-family:inherit;font-weight:500;font-size:1.45rem;letter-spacing:.1em}
+  body[data-f="grotesk"]   .fp-title, body[data-f="grotesk"]   .sv-cap{font-family:'Space Grotesk',sans-serif;font-weight:400;font-size:1.55rem}
 
-  /* C — big single column */
-  .lo-stack{display:flex;flex-direction:column;align-items:center;gap:64px}
-  .lo-stack img{max-width:min(78vw,860px);max-height:82vh;width:auto}
+  .sv-cap{font-size:1.05rem !important}
 
-  /* D — horizontal filmstrip */
-  .lo-strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:14px;scroll-snap-type:x proximity}
-  .lo-strip img{height:340px;width:auto;flex-shrink:0;scroll-snap-align:start}
+  /* ---- collections: her final look, just fewer photos so the names lead ---- */
+  .fp-col{margin-bottom:52px}
+  .fp-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+    border-bottom:1px solid rgba(233,218,177,.16);padding-bottom:12px;margin-bottom:18px}
+  .fp-title{color:var(--text-bright);text-transform:lowercase;line-height:1.25}
+  .fp-chev{width:9px;height:9px;border-right:2px solid var(--text-muted);
+    border-bottom:2px solid var(--text-muted);transform:rotate(-135deg);flex-shrink:0;align-self:center}
+  .fp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .fp-grid img{width:100%;aspect-ratio:1;object-fit:cover;display:block;cursor:zoom-in;
+    border-radius:3px;
+    box-shadow:0 0 0 1px rgba(233,218,177,.26),0 0 18px rgba(233,218,177,.15),0 6px 20px rgba(0,0,0,.42);
+    transition:box-shadow .2s ease,transform .2s ease}
+  .fp-grid img:hover{transform:translateY(-2px)}
 
-  @media(max-width:600px){
-    .lo-columns{column-count:2}
-    .lo-grid{grid-template-columns:repeat(2,1fr)}
-    .lo-stack{gap:36px}
-    .lo-stack img{max-width:92vw}
-    .lo-strip img{height:210px}
-  }
-
-  /* ---- slideshow preview, for choosing arrows ---- */
+  /* ---- slideshow preview, so the photo titles get judged too ---- */
   .sv{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;
     gap:12px;padding:40px;background:rgba(6,8,5,.975)}
   .sv.on{display:flex}
-  .sv img.sv-photo{max-width:80vw;max-height:74vh;object-fit:contain;
+  .sv-photo{max-width:80vw;max-height:74vh;object-fit:contain;
     box-shadow:0 0 0 2px rgba(255,255,255,.6),0 18px 50px rgba(0,0,0,.62)}
   .sv-close{position:absolute;top:16px;right:22px;background:none;border:none;
     color:var(--text-bright);font-size:2.1rem;line-height:1;cursor:pointer;padding:4px 10px}
-  .sv-cap{position:absolute;left:0;right:0;bottom:46px;text-align:center;
-    font-family:'Cutive Mono',monospace;font-size:1.05rem;color:var(--text-bright)}
-  .sv-nav{background:none;border:none;cursor:pointer;flex-shrink:0;padding:0;
+  .sv-cap{position:absolute;left:0;right:0;bottom:44px;text-align:center;color:var(--text-bright)}
+  .sv-nav{background:none;border:none;cursor:pointer;flex-shrink:0;padding:0;width:40px;height:40px;
     color:rgba(243,231,187,.7);display:flex;align-items:center;justify-content:center;
-    transition:color .16s ease,transform .16s ease,background .16s ease,border-color .16s ease}
+    transition:color .16s ease}
   .sv-nav:hover{color:#fff}
-  .sv-nav svg{display:block;fill:none;stroke:currentColor;stroke-width:1.6;
-    stroke-linecap:round;stroke-linejoin:round}
+  .sv-nav svg{display:block;width:20px;height:24px;fill:currentColor}
 
-  /* arrow styles */
-  body[data-arrow="chevron"] .sv-nav{font-size:2.8rem;width:46px;height:46px;line-height:1}
-  body[data-arrow="chevron"] .sv-nav:hover{transform:scale(1.18)}
-
-  body[data-arrow="line"] .sv-nav svg{width:44px;height:22px}
-  body[data-arrow="line"] .sv-nav:hover{transform:translateX(0)}
-
-  body[data-arrow="circle"] .sv-nav{width:46px;height:46px;border-radius:50%;
-    border:1px solid rgba(243,231,187,.35)}
-  body[data-arrow="circle"] .sv-nav svg{width:16px;height:16px}
-  body[data-arrow="circle"] .sv-nav:hover{border-color:rgba(243,231,187,.9);
-    background:rgba(243,231,187,.08)}
-
-  body[data-arrow="triangle"] .sv-nav svg{width:20px;height:24px;fill:currentColor;stroke:none}
-  body[data-arrow="triangle"] .sv-nav{width:40px;height:40px}
-
-  body[data-arrow="edge"] .sv-nav{width:16vw;height:74vh;color:transparent}
-  body[data-arrow="edge"] .sv-nav svg{width:30px;height:30px}
-  body[data-arrow="edge"] .sv-nav:hover{color:rgba(243,231,187,.85)}
-
-  /* ---- collection-name font options ---- */
-  body[data-font="cutive"]    .lo-title, body[data-font="cutive"]    .sv-cap { font-family:'Cutive Mono',monospace; }
-  body[data-font="instrument"] .lo-title, body[data-font="instrument"] .sv-cap { font-family:'Instrument Serif',serif; font-size:2rem; letter-spacing:.01em; }
-  body[data-font="fraunces"]  .lo-title, body[data-font="fraunces"]  .sv-cap { font-family:'Fraunces',serif; font-weight:400; font-size:1.7rem; }
-  body[data-font="cormorant"] .lo-title, body[data-font="cormorant"] .sv-cap { font-family:'Cormorant Garamond',serif; font-weight:400; font-size:2rem; }
-  body[data-font="ebgaramond"] .lo-title, body[data-font="ebgaramond"] .sv-cap { font-family:'EB Garamond',serif; font-weight:400; font-size:1.8rem; }
-  body[data-font="syne"]      .lo-title, body[data-font="syne"]      .sv-cap { font-family:'Syne',sans-serif; font-weight:600; font-size:1.5rem; }
-  body[data-font="dmmono"]    .lo-title, body[data-font="dmmono"]    .sv-cap { font-family:'DM Mono',monospace; font-weight:300; font-size:1.45rem; }
-  body[data-font="site"]      .lo-title, body[data-font="site"]      .sv-cap { font-family:inherit; font-weight:500; font-size:1.5rem; }
-  .sv-cap { font-size:1.05rem !important; }
+  @media(max-width:600px){
+    body.rest-energy{padding-top:120px}
+    .fp-grid{grid-template-columns:repeat(3,1fr);gap:4px;margin:0 -12px}
+  }
 </style>
 </head>
 <body class="rest-energy">
-<div class="lo-bar" id="lo-bar">
-  <span class="lo-cols" id="lo-cols"><span>per row</span></span>
-  <span class="lo-dial" id="lo-glow"><span>glow</span></span>
-  <span class="lo-dial" id="lo-bg"><span>background</span></span>
-  <span class="lo-dial" id="lo-arrow"><span>arrows</span></span>
-  <span class="lo-dial" id="lo-font"><span>name font</span></span>
-  <a class="lo-now" href="./">what you have now &rarr;</a>
+<div class="fp-bar" id="fp-bar">
+  <span>name font</span>
+  <a class="fp-back" href="./">the real gallery &rarr;</a>
 </div>
+
 <header class="re-header">
   <div class="re-title">
     <img class="section-label-img" src="../labels/rest-energy.png?v=2" alt="rest energy">
     <span class="re-subtitle">my visual reflections</span>
   </div>
 </header>
-<div class="lo-wrap" id="lo-wrap"></div>
+
+<p class="fp-note">
+  the same font sets your collection names and your photo titles — click a photo to see it there too.
+  “site font” is your body font: on your mac that’s neue machina, but it isn’t installed on the site,
+  so everyone else sees space grotesk — which is the option below it.
+</p>
+
+<div id="fp-collections"></div>
+
 <div class="sv" id="sv">
   <button type="button" class="sv-close" id="sv-close" aria-label="close">&times;</button>
-  <button type="button" class="sv-nav" id="sv-prev" aria-label="previous"></button>
+  <button type="button" class="sv-nav" id="sv-prev" aria-label="previous"><svg viewBox="0 0 20 24"><path d="M16 2 4 12l12 10z"/></svg></button>
   <img class="sv-photo" id="sv-photo" src="" alt="">
-  <button type="button" class="sv-nav" id="sv-next" aria-label="next"></button>
+  <button type="button" class="sv-nav" id="sv-next" aria-label="next"><svg viewBox="0 0 20 24"><path d="M4 2l12 10L4 22z"/></svg></button>
   <div class="sv-cap" id="sv-cap"></div>
 </div>
 
+<script src="../studio-config.js?v=1"></script>
 <script>
-const MODES=[['columns','columns'],['grid','grid'],['stack','big'],['strip','filmstrip']];
-let manifest,ratios={},mode='grid',cols=4;
-function dial(boxId,attr,opts,initial){
-  const box=document.getElementById(boxId);
-  const set=v=>{document.body.dataset[attr]=v;
-    [...box.querySelectorAll('button')].forEach(b=>b.classList.toggle('on',b.dataset.v===v));};
-  opts.forEach(([v,label])=>{const b=document.createElement('button');b.textContent=label;b.dataset.v=v;
-    b.onclick=()=>set(v);box.appendChild(b);});
-  set(initial);
-}
-const bar=document.getElementById('lo-bar'),wrap=document.getElementById('lo-wrap');
-const colBox=document.getElementById('lo-cols');
-[2,3,4,5,6].forEach(n=>{const b=document.createElement('button');b.textContent=n;b.dataset.n=n;
-  b.onclick=()=>{cols=n;document.documentElement.style.setProperty('--cols',n);
-    [...colBox.querySelectorAll('button')].forEach(x=>x.classList.toggle('on',+x.dataset.n===cols));};
-  colBox.appendChild(b);});
-MODES.forEach(([k,label])=>{const b=document.createElement('button');b.textContent=label;b.dataset.k=k;
-  b.onclick=()=>{mode=k;draw();};bar.insertBefore(b,bar.querySelector('.lo-now'));});
-function fileOf(e){return typeof e==='string'?e:e.file}
-function draw(){
-  [...bar.querySelectorAll('button[data-k]')].forEach(b=>b.classList.toggle('on',b.dataset.k===mode));
-  document.body.classList.toggle('has-cols', mode==='grid'||mode==='columns');
-  document.documentElement.style.setProperty('--cols',cols);
-  [...colBox.querySelectorAll('button')].forEach(x=>x.classList.toggle('on',+x.dataset.n===cols));
-  wrap.innerHTML='';
-  manifest.collections.forEach(col=>{
-    const sec=document.createElement('section');sec.className='lo-col';
-    sec.innerHTML='<div class="lo-head"><span class="lo-title">'+col.title+'</span>'+
-      '<span class="lo-count">'+col.photos.length+' photos</span></div>';
-    const box=document.createElement('div');box.className='lo-'+mode;
-    const list=col.photos.map(e=>({src:'img/'+col.slug+'/large/'+fileOf(e)+'.jpg',
-      title:(typeof e==='string'?'':(e.title||''))}));
-    col.photos.forEach((e,pi)=>{const f=fileOf(e);const im=new Image();
-      im.onclick=()=>svOpen(list,pi);
-      im.src='img/'+col.slug+'/thumb/'+f+'.jpg';im.loading='lazy';im.alt='';
-      const r=ratios[col.slug+'/'+f];if(r&&mode!=='grid')im.style.aspectRatio=r;
-      box.appendChild(im);});
-    sec.appendChild(box);wrap.appendChild(sec);
-  });
-  window.scrollTo(0,0);
-}
+const OPTS=[
+  ['fr-book','fraunces'],['fr-light','fraunces light'],['fr-semi','fraunces bold'],
+  ['fr-italic','fraunces italic'],['fr-wonky','fraunces wonky'],
+  ['site','site font'],['site-wide','site font wide'],['grotesk','space grotesk'],
+];
+const bar=document.getElementById('fp-bar'),back=document.querySelector('.fp-back');
+OPTS.forEach(([v,label])=>{const b=document.createElement('button');b.textContent=label;b.dataset.v=v;
+  b.onclick=()=>set(v);bar.insertBefore(b,back);});
+function set(v){document.body.dataset.f=v;
+  [...bar.querySelectorAll('button')].forEach(b=>b.classList.toggle('on',b.dataset.v===v));}
 
-// ---- slideshow preview: click any photo, then try the arrow styles ----
-const GLYPH={
-  chevron:['&#8249;','&#8250;'],
-  line:['<svg viewBox="0 0 44 22"><path d="M42 11H3M11 3 3 11l8 8"/></svg>',
-        '<svg viewBox="0 0 44 22"><path d="M2 11h39M33 3l8 8-8 8"/></svg>'],
-  circle:['<svg viewBox="0 0 16 16"><path d="M10 2 4 8l6 6"/></svg>',
-          '<svg viewBox="0 0 16 16"><path d="M6 2l6 6-6 6"/></svg>'],
-  triangle:['<svg viewBox="0 0 20 24"><path d="M16 2 4 12l12 10z"/></svg>',
-            '<svg viewBox="0 0 20 24"><path d="M4 2l12 10L4 22z"/></svg>'],
-  edge:['<svg viewBox="0 0 30 30"><path d="M19 5 9 15l10 10"/></svg>',
-        '<svg viewBox="0 0 30 30"><path d="M11 5l10 10-10 10"/></svg>'],
-};
 let svList=[],svIdx=0;
 const sv=document.getElementById('sv'),svPhoto=document.getElementById('sv-photo'),
-      svCap=document.getElementById('sv-cap'),svPrev=document.getElementById('sv-prev'),
-      svNext=document.getElementById('sv-next');
-function paintArrows(){
-  const g=GLYPH[document.body.dataset.arrow]||GLYPH.chevron;
-  svPrev.innerHTML=g[0]; svNext.innerHTML=g[1];
-}
+      svCap=document.getElementById('sv-cap');
 function svShow(){const p=svList[svIdx]||{};svPhoto.src=p.src||'';svCap.textContent=p.title||'';}
-function svOpen(list,i){svList=list;svIdx=i;paintArrows();svShow();sv.classList.add('on');}
 function svStep(d){svIdx=(svIdx+d+svList.length)%svList.length;svShow();}
-svPrev.onclick=e=>{e.stopPropagation();svStep(-1)};
-svNext.onclick=e=>{e.stopPropagation();svStep(1)};
+document.getElementById('sv-prev').onclick=e=>{e.stopPropagation();svStep(-1)};
+document.getElementById('sv-next').onclick=e=>{e.stopPropagation();svStep(1)};
 document.getElementById('sv-close').onclick=()=>sv.classList.remove('on');
 sv.addEventListener('click',e=>{if(e.target===sv)sv.classList.remove('on')});
 document.addEventListener('keydown',e=>{if(!sv.classList.contains('on'))return;
   if(e.key==='Escape')sv.classList.remove('on');
   else if(e.key==='ArrowLeft')svStep(-1); else if(e.key==='ArrowRight')svStep(1);});
 
-dial('lo-glow','glow',[['none','none'],['soft','soft'],['medium','medium'],['strong','strong']],'soft');
-dial('lo-bg','bg',[['leaf','leaf'],['dimleaf','dim leaf'],['forest','forest'],['deep','deep'],['ink','ink (now)'],['fade','fade']],'ink');
-dial('lo-font','font',[['cutive','cutive mono (now)'],['instrument','instrument serif'],['fraunces','fraunces'],['cormorant','cormorant'],['ebgaramond','eb garamond'],['syne','syne'],['dmmono','dm mono'],['site','site font']],'cutive');
-dial('lo-arrow','arrow',[['chevron','chevron (now)'],['line','line'],['circle','circle'],['triangle','triangle'],['edge','edge']],'line');
-document.getElementById('lo-arrow').addEventListener('click',()=>setTimeout(paintArrows,0));
+const fileOf=e=>typeof e==='string'?e:e.file;
+const titleOf=e=>typeof e==='string'?'':(e.title||'');
+
+// the live titles come from the saved arrangement, same as the real gallery
+async function saved(){
+  if(!window.STUDIO_API_URL) return null;
+  try{
+    const r=await Promise.race([fetch(window.STUDIO_API_URL+'?type=restenergy'),
+      new Promise((_,j)=>setTimeout(()=>j(new Error('t')),2500))]);
+    return (await r.json()).arrangement||null;
+  }catch(e){return null}
+}
+
 (async()=>{
-  const [m,r]=await Promise.all([fetch('manifest.json?v='+Date.now()),fetch('ratios.json?v='+Date.now())]);
-  manifest=await m.json();ratios=await r.json();draw();
+  const [mRes,arr]=await Promise.all([fetch('manifest.json?v='+Date.now()),saved()]);
+  const man=await mRes.json();
+  const root=document.getElementById('fp-collections');
+  man.collections.forEach(col=>{
+    const caps=((arr&&arr[col.slug])||{}).captions||{};
+    const photos=col.photos.slice(0,9).map(e=>{
+      const f=fileOf(e), c=caps[f];
+      return {file:f, title:(c&&c.title)||titleOf(e),
+              thumb:'img/'+col.slug+'/thumb/'+f+'.jpg', large:'img/'+col.slug+'/large/'+f+'.jpg'};
+    });
+    const sec=document.createElement('section');
+    sec.className='fp-col';
+    sec.innerHTML='<div class="fp-head"><span class="fp-title">'+col.title+
+      '</span><span class="fp-chev"></span></div>';
+    const g=document.createElement('div');
+    g.className='fp-grid';
+    const list=photos.map(p=>({src:p.large,title:p.title}));
+    photos.forEach((p,i)=>{
+      const im=new Image();im.src=p.thumb;im.alt=p.title;im.loading='lazy';
+      im.onclick=()=>{svList=list;svIdx=i;svShow();sv.classList.add('on')};
+      g.appendChild(im);
+    });
+    sec.appendChild(g);
+    root.appendChild(sec);
+  });
+  set('fr-book');
 })();
 </script>
 </body>
