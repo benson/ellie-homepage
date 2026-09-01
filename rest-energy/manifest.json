@@ -5,49 +5,178 @@
       "slug": "art-imitates-life",
       "prints": "https://restenergy.pixieset.com/outsidelookingin/",
       "photos": [
-        "bobstrees",
-        "appalachianairbnbview",
-        "balanceddiet",
-        "busybee",
-        "catcowcall",
-        "centralparked",
-        "countyfair",
-        "dinnerparty",
-        "dontscarethemawayhoney",
-        "peekaboo",
-        "dreamspacehouse",
-        "easylife",
-        "pickingapples",
-        "fishermanonkeuka",
-        "gardenparty",
-        "hisandhers",
-        "nycwinter",
-        "layhere",
-        "liminalbeach",
-        "mistysf",
-        "nycbeach",
-        "staringcontest",
-        "staringcontestwinner",
-        "paradisema",
-        "shygurl",
-        "mooyouwhore",
-        "samefeather",
-        "skycloudslandclouds",
-        "sliceofheaven",
-        "stargaze",
-        "sutrobaths",
-        "weouthere",
-        "urbanprism",
-        "r0020776",
-        "r0020839",
-        "r0021041",
-        "r0021274",
-        "r0021501",
-        "r0021502",
-        "r0021508",
-        "r0021574",
-        "r0021604",
-        "r0021759"
+        {
+          "file": "bobstrees",
+          "title": "bob's trees"
+        },
+        {
+          "file": "appalachianairbnbview",
+          "title": "appalachian airbnb view"
+        },
+        {
+          "file": "balanceddiet",
+          "title": "balanced diet"
+        },
+        {
+          "file": "busybee",
+          "title": "busy bee"
+        },
+        {
+          "file": "catcowcall",
+          "title": "cat cow call"
+        },
+        {
+          "file": "centralparked",
+          "title": "central parked"
+        },
+        {
+          "file": "countyfair",
+          "title": "county fair"
+        },
+        {
+          "file": "dinnerparty",
+          "title": "dinner party"
+        },
+        {
+          "file": "dontscarethemawayhoney",
+          "title": "don't scare them away, honey"
+        },
+        {
+          "file": "peekaboo",
+          "title": "peekaboo"
+        },
+        {
+          "file": "dreamspacehouse",
+          "title": "dream space house"
+        },
+        {
+          "file": "easylife",
+          "title": "easy life"
+        },
+        {
+          "file": "pickingapples",
+          "title": "picking apples"
+        },
+        {
+          "file": "fishermanonkeuka",
+          "title": "fisherman on keuka"
+        },
+        {
+          "file": "gardenparty",
+          "title": "garden party"
+        },
+        {
+          "file": "hisandhers",
+          "title": "his and hers"
+        },
+        {
+          "file": "nycwinter",
+          "title": "nyc winter"
+        },
+        {
+          "file": "layhere",
+          "title": "lay here"
+        },
+        {
+          "file": "liminalbeach",
+          "title": "liminal beach"
+        },
+        {
+          "file": "mistysf",
+          "title": "misty sf"
+        },
+        {
+          "file": "nycbeach",
+          "title": "nyc beach"
+        },
+        {
+          "file": "staringcontest",
+          "title": "staring contest"
+        },
+        {
+          "file": "staringcontestwinner",
+          "title": "staring contest winner"
+        },
+        {
+          "file": "paradisema",
+          "title": "paradise, ma"
+        },
+        {
+          "file": "shygurl",
+          "title": "shy gurl"
+        },
+        {
+          "file": "mooyouwhore",
+          "title": "moo you whore"
+        },
+        {
+          "file": "samefeather",
+          "title": "same feather"
+        },
+        {
+          "file": "skycloudslandclouds",
+          "title": "sky clouds land clouds"
+        },
+        {
+          "file": "sliceofheaven",
+          "title": "slice of heaven"
+        },
+        {
+          "file": "stargaze",
+          "title": "stargaze"
+        },
+        {
+          "file": "sutrobaths",
+          "title": "sutro baths"
+        },
+        {
+          "file": "weouthere",
+          "title": "we out here"
+        },
+        {
+          "file": "urbanprism",
+          "title": "urban prism"
+        },
+        {
+          "file": "alligatorhotdog",
+          "title": "alligator hotdog"
+        },
+        {
+          "file": "sneakypete",
+          "title": "sneaky pete"
+        },
+        {
+          "file": "americhuh-naaah",
+          "title": "americhuh? naaah"
+        },
+        {
+          "file": "misterskyblue",
+          "title": "mister sky blue"
+        },
+        {
+          "file": "horseplay",
+          "title": "horseplay"
+        },
+        {
+          "file": "housewinning",
+          "title": "house winning"
+        },
+        {
+          "file": "bettheirbottomdollar",
+          "title": "bet their bottom dollar"
+        },
+        {
+          "file": "twinspeek",
+          "title": "twins peek"
+        },
+        {
+          "file": "be-s-tbuds",
+          "title": "be(s)t buds"
+        },
+        {
+          "file": "supercyan",
+          "title": "super cyan"
+        }
       ]
     },
     {
@@ -55,21 +184,63 @@
       "slug": "textural-healing",
       "prints": "https://restenergy.pixieset.com/texturalhealing/",
       "photos": [
-        "afternoonnapview",
-        "applezen",
-        "bkbotanical1",
+        {
+          "file": "afternoonnapview",
+          "title": "afternoon nap view"
+        },
+        {
+          "file": "applezen",
+          "title": "apple zen"
+        },
+        {
+          "file": "bkbotanical1",
+          "title": "bk botanical 1"
+        },
         "r0020016",
-        "bkbotanical2",
-        "bkbotanical3",
-        "bumpyride",
-        "catchawave",
-        "creepingin",
-        "greatdaytobeatermite",
-        "inhaleexhale",
-        "intimacy",
-        "itchyeyes",
-        "lynchflorals",
-        "pnwfuzz",
+        {
+          "file": "bkbotanical2",
+          "title": "bk botanical 2"
+        },
+        {
+          "file": "bkbotanical3",
+          "title": "bk botanical 3"
+        },
+        {
+          "file": "bumpyride",
+          "title": "bumpy ride"
+        },
+        {
+          "file": "catchawave",
+          "title": "catch a wave"
+        },
+        {
+          "file": "creepingin",
+          "title": "creeping in"
+        },
+        {
+          "file": "greatdaytobeatermite",
+          "title": "great day to be a termite"
+        },
+        {
+          "file": "inhaleexhale",
+          "title": "inhale exhale"
+        },
+        {
+          "file": "intimacy",
+          "title": "intimacy"
+        },
+        {
+          "file": "itchyeyes",
+          "title": "itchy eyes"
+        },
+        {
+          "file": "lynchflorals",
+          "title": "lynch florals"
+        },
+        {
+          "file": "pnwfuzz",
+          "title": "pnw fuzz"
+        },
         "r0017582",
         "r0018165",
         "r0020013",
@@ -78,10 +249,22 @@
         "r0018531",
         "r0019228",
         "r0020012",
-        "redheads",
-        "slick",
-        "smashedpumpkins",
-        "snowlines",
+        {
+          "file": "redheads",
+          "title": "redheads"
+        },
+        {
+          "file": "slick",
+          "title": "slick"
+        },
+        {
+          "file": "smashedpumpkins",
+          "title": "smashed pumpkins"
+        },
+        {
+          "file": "snowlines",
+          "title": "snow lines"
+        },
         "r0020800",
         "r0020988",
         "r0021444",
@@ -94,26 +277,86 @@
       "slug": "take-a-hike",
       "prints": "https://restenergy.pixieset.com/outonahike/",
       "photos": [
-        "aquinnahcliff",
-        "blueridgemountains",
-        "brushstrokes",
-        "californiaredwoods",
-        "coldsprings",
-        "evergladesshowoff",
-        "lookup",
-        "wellfed",
-        "newyorkwinter",
-        "oregoncoast",
-        "oregoncoast2",
-        "sacredplace",
-        "oregoncoast3",
-        "restingplace",
-        "middleofnowhere",
-        "restingplace2",
-        "secretbeach",
-        "sneakingaround",
-        "californiaredwoods2",
-        "trueabundance",
+        {
+          "file": "aquinnahcliff",
+          "title": "aquinnah cliff"
+        },
+        {
+          "file": "blueridgemountains",
+          "title": "blue ridge mountains"
+        },
+        {
+          "file": "brushstrokes",
+          "title": "brush strokes"
+        },
+        {
+          "file": "californiaredwoods",
+          "title": "california redwoods"
+        },
+        {
+          "file": "coldsprings",
+          "title": "cold springs"
+        },
+        {
+          "file": "evergladesshowoff",
+          "title": "everglades show off"
+        },
+        {
+          "file": "lookup",
+          "title": "look up"
+        },
+        {
+          "file": "wellfed",
+          "title": "well fed"
+        },
+        {
+          "file": "newyorkwinter",
+          "title": "new york winter"
+        },
+        {
+          "file": "oregoncoast",
+          "title": "oregon coast"
+        },
+        {
+          "file": "oregoncoast2",
+          "title": "oregon coast 2"
+        },
+        {
+          "file": "sacredplace",
+          "title": "sacred place"
+        },
+        {
+          "file": "oregoncoast3",
+          "title": "oregon coast 3"
+        },
+        {
+          "file": "restingplace",
+          "title": "resting place"
+        },
+        {
+          "file": "middleofnowhere",
+          "title": "middle of nowhere"
+        },
+        {
+          "file": "restingplace2",
+          "title": "resting place 2"
+        },
+        {
+          "file": "secretbeach",
+          "title": "secret beach"
+        },
+        {
+          "file": "sneakingaround",
+          "title": "sneaking around"
+        },
+        {
+          "file": "californiaredwoods2",
+          "title": "california redwoods 2"
+        },
+        {
+          "file": "trueabundance",
+          "title": "true abundance"
+        },
         "r0021647",
         "r0021653",
         "r0021767",
