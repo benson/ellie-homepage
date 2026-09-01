@@ -20,7 +20,7 @@
   lb.hidden = true;
   lb.innerHTML =
     '<button type="button" class="re-lb-close" aria-label="close">&times;</button>' +
-    '<button type="button" class="re-lb-nav re-lb-prev" aria-label="previous">&#8249;</button>' +
+    '<button type="button" class="re-lb-nav re-lb-prev" aria-label="previous"><svg viewBox="0 0 20 24" aria-hidden="true"><path d="M16 2 4 12l12 10z"/></svg></button>' +
     '<figure class="re-lb-figure">' +
       '<img class="re-lb-img" src="" alt="">' +
       '<figcaption class="re-lb-cap">' +
@@ -28,7 +28,7 @@
         '<span class="re-lb-caption"></span>' +
       '</figcaption>' +
     '</figure>' +
-    '<button type="button" class="re-lb-nav re-lb-next" aria-label="next">&#8250;</button>';
+    '<button type="button" class="re-lb-nav re-lb-next" aria-label="next"><svg viewBox="0 0 20 24" aria-hidden="true"><path d="M4 2l12 10L4 22z"/></svg></button>';
   document.body.appendChild(lb);
 
   const lbImg = lb.querySelector('.re-lb-img');

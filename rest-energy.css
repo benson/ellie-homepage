@@ -248,13 +248,22 @@ body.re-lb-open { overflow: hidden; }
   background: none;
   border: none;
   color: rgba(243, 231, 187, 0.7);
-  font-size: 2.8rem;
-  line-height: 1;
-  width: 46px;
-  height: 46px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
   cursor: pointer;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: color 0.16s ease, transform 0.16s ease;
+}
+.re-lb-nav svg {
+  display: block;
+  width: 20px;
+  height: 24px;
+  fill: currentColor;
+  stroke: none;
 }
 .re-lb-nav:hover { color: #fff; transform: scale(1.18); }
 
@@ -294,10 +303,8 @@ body.re-lb-open { overflow: hidden; }
     background: none;
     width: auto;
     height: auto;
-    font-size: 2rem;
-    line-height: 1;
-    color: rgba(243, 231, 187, 0.8);
-    padding: 6px 30px 10px;
+    color: rgba(243, 231, 187, 0.85);
+    padding: 8px 30px 12px;
   }
   .re-lb-prev { grid-row: 2; grid-column: 1; justify-self: end; }
   .re-lb-next { grid-row: 2; grid-column: 2; justify-self: start; }

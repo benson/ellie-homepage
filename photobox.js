@@ -17,7 +17,7 @@
     lb.hidden = true;
     lb.innerHTML =
       '<button type="button" class="pb-close" aria-label="close">&times;</button>' +
-      '<button type="button" class="pb-nav pb-prev" aria-label="previous">&#8249;</button>' +
+      '<button type="button" class="pb-nav pb-prev" aria-label="previous"><svg viewBox="0 0 20 24" aria-hidden="true"><path d="M16 2 4 12l12 10z"/></svg></button>' +
       '<figure class="pb-figure">' +
         '<img class="pb-img" src="" alt="">' +
         '<figcaption class="pb-cap">' +
@@ -25,7 +25,7 @@
           '<span class="pb-count"></span>' +
         '</figcaption>' +
       '</figure>' +
-      '<button type="button" class="pb-nav pb-next" aria-label="next">&#8250;</button>';
+      '<button type="button" class="pb-nav pb-next" aria-label="next"><svg viewBox="0 0 20 24" aria-hidden="true"><path d="M4 2l12 10L4 22z"/></svg></button>';
     document.body.appendChild(lb);
 
     img = lb.querySelector('.pb-img');
