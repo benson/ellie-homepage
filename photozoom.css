@@ -68,10 +68,10 @@
 .pz-expanded .pb-cap { opacity: 0.72; }
 
 @media (max-width: 600px) {
-  .pz-bar { top: 12px; left: 14px; gap: 6px; }
-  .pz-btn { font-size: 1.45rem; padding: 6px 8px; }
-  .pz-btn svg { width: 20px; height: 20px; }
-  .pz-level { min-width: 36px; }
+  .pz-bar { top: 10px; left: 12px; gap: 3px; }
+  .pz-btn { font-size: 1.1rem; padding: 4px 6px; }
+  .pz-btn svg { width: 15px; height: 15px; }
+  .pz-level { min-width: 30px; font-size: 0.58rem; }
   .pz-expanded .re-lb-img,
   .pz-expanded .pb-img { max-width: 99vw; max-height: 88vh; }
 }

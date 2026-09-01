@@ -275,17 +275,22 @@ body.re-lb-open { overflow: hidden; }
 }
 
 @media (max-width: 600px) {
-  body.rest-energy { padding: 44px 20px 80px; }
+  body.rest-energy { padding: 44px 12px 80px; }
   .re-title img.section-label-img { height: 72px; }
   .re-acc-title { font-size: 1.6rem; }
   .re-strip { gap: 6px; padding-bottom: 20px; }
   .re-strip img { height: 68px; }
-  .re-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
+  /* three across, breaking out of the body padding so it reaches the edges */
+  .re-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin: 0 -12px;
+  }
 
   /* on phones the side arrows move to a row at the bottom, centered under
      the count — no box, off the photo */
   .re-lightbox {
-    padding: 16px;
+    padding: 52px 10px 16px;   /* top strip kept clear for the zoom + close controls */
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr auto;
@@ -298,7 +303,7 @@ body.re-lb-open { overflow: hidden; }
     justify-self: center;
     align-self: center;
   }
-  .re-lb-img { max-width: 92vw; }
+  .re-lb-img { max-width: 96vw; max-height: 68vh; }
   .re-lb-nav {
     background: none;
     width: auto;
@@ -306,6 +311,7 @@ body.re-lb-open { overflow: hidden; }
     color: rgba(243, 231, 187, 0.85);
     padding: 8px 30px 12px;
   }
+  .re-lb-close { top: 9px; right: 12px; font-size: 1.6rem; padding: 2px 6px; }
   .re-lb-prev { grid-row: 2; grid-column: 1; justify-self: end; }
   .re-lb-next { grid-row: 2; grid-column: 2; justify-self: start; }
 }

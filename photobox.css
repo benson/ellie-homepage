@@ -95,7 +95,7 @@ body.pb-open { overflow: hidden; }
    to a row at the bottom, centered under the count, no box, off the photo */
 @media (max-width: 600px) {
   .pb-lightbox {
-    padding: 16px;
+    padding: 52px 10px 16px;   /* top strip kept clear for the zoom + close controls */
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr auto;
@@ -108,7 +108,7 @@ body.pb-open { overflow: hidden; }
     justify-self: center;
     align-self: center;
   }
-  .pb-img { max-width: 92vw; }
+    .pb-img { max-width: 92vw; }
   .pb-nav {
     background: none;
     border-radius: 0;
@@ -117,6 +117,7 @@ body.pb-open { overflow: hidden; }
     color: rgba(243, 231, 187, 0.85);
     padding: 8px 30px 12px;
   }
+  .pb-close { top: 9px; right: 12px; font-size: 1.6rem; padding: 2px 6px; }
   .pb-prev { grid-row: 2; grid-column: 1; justify-self: end; }
   .pb-next { grid-row: 2; grid-column: 2; justify-self: start; }
 }
