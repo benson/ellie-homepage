@@ -117,7 +117,6 @@
       head.innerHTML =
         '<span class="re-acc-title">' + col.title + '</span>' +
         '<span class="re-acc-meta">' +
-          '<span class="re-acc-count">' + photos.length + '</span>' +
           '<span class="re-acc-icon" aria-hidden="true"></span>' +
         '</span>';
 
@@ -134,9 +133,7 @@
         img.src = p.thumb;
         img.alt = p.title || '';
         img.loading = 'lazy';
-        img.dataset.ratio = ratios[p.src + '/' + p.file] || '';
         img.addEventListener('click', () => openLightbox(lbList, i));
-        img.addEventListener('load', () => { if (!img.dataset.ratio) justifyGrid(grid); });
         grid.appendChild(img);
       });
       inner.appendChild(grid);
@@ -159,7 +156,6 @@
       head.addEventListener('click', () => {
         const open = section.classList.toggle('open');
         head.setAttribute('aria-expanded', open ? 'true' : 'false');
-        if (open) requestAnimationFrame(() => justifyGrid(grid));
       });
 
       // preview strip — a right-aligned taste of the collection, shown while
@@ -182,60 +178,7 @@
       section.appendChild(panel);
       root.appendChild(section);
     });
-    requestAnimationFrame(justifyAll);
   }
-
-  // ---- justified rows: equal-height rows, flush left+right, no cropping ----
-  function targetRowHeight(W) {
-    if (W <= 480) return 240;
-    if (W <= 820) return 340;
-    return 440;
-  }
-  function ratioOf(img) {
-    const r = parseFloat(img.dataset.ratio);
-    if (r) return r;
-    if (img.naturalWidth && img.naturalHeight) return img.naturalWidth / img.naturalHeight;
-    return 1.4;
-  }
-  function justifyGrid(grid) {
-    const imgs = Array.prototype.slice.call(grid.querySelectorAll('.re-photo'));
-    if (!imgs.length) return;
-    const W = grid.clientWidth;
-    if (!W) return;
-    const gap = parseFloat(getComputedStyle(grid).gap) || 6;
-    const targetH = targetRowHeight(W);
-    let row = [], sumA = 0;
-    const rows = [];
-    imgs.forEach(im => {
-      const a = ratioOf(im);
-      im._ar = a;
-      row.push(im);
-      sumA += a;
-      if (sumA * targetH + gap * (row.length - 1) >= W) { rows.push({ r: row, sumA: sumA }); row = []; sumA = 0; }
-    });
-    if (row.length) rows.push({ r: row, sumA: sumA });
-    rows.forEach((o, idx) => {
-      const gaps = gap * (o.r.length - 1);
-      const last = idx === rows.length - 1;
-      let h = last ? Math.min(targetH, (W - gaps) / o.sumA) : (W - gaps) / o.sumA;
-      o.r.forEach(im => {
-        im.style.width = Math.floor(im._ar * h) + 'px';
-        im.style.height = Math.round(h) + 'px';
-      });
-    });
-  }
-  function justifyAll() {
-    Array.prototype.slice.call(root.querySelectorAll('.re-grid')).forEach(justifyGrid);
-  }
-  // reflow on resize, but only when the width actually changed (ignore mobile
-  // toolbar show/hide height jitter), debounced so it never thrashes
-  let lastW = window.innerWidth, rzT;
-  window.addEventListener('resize', () => {
-    if (window.innerWidth === lastW) return;
-    lastW = window.innerWidth;
-    clearTimeout(rzT);
-    rzT = setTimeout(justifyAll, 120);
-  });
 
   // collections built in the arrange page's sort mode. they live entirely in
   // the saved arrangement — each photo just points at the folder it already

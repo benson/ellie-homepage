@@ -84,13 +84,6 @@ body.rest-energy {
   flex-shrink: 0;
   color: var(--text-muted);
 }
-.re-acc-count {
-  font-size: 0.68rem;
-  letter-spacing: 0.1em;
-  text-transform: lowercase;
-}
-.re-acc-count::after { content: ' photos'; }
-
 /* drop-arrow indicator (chevron; points down, flips up when open) */
 .re-acc-icon {
   width: 9px;
@@ -103,7 +96,7 @@ body.rest-energy {
 }
 .re-acc.open .re-acc-icon { transform: rotate(-135deg); }
 
-/* preview strip — right-aligned taste of each collection while closed */
+/* preview strip — shown once a collection is collapsed */
 .re-strip {
   display: flex;
   justify-content: flex-end;
@@ -156,27 +149,33 @@ body.rest-energy {
   background: rgba(244, 237, 228, 0.06);
 }
 
-/* ---- justified photo grid (equal-height rows, flush edges; JS sizes each) ---- */
+/* ---- photo grid: even squares, three across ---- */
 .re-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
 .re-photo {
   display: block;
-  height: auto;           /* JS sets explicit width/height per row */
+  width: 100%;
+  aspect-ratio: 1;
   object-fit: cover;
   border-radius: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.28);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
   cursor: zoom-in;
-  transition: box-shadow 0.18s ease, filter 0.18s ease;
-  filter: brightness(0.97);
+  /* a hairline of warm light plus a soft halo, so photos sit above the page */
+  box-shadow:
+    0 0 0 1px rgba(233, 218, 177, 0.26),
+    0 0 18px rgba(233, 218, 177, 0.15),
+    0 6px 20px rgba(0, 0, 0, 0.42);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 .re-photo:hover {
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
-  filter: brightness(1.07);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(233, 218, 177, 0.4),
+    0 0 28px rgba(233, 218, 177, 0.24),
+    0 10px 26px rgba(0, 0, 0, 0.5);
 }
 
 /* ---- lightbox / slideshow ---- */
@@ -277,10 +276,9 @@ body.re-lb-open { overflow: hidden; }
   body.rest-energy { padding: 44px 20px 80px; }
   .re-title img.section-label-img { height: 72px; }
   .re-acc-title { font-size: 1.6rem; }
-  .re-acc-count::after { content: ""; }
   .re-strip { gap: 6px; padding-bottom: 20px; }
   .re-strip img { height: 68px; }
-  .re-grid { gap: 4px; }
+  .re-grid { grid-template-columns: repeat(2, 1fr); gap: 6px; }
 
   /* on phones the side arrows move to a row at the bottom, centered under
      the count — no box, off the photo */
