@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>layout options · rest energy</title>
 <meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Fraunces:opsz,wght@9..144,300..700&family=Cormorant+Garamond:wght@300;400;500&family=EB+Garamond:wght@400;500&family=Syne:wght@400;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css?v=111">
 <link rel="stylesheet" href="../rest-energy.css?v=20">
 <style>
@@ -106,6 +109,17 @@
   body[data-arrow="edge"] .sv-nav{width:16vw;height:74vh;color:transparent}
   body[data-arrow="edge"] .sv-nav svg{width:30px;height:30px}
   body[data-arrow="edge"] .sv-nav:hover{color:rgba(243,231,187,.85)}
+
+  /* ---- collection-name font options ---- */
+  body[data-font="cutive"]    .lo-title, body[data-font="cutive"]    .sv-cap { font-family:'Cutive Mono',monospace; }
+  body[data-font="instrument"] .lo-title, body[data-font="instrument"] .sv-cap { font-family:'Instrument Serif',serif; font-size:2rem; letter-spacing:.01em; }
+  body[data-font="fraunces"]  .lo-title, body[data-font="fraunces"]  .sv-cap { font-family:'Fraunces',serif; font-weight:400; font-size:1.7rem; }
+  body[data-font="cormorant"] .lo-title, body[data-font="cormorant"] .sv-cap { font-family:'Cormorant Garamond',serif; font-weight:400; font-size:2rem; }
+  body[data-font="ebgaramond"] .lo-title, body[data-font="ebgaramond"] .sv-cap { font-family:'EB Garamond',serif; font-weight:400; font-size:1.8rem; }
+  body[data-font="syne"]      .lo-title, body[data-font="syne"]      .sv-cap { font-family:'Syne',sans-serif; font-weight:600; font-size:1.5rem; }
+  body[data-font="dmmono"]    .lo-title, body[data-font="dmmono"]    .sv-cap { font-family:'DM Mono',monospace; font-weight:300; font-size:1.45rem; }
+  body[data-font="site"]      .lo-title, body[data-font="site"]      .sv-cap { font-family:inherit; font-weight:500; font-size:1.5rem; }
+  .sv-cap { font-size:1.05rem !important; }
 </style>
 </head>
 <body class="rest-energy">
@@ -114,6 +128,7 @@
   <span class="lo-dial" id="lo-glow"><span>glow</span></span>
   <span class="lo-dial" id="lo-bg"><span>background</span></span>
   <span class="lo-dial" id="lo-arrow"><span>arrows</span></span>
+  <span class="lo-dial" id="lo-font"><span>name font</span></span>
   <a class="lo-now" href="./">what you have now &rarr;</a>
 </div>
 <header class="re-header">
@@ -207,6 +222,7 @@ document.addEventListener('keydown',e=>{if(!sv.classList.contains('on'))return;
 
 dial('lo-glow','glow',[['none','none'],['soft','soft'],['medium','medium'],['strong','strong']],'soft');
 dial('lo-bg','bg',[['leaf','leaf'],['dimleaf','dim leaf'],['forest','forest'],['deep','deep'],['ink','ink (now)'],['fade','fade']],'ink');
+dial('lo-font','font',[['cutive','cutive mono (now)'],['instrument','instrument serif'],['fraunces','fraunces'],['cormorant','cormorant'],['ebgaramond','eb garamond'],['syne','syne'],['dmmono','dm mono'],['site','site font']],'cutive');
 dial('lo-arrow','arrow',[['chevron','chevron (now)'],['line','line'],['circle','circle'],['triangle','triangle'],['edge','edge']],'line');
 document.getElementById('lo-arrow').addEventListener('click',()=>setTimeout(paintArrows,0));
 (async()=>{
