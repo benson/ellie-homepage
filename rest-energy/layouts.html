@@ -18,6 +18,10 @@
   body.has-cols .lo-cols{display:flex}
   .lo-cols span{font-size:.66rem;letter-spacing:.08em;color:var(--text-muted)}
   .lo-cols button{padding:5px 12px}
+  .lo-dial{display:flex;align-items:center;gap:6px;margin-left:16px;
+    padding-left:16px;border-left:1px solid rgba(233,218,177,.22)}
+  .lo-dial span{font-size:.66rem;letter-spacing:.08em;color:var(--text-muted)}
+  .lo-dial button{padding:5px 12px}
   .lo-now{align-self:center;margin-left:14px;font-size:.7rem;letter-spacing:.06em;
     color:var(--text-muted);text-decoration:none;border-bottom:1px solid rgba(233,218,177,.3)}
   .lo-now:hover{color:var(--text-bright)}
@@ -27,7 +31,20 @@
     padding-bottom:10px;margin-bottom:22px}
   .lo-title{font-family:'Cutive Mono',monospace;font-size:1.5rem;color:var(--text-bright);text-transform:lowercase}
   .lo-count{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted)}
-  .lo-wrap img{display:block;cursor:pointer}
+  .lo-wrap img{display:block;cursor:pointer;transition:box-shadow .2s ease,transform .2s ease}
+
+  /* glow — how much the photos lift off the page */
+  body[data-glow="soft"]   .lo-wrap img{box-shadow:0 0 0 1px rgba(233,218,177,.16), 0 0 10px rgba(233,218,177,.09), 0 4px 14px rgba(0,0,0,.35)}
+  body[data-glow="medium"] .lo-wrap img{box-shadow:0 0 0 1px rgba(233,218,177,.26), 0 0 18px rgba(233,218,177,.15), 0 6px 20px rgba(0,0,0,.42)}
+  body[data-glow="strong"] .lo-wrap img{box-shadow:0 0 0 1px rgba(233,218,177,.4),  0 0 30px rgba(233,218,177,.26), 0 8px 26px rgba(0,0,0,.5)}
+  body:not([data-glow="none"]) .lo-wrap img:hover{transform:translateY(-2px)}
+
+  /* background — the page behind everything */
+  body[data-bg="dimleaf"]{background-image:linear-gradient(rgba(24,30,21,.93),rgba(24,30,21,.96)),url('../bg/current.jpg')}
+  body[data-bg="forest"]{background-image:none;background-color:#2d3826}
+  body[data-bg="deep"]{background-image:none;background-color:#1e2419}
+  body[data-bg="ink"]{background-image:none;background-color:#14170f}
+  body[data-bg="fade"]{background-image:linear-gradient(#2d3826,#191e15);background-color:#191e15}
 
   /* A — masonry columns */
   .lo-columns{column-count:var(--cols,3);column-gap:10px}
@@ -57,6 +74,8 @@
 <body class="rest-energy">
 <div class="lo-bar" id="lo-bar">
   <span class="lo-cols" id="lo-cols"><span>per row</span></span>
+  <span class="lo-dial" id="lo-glow"><span>glow</span></span>
+  <span class="lo-dial" id="lo-bg"><span>background</span></span>
   <a class="lo-now" href="./">what you have now &rarr;</a>
 </div>
 <header class="re-header">
@@ -68,7 +87,15 @@
 <div class="lo-wrap" id="lo-wrap"></div>
 <script>
 const MODES=[['columns','columns'],['grid','grid'],['stack','big'],['strip','filmstrip']];
-let manifest,ratios={},mode='grid',cols=3;
+let manifest,ratios={},mode='grid',cols=4;
+function dial(boxId,attr,opts,initial){
+  const box=document.getElementById(boxId);
+  const set=v=>{document.body.dataset[attr]=v;
+    [...box.querySelectorAll('button')].forEach(b=>b.classList.toggle('on',b.dataset.v===v));};
+  opts.forEach(([v,label])=>{const b=document.createElement('button');b.textContent=label;b.dataset.v=v;
+    b.onclick=()=>set(v);box.appendChild(b);});
+  set(initial);
+}
 const bar=document.getElementById('lo-bar'),wrap=document.getElementById('lo-wrap');
 const colBox=document.getElementById('lo-cols');
 [2,3,4,5,6].forEach(n=>{const b=document.createElement('button');b.textContent=n;b.dataset.n=n;
@@ -97,6 +124,8 @@ function draw(){
   });
   window.scrollTo(0,0);
 }
+dial('lo-glow','glow',[['none','none'],['soft','soft'],['medium','medium'],['strong','strong']],'soft');
+dial('lo-bg','bg',[['leaf','leaf (now)'],['dimleaf','dim leaf'],['forest','forest'],['deep','deep'],['ink','ink'],['fade','fade']],'leaf');
 (async()=>{
   const [m,r]=await Promise.all([fetch('manifest.json?v='+Date.now()),fetch('ratios.json?v='+Date.now())]);
   manifest=await m.json();ratios=await r.json();draw();
