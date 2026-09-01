@@ -122,8 +122,9 @@ body.mode-captions .arr-col.open .arr-caps { display: flex; flex-direction: colu
 .arr-col:not(.open) .arr-grid { display: none; }
 body.mode-captions .arr-grid { display: none; }
 .arr-col-title {
-  font-family: 'Cutive Mono', monospace;
-  font-size: 1.4rem;
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+  font-size: 1.3rem;
   color: var(--text-bright);
   text-transform: lowercase;
 }
@@ -352,8 +353,9 @@ body.arr-dragging .arr-tile { cursor: grabbing; }
 .arr-new-fields input:focus { outline: none; border-color: var(--text-muted); }
 .arr-new-name {
   flex: 2 1 220px;
-  font-family: 'Cutive Mono', monospace;
-  font-size: 1.05rem;
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+  font-size: 1rem;
 }
 .arr-new-prints { flex: 1 1 180px; font-size: 0.8rem; }
 

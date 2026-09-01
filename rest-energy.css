@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap');
 
 /* Rest Energy — ellie's photography portfolio page */
 
@@ -66,9 +66,10 @@ body.rest-energy {
 }
 
 .re-acc-title {
-  /* collection names — soft typewriter */
-  font-family: 'Cutive Mono', monospace;
-  font-size: 1.9rem;
+  /* collection names — light typewriter */
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+  font-size: 1.7rem;
   line-height: 1.2;
   color: var(--text-bright);
   text-transform: lowercase;
@@ -219,8 +220,9 @@ body.re-lb-open { overflow: hidden; }
   max-width: 70ch;
 }
 .re-lb-title {
-  font-family: 'Cutive Mono', monospace;
-  font-size: 1.05rem;
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+  font-size: 1rem;
   color: var(--text-bright);
   text-transform: lowercase;
 }
@@ -277,7 +279,7 @@ body.re-lb-open { overflow: hidden; }
 @media (max-width: 600px) {
   body.rest-energy { padding: 44px 12px 80px; }
   .re-title img.section-label-img { height: 72px; }
-  .re-acc-title { font-size: 1.6rem; }
+  .re-acc-title { font-size: 1.45rem; }
   .re-strip { gap: 6px; padding-bottom: 20px; }
   .re-strip img { height: 68px; }
   /* three across, breaking out of the body padding so it reaches the edges */
