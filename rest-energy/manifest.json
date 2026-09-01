@@ -185,8 +185,8 @@
       "prints": "https://restenergy.pixieset.com/texturalhealing/",
       "photos": [
         {
-          "file": "afternoonnapview",
-          "title": "afternoon nap view"
+          "file": "seethrough",
+          "title": "see through"
         },
         {
           "file": "applezen",
@@ -196,7 +196,10 @@
           "file": "bkbotanical1",
           "title": "bk botanical 1"
         },
-        "r0020016",
+        {
+          "file": "vineyardwhines",
+          "title": "vineyard whines"
+        },
         {
           "file": "bkbotanical2",
           "title": "bk botanical 2"
@@ -241,14 +244,38 @@
           "file": "pnwfuzz",
           "title": "pnw fuzz"
         },
-        "r0017582",
-        "r0018165",
-        "r0020013",
-        "r0018316",
-        "r0018528",
-        "r0018531",
-        "r0019228",
-        "r0020012",
+        {
+          "file": "bigwingsfan",
+          "title": "big wings fan"
+        },
+        {
+          "file": "sharethespotlight",
+          "title": "share the spotlight"
+        },
+        {
+          "file": "dusttodusk",
+          "title": "dust to dusk"
+        },
+        {
+          "file": "feelingprickly",
+          "title": "feeling prickly"
+        },
+        {
+          "file": "lookup2",
+          "title": "look up"
+        },
+        {
+          "file": "stardust",
+          "title": "stardust"
+        },
+        {
+          "file": "backstroke",
+          "title": "backstroke?"
+        },
+        {
+          "file": "afternoonwalk",
+          "title": "afternoon walk"
+        },
         {
           "file": "redheads",
           "title": "redheads"
@@ -265,11 +292,26 @@
           "file": "snowlines",
           "title": "snow lines"
         },
-        "r0020800",
-        "r0020988",
-        "r0021444",
-        "r0021446",
-        "r0021711"
+        {
+          "file": "idealhammockview",
+          "title": "ideal hammock view"
+        },
+        {
+          "file": "gardenparty2",
+          "title": "garden party"
+        },
+        {
+          "file": "pro-glare",
+          "title": "pro-glare"
+        },
+        {
+          "file": "whattimeisit",
+          "title": "what time is it"
+        },
+        {
+          "file": "socialclimber",
+          "title": "social climber"
+        }
       ]
     },
     {
@@ -357,10 +399,22 @@
           "file": "trueabundance",
           "title": "true abundance"
         },
-        "r0021647",
-        "r0021653",
-        "r0021767",
-        "r0021779"
+        {
+          "file": "fairytrampoline",
+          "title": "fairy trampoline"
+        },
+        {
+          "file": "smotherme",
+          "title": "smother me"
+        },
+        {
+          "file": "goetheskindofpurple",
+          "title": "goethe's kind of purple"
+        },
+        {
+          "file": "anyonehome",
+          "title": "anyone home?"
+        }
       ]
     }
   ]

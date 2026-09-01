@@ -17,7 +17,11 @@
 
   let manifest = null;
   const state = {};      // slug -> { remove:Set, orig:[file...], captions:{}, origCaptionsJson }
-  const srcOf = {};      // file -> the collection folder its image actually lives in
+  // file -> the collection folder its image actually lives in. this assumes photo
+  // file names are UNIQUE SITE-WIDE — sort mode identifies a photo by name when it
+  // moves between collections. when adding photos, give any name that already exists
+  // in another collection a numbered suffix (gardenparty2), as the manifest does.
+  const srcOf = {};
   let mode = 'arrange';
 
   // the re-sorted collection built in sort mode (one for now; stored as a list
