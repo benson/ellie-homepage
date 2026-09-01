@@ -13,6 +13,11 @@
   .lo-bar button{background:none;border:1px solid rgba(233,218,177,.35);color:var(--text-muted);
     border-radius:999px;padding:6px 16px;font-family:inherit;font-size:.72rem;letter-spacing:.06em;cursor:pointer}
   .lo-bar button.on{background:var(--text-main);color:#2d3826;border-color:var(--text-main)}
+  .lo-cols{display:none;align-items:center;gap:6px;margin-left:16px;
+    padding-left:16px;border-left:1px solid rgba(233,218,177,.22)}
+  body.has-cols .lo-cols{display:flex}
+  .lo-cols span{font-size:.66rem;letter-spacing:.08em;color:var(--text-muted)}
+  .lo-cols button{padding:5px 12px}
   .lo-now{align-self:center;margin-left:14px;font-size:.7rem;letter-spacing:.06em;
     color:var(--text-muted);text-decoration:none;border-bottom:1px solid rgba(233,218,177,.3)}
   .lo-now:hover{color:var(--text-bright)}
@@ -25,11 +30,11 @@
   .lo-wrap img{display:block;cursor:pointer}
 
   /* A — masonry columns */
-  .lo-columns{column-count:3;column-gap:10px}
+  .lo-columns{column-count:var(--cols,3);column-gap:10px}
   .lo-columns img{width:100%;margin:0 0 10px;break-inside:avoid}
 
   /* B — uniform square grid */
-  .lo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px}
+  .lo-grid{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:8px}
   .lo-grid img{width:100%;aspect-ratio:1;object-fit:cover}
 
   /* C — big single column */
@@ -42,7 +47,7 @@
 
   @media(max-width:600px){
     .lo-columns{column-count:2}
-    .lo-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}
+    .lo-grid{grid-template-columns:repeat(2,1fr)}
     .lo-stack{gap:36px}
     .lo-stack img{max-width:92vw}
     .lo-strip img{height:210px}
@@ -50,7 +55,10 @@
 </style>
 </head>
 <body class="rest-energy">
-<div class="lo-bar" id="lo-bar"><a class="lo-now" href="./">what you have now &rarr;</a></div>
+<div class="lo-bar" id="lo-bar">
+  <span class="lo-cols" id="lo-cols"><span>per row</span></span>
+  <a class="lo-now" href="./">what you have now &rarr;</a>
+</div>
 <header class="re-header">
   <div class="re-title">
     <img class="section-label-img" src="../labels/rest-energy.png?v=2" alt="rest energy">
@@ -60,13 +68,21 @@
 <div class="lo-wrap" id="lo-wrap"></div>
 <script>
 const MODES=[['columns','columns'],['grid','grid'],['stack','big'],['strip','filmstrip']];
-let manifest,ratios={},mode='columns';
+let manifest,ratios={},mode='grid',cols=3;
 const bar=document.getElementById('lo-bar'),wrap=document.getElementById('lo-wrap');
+const colBox=document.getElementById('lo-cols');
+[2,3,4,5,6].forEach(n=>{const b=document.createElement('button');b.textContent=n;b.dataset.n=n;
+  b.onclick=()=>{cols=n;document.documentElement.style.setProperty('--cols',n);
+    [...colBox.querySelectorAll('button')].forEach(x=>x.classList.toggle('on',+x.dataset.n===cols));};
+  colBox.appendChild(b);});
 MODES.forEach(([k,label])=>{const b=document.createElement('button');b.textContent=label;b.dataset.k=k;
   b.onclick=()=>{mode=k;draw();};bar.insertBefore(b,bar.querySelector('.lo-now'));});
 function fileOf(e){return typeof e==='string'?e:e.file}
 function draw(){
-  [...bar.children].forEach(b=>b.classList.toggle('on',b.dataset.k===mode));
+  [...bar.querySelectorAll('button[data-k]')].forEach(b=>b.classList.toggle('on',b.dataset.k===mode));
+  document.body.classList.toggle('has-cols', mode==='grid'||mode==='columns');
+  document.documentElement.style.setProperty('--cols',cols);
+  [...colBox.querySelectorAll('button')].forEach(x=>x.classList.toggle('on',+x.dataset.n===cols));
   wrap.innerHTML='';
   manifest.collections.forEach(col=>{
     const sec=document.createElement('section');sec.className='lo-col';
