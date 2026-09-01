@@ -298,7 +298,19 @@
   }
 
   // fetch the saved arrangement from the backend, but never let it stall the
-  // gallery — bail to the static manifest after a short timeout or any error
+  // gallery — bail after a short timeout or any error.
+  // the apps script cold-starts well past that timeout, which used to drop the
+  // page back to the static manifest and show stale titles, so the last good
+  // answer is kept in localStorage and used when the live one doesn't arrive.
+  const ARR_CACHE = 'restenergy-arrangement';
+
+  function cachedArrangement() {
+    try {
+      const s = localStorage.getItem(ARR_CACHE);
+      return s ? JSON.parse(s) : null;
+    } catch (e) { return null; }
+  }
+
   async function fetchArrangement() {
     if (!window.STUDIO_API_URL) return null;
     try {
@@ -307,9 +319,11 @@
         new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 1800)),
       ]);
       const data = await res.json();
-      return (data && data.arrangement) ? data.arrangement : null;
+      const arr = (data && data.arrangement) ? data.arrangement : null;
+      if (arr) { try { localStorage.setItem(ARR_CACHE, JSON.stringify(arr)); } catch (e) {} }
+      return arr;
     } catch (e) {
-      return null;
+      return cachedArrangement();
     }
   }
 
