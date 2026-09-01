@@ -26,7 +26,6 @@
       '<figcaption class="re-lb-cap">' +
         '<span class="re-lb-title"></span>' +
         '<span class="re-lb-caption"></span>' +
-        '<span class="re-lb-count"></span>' +
       '</figcaption>' +
     '</figure>' +
     '<button type="button" class="re-lb-nav re-lb-next" aria-label="next">&#8250;</button>';
@@ -35,7 +34,6 @@
   const lbImg = lb.querySelector('.re-lb-img');
   const lbTitle = lb.querySelector('.re-lb-title');
   const lbCaption = lb.querySelector('.re-lb-caption');
-  const lbCount = lb.querySelector('.re-lb-count');
   let lbPhotos = [];
   let lbIndex = 0;
   // zoom + expand controls (photozoom.js); absent = slideshow still works as before
@@ -57,7 +55,6 @@
     lbCaption.textContent = p.caption || '';
     lbCaption.hidden = !p.caption;
     const multi = lbPhotos.length > 1;
-    lbCount.textContent = multi ? (lbIndex + 1) + ' / ' + lbPhotos.length : '';
     lb.querySelector('.re-lb-prev').style.display = multi ? '' : 'none';
     lb.querySelector('.re-lb-next').style.display = multi ? '' : 'none';
   }

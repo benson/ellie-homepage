@@ -183,7 +183,7 @@ body.rest-energy {
   position: fixed;
   inset: 0;
   z-index: 100;
-  background: rgba(20, 24, 18, 0.94);
+  background: rgba(6, 8, 5, 0.975); /* near-black, so only the photo reads */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -231,13 +231,6 @@ body.re-lb-open { overflow: hidden; }
   color: var(--text-main);
 }
 .re-lb-title[hidden], .re-lb-caption[hidden] { display: none; }
-.re-lb-count {
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  margin-top: 2px;
-}
-
 .re-lb-close {
   position: absolute;
   top: 16px;

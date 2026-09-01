@@ -6,7 +6,7 @@
 <title>layout options · rest energy</title>
 <meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="../style.css?v=111">
-<link rel="stylesheet" href="../rest-energy.css?v=17">
+<link rel="stylesheet" href="../rest-energy.css?v=18">
 <style>
   .lo-bar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;gap:6px;justify-content:center;
     padding:10px;background:rgba(20,24,18,.96);border-bottom:1px solid rgba(233,218,177,.18);flex-wrap:wrap}
@@ -69,6 +69,43 @@
     .lo-stack img{max-width:92vw}
     .lo-strip img{height:210px}
   }
+
+  /* ---- slideshow preview, for choosing arrows ---- */
+  .sv{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;
+    gap:12px;padding:40px;background:rgba(6,8,5,.975)}
+  .sv.on{display:flex}
+  .sv img.sv-photo{max-width:80vw;max-height:74vh;object-fit:contain;
+    box-shadow:0 0 0 2px rgba(255,255,255,.6),0 18px 50px rgba(0,0,0,.62)}
+  .sv-close{position:absolute;top:16px;right:22px;background:none;border:none;
+    color:var(--text-bright);font-size:2.1rem;line-height:1;cursor:pointer;padding:4px 10px}
+  .sv-cap{position:absolute;left:0;right:0;bottom:46px;text-align:center;
+    font-family:'Cutive Mono',monospace;font-size:1.05rem;color:var(--text-bright)}
+  .sv-nav{background:none;border:none;cursor:pointer;flex-shrink:0;padding:0;
+    color:rgba(243,231,187,.7);display:flex;align-items:center;justify-content:center;
+    transition:color .16s ease,transform .16s ease,background .16s ease,border-color .16s ease}
+  .sv-nav:hover{color:#fff}
+  .sv-nav svg{display:block;fill:none;stroke:currentColor;stroke-width:1.6;
+    stroke-linecap:round;stroke-linejoin:round}
+
+  /* arrow styles */
+  body[data-arrow="chevron"] .sv-nav{font-size:2.8rem;width:46px;height:46px;line-height:1}
+  body[data-arrow="chevron"] .sv-nav:hover{transform:scale(1.18)}
+
+  body[data-arrow="line"] .sv-nav svg{width:44px;height:22px}
+  body[data-arrow="line"] .sv-nav:hover{transform:translateX(0)}
+
+  body[data-arrow="circle"] .sv-nav{width:46px;height:46px;border-radius:50%;
+    border:1px solid rgba(243,231,187,.35)}
+  body[data-arrow="circle"] .sv-nav svg{width:16px;height:16px}
+  body[data-arrow="circle"] .sv-nav:hover{border-color:rgba(243,231,187,.9);
+    background:rgba(243,231,187,.08)}
+
+  body[data-arrow="triangle"] .sv-nav svg{width:20px;height:24px;fill:currentColor;stroke:none}
+  body[data-arrow="triangle"] .sv-nav{width:40px;height:40px}
+
+  body[data-arrow="edge"] .sv-nav{width:16vw;height:74vh;color:transparent}
+  body[data-arrow="edge"] .sv-nav svg{width:30px;height:30px}
+  body[data-arrow="edge"] .sv-nav:hover{color:rgba(243,231,187,.85)}
 </style>
 </head>
 <body class="rest-energy">
@@ -76,6 +113,7 @@
   <span class="lo-cols" id="lo-cols"><span>per row</span></span>
   <span class="lo-dial" id="lo-glow"><span>glow</span></span>
   <span class="lo-dial" id="lo-bg"><span>background</span></span>
+  <span class="lo-dial" id="lo-arrow"><span>arrows</span></span>
   <a class="lo-now" href="./">what you have now &rarr;</a>
 </div>
 <header class="re-header">
@@ -85,6 +123,14 @@
   </div>
 </header>
 <div class="lo-wrap" id="lo-wrap"></div>
+<div class="sv" id="sv">
+  <button type="button" class="sv-close" id="sv-close" aria-label="close">&times;</button>
+  <button type="button" class="sv-nav" id="sv-prev" aria-label="previous"></button>
+  <img class="sv-photo" id="sv-photo" src="" alt="">
+  <button type="button" class="sv-nav" id="sv-next" aria-label="next"></button>
+  <div class="sv-cap" id="sv-cap"></div>
+</div>
+
 <script>
 const MODES=[['columns','columns'],['grid','grid'],['stack','big'],['strip','filmstrip']];
 let manifest,ratios={},mode='grid',cols=4;
@@ -116,7 +162,10 @@ function draw(){
     sec.innerHTML='<div class="lo-head"><span class="lo-title">'+col.title+'</span>'+
       '<span class="lo-count">'+col.photos.length+' photos</span></div>';
     const box=document.createElement('div');box.className='lo-'+mode;
-    col.photos.forEach(e=>{const f=fileOf(e);const im=new Image();
+    const list=col.photos.map(e=>({src:'img/'+col.slug+'/large/'+fileOf(e)+'.jpg',
+      title:(typeof e==='string'?'':(e.title||''))}));
+    col.photos.forEach((e,pi)=>{const f=fileOf(e);const im=new Image();
+      im.onclick=()=>svOpen(list,pi);
       im.src='img/'+col.slug+'/thumb/'+f+'.jpg';im.loading='lazy';im.alt='';
       const r=ratios[col.slug+'/'+f];if(r&&mode!=='grid')im.style.aspectRatio=r;
       box.appendChild(im);});
@@ -124,8 +173,42 @@ function draw(){
   });
   window.scrollTo(0,0);
 }
+
+// ---- slideshow preview: click any photo, then try the arrow styles ----
+const GLYPH={
+  chevron:['&#8249;','&#8250;'],
+  line:['<svg viewBox="0 0 44 22"><path d="M42 11H3M11 3 3 11l8 8"/></svg>',
+        '<svg viewBox="0 0 44 22"><path d="M2 11h39M33 3l8 8-8 8"/></svg>'],
+  circle:['<svg viewBox="0 0 16 16"><path d="M10 2 4 8l6 6"/></svg>',
+          '<svg viewBox="0 0 16 16"><path d="M6 2l6 6-6 6"/></svg>'],
+  triangle:['<svg viewBox="0 0 20 24"><path d="M16 2 4 12l12 10z"/></svg>',
+            '<svg viewBox="0 0 20 24"><path d="M4 2l12 10L4 22z"/></svg>'],
+  edge:['<svg viewBox="0 0 30 30"><path d="M19 5 9 15l10 10"/></svg>',
+        '<svg viewBox="0 0 30 30"><path d="M11 5l10 10-10 10"/></svg>'],
+};
+let svList=[],svIdx=0;
+const sv=document.getElementById('sv'),svPhoto=document.getElementById('sv-photo'),
+      svCap=document.getElementById('sv-cap'),svPrev=document.getElementById('sv-prev'),
+      svNext=document.getElementById('sv-next');
+function paintArrows(){
+  const g=GLYPH[document.body.dataset.arrow]||GLYPH.chevron;
+  svPrev.innerHTML=g[0]; svNext.innerHTML=g[1];
+}
+function svShow(){const p=svList[svIdx]||{};svPhoto.src=p.src||'';svCap.textContent=p.title||'';}
+function svOpen(list,i){svList=list;svIdx=i;paintArrows();svShow();sv.classList.add('on');}
+function svStep(d){svIdx=(svIdx+d+svList.length)%svList.length;svShow();}
+svPrev.onclick=e=>{e.stopPropagation();svStep(-1)};
+svNext.onclick=e=>{e.stopPropagation();svStep(1)};
+document.getElementById('sv-close').onclick=()=>sv.classList.remove('on');
+sv.addEventListener('click',e=>{if(e.target===sv)sv.classList.remove('on')});
+document.addEventListener('keydown',e=>{if(!sv.classList.contains('on'))return;
+  if(e.key==='Escape')sv.classList.remove('on');
+  else if(e.key==='ArrowLeft')svStep(-1); else if(e.key==='ArrowRight')svStep(1);});
+
 dial('lo-glow','glow',[['none','none'],['soft','soft'],['medium','medium'],['strong','strong']],'soft');
-dial('lo-bg','bg',[['leaf','leaf (now)'],['dimleaf','dim leaf'],['forest','forest'],['deep','deep'],['ink','ink'],['fade','fade']],'leaf');
+dial('lo-bg','bg',[['leaf','leaf'],['dimleaf','dim leaf'],['forest','forest'],['deep','deep'],['ink','ink (now)'],['fade','fade']],'ink');
+dial('lo-arrow','arrow',[['chevron','chevron (now)'],['line','line'],['circle','circle'],['triangle','triangle'],['edge','edge']],'line');
+document.getElementById('lo-arrow').addEventListener('click',()=>setTimeout(paintArrows,0));
 (async()=>{
   const [m,r]=await Promise.all([fetch('manifest.json?v='+Date.now()),fetch('ratios.json?v='+Date.now())]);
   manifest=await m.json();ratios=await r.json();draw();

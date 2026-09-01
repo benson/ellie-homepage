@@ -61,7 +61,7 @@
 
 /* expanded: the photo takes the screen and the background drops away */
 .re-lightbox.pz-expanded,
-.pb-lightbox.pz-expanded { background: rgba(8, 10, 7, 0.985); }
+.pb-lightbox.pz-expanded { background: rgba(3, 4, 3, 0.995); }
 .pz-expanded .re-lb-img,
 .pz-expanded .pb-img { max-width: 96vw; max-height: 86vh; }
 .pz-expanded .re-lb-cap,
