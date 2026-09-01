@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Fraunces:opsz,wght@9..144,300..500&display=swap');
 
 /* Rest Energy — ellie's photography portfolio page */
 
@@ -66,10 +66,10 @@ body.rest-energy {
 }
 
 .re-acc-title {
-  /* collection names — light typewriter */
-  font-family: 'DM Mono', monospace;
+  /* collection names — fraunces light. --name-size is what the sizer page sets */
+  font-family: 'Fraunces', serif;
   font-weight: 300;
-  font-size: 1.7rem;
+  font-size: var(--name-size, 1.9rem);
   line-height: 1.2;
   color: var(--text-bright);
   text-transform: lowercase;
@@ -220,9 +220,8 @@ body.re-lb-open { overflow: hidden; }
   max-width: 70ch;
 }
 .re-lb-title {
-  font-family: 'DM Mono', monospace;
-  font-weight: 300;
-  font-size: 1rem;
+  font-family: 'Cutive Mono', monospace;
+  font-size: 1.05rem;
   color: var(--text-bright);
   text-transform: lowercase;
 }
@@ -279,7 +278,7 @@ body.re-lb-open { overflow: hidden; }
 @media (max-width: 600px) {
   body.rest-energy { padding: 44px 12px 80px; }
   .re-title img.section-label-img { height: 72px; }
-  .re-acc-title { font-size: 1.45rem; }
+  .re-acc-title { font-size: var(--name-size-mobile, 1.5rem); }
   .re-strip { gap: 6px; padding-bottom: 20px; }
   .re-strip img { height: 68px; }
   /* three across, breaking out of the body padding so it reaches the edges */

@@ -3,84 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>name font · rest energy</title>
+<title>name size · rest energy</title>
 <meta name="robots" content="noindex,nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,SOFT,WONK,wght@0,9..144,0..100,0..1,300..700;1,9..144,0..100,0..1,300..700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../style.css?v=111">
-<link rel="stylesheet" href="../rest-energy.css?v=20">
+<link rel="stylesheet" href="../rest-energy.css?v=22">
+<link rel="stylesheet" href="../photozoom.css?v=3">
 <style>
-  .fp-bar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;gap:6px;
+  /* this page IS the real gallery — same stylesheet, same script — with a size
+     dial on top, so what you're judging is exactly what you'll get. */
+  .sz-bar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;gap:6px;
     justify-content:center;align-items:center;flex-wrap:wrap;padding:10px 12px;
     background:rgba(12,14,10,.97);border-bottom:1px solid rgba(233,218,177,.18)}
-  .fp-bar span{font-size:.66rem;letter-spacing:.08em;color:var(--text-muted)}
-  .fp-bar button{background:none;border:1px solid rgba(233,218,177,.35);color:var(--text-muted);
-    border-radius:999px;padding:6px 14px;font-family:inherit;font-size:.72rem;
-    letter-spacing:.05em;cursor:pointer}
-  .fp-bar button.on{background:var(--text-main);color:#2d3826;border-color:var(--text-main)}
-  .fp-back{margin-left:10px;font-size:.7rem;color:var(--text-muted);text-decoration:none;
+  .sz-bar span{font-size:.66rem;letter-spacing:.08em;color:var(--text-muted)}
+  .sz-bar button{background:none;border:1px solid rgba(233,218,177,.35);color:var(--text-muted);
+    border-radius:999px;padding:6px 14px;font-family:inherit;font-size:.72rem;cursor:pointer}
+  .sz-bar button.on{background:var(--text-main);color:#2d3826;border-color:var(--text-main)}
+  .sz-back{margin-left:10px;font-size:.7rem;color:var(--text-muted);text-decoration:none;
     border-bottom:1px solid rgba(233,218,177,.3)}
-  body.rest-energy{padding-top:96px}
-
-  .fp-note{max-width:620px;margin:0 auto 34px;text-align:center;font-size:.76rem;
+  .sz-note{max-width:560px;margin:0 auto 30px;text-align:center;font-size:.76rem;
     line-height:1.6;color:var(--text-muted);font-style:italic}
-
-  /* ---- the eight variants, on both the collection names and photo titles ---- */
-  .fp-title,.sv-cap{font-family:'Cutive Mono',monospace}
-
-  body[data-f="fr-book"]   .fp-title, body[data-f="fr-book"]   .sv-cap{font-family:'Fraunces',serif;font-weight:400;font-size:1.8rem}
-  body[data-f="fr-light"]  .fp-title, body[data-f="fr-light"]  .sv-cap{font-family:'Fraunces',serif;font-weight:300;font-size:1.85rem}
-  body[data-f="fr-semi"]   .fp-title, body[data-f="fr-semi"]   .sv-cap{font-family:'Fraunces',serif;font-weight:600;font-size:1.7rem}
-  body[data-f="fr-italic"] .fp-title, body[data-f="fr-italic"] .sv-cap{font-family:'Fraunces',serif;font-weight:400;font-style:italic;font-size:1.8rem}
-  body[data-f="fr-wonky"]  .fp-title, body[data-f="fr-wonky"]  .sv-cap{font-family:'Fraunces',serif;font-weight:400;font-size:1.8rem;
-    font-variation-settings:'SOFT' 60,'WONK' 1}
-
-  body[data-f="site"]      .fp-title, body[data-f="site"]      .sv-cap{font-family:inherit;font-weight:400;font-size:1.55rem}
-  body[data-f="site-wide"] .fp-title, body[data-f="site-wide"] .sv-cap{font-family:inherit;font-weight:500;font-size:1.45rem;letter-spacing:.1em}
-  body[data-f="grotesk"]   .fp-title, body[data-f="grotesk"]   .sv-cap{font-family:'Space Grotesk',sans-serif;font-weight:400;font-size:1.55rem}
-
-  .sv-cap{font-size:1.05rem !important}
-
-  /* ---- collections: her final look, just fewer photos so the names lead ---- */
-  .fp-col{margin-bottom:52px}
-  .fp-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;
-    border-bottom:1px solid rgba(233,218,177,.16);padding-bottom:12px;margin-bottom:18px}
-  .fp-title{color:var(--text-bright);text-transform:lowercase;line-height:1.25}
-  .fp-chev{width:9px;height:9px;border-right:2px solid var(--text-muted);
-    border-bottom:2px solid var(--text-muted);transform:rotate(-135deg);flex-shrink:0;align-self:center}
-  .fp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .fp-grid img{width:100%;aspect-ratio:1;object-fit:cover;display:block;cursor:zoom-in;
-    border-radius:3px;
-    box-shadow:0 0 0 1px rgba(233,218,177,.26),0 0 18px rgba(233,218,177,.15),0 6px 20px rgba(0,0,0,.42);
-    transition:box-shadow .2s ease,transform .2s ease}
-  .fp-grid img:hover{transform:translateY(-2px)}
-
-  /* ---- slideshow preview, so the photo titles get judged too ---- */
-  .sv{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;
-    gap:12px;padding:40px;background:rgba(6,8,5,.975)}
-  .sv.on{display:flex}
-  .sv-photo{max-width:80vw;max-height:74vh;object-fit:contain;
-    box-shadow:0 0 0 2px rgba(255,255,255,.6),0 18px 50px rgba(0,0,0,.62)}
-  .sv-close{position:absolute;top:16px;right:22px;background:none;border:none;
-    color:var(--text-bright);font-size:2.1rem;line-height:1;cursor:pointer;padding:4px 10px}
-  .sv-cap{position:absolute;left:0;right:0;bottom:44px;text-align:center;color:var(--text-bright)}
-  .sv-nav{background:none;border:none;cursor:pointer;flex-shrink:0;padding:0;width:40px;height:40px;
-    color:rgba(243,231,187,.7);display:flex;align-items:center;justify-content:center;
-    transition:color .16s ease}
-  .sv-nav:hover{color:#fff}
-  .sv-nav svg{display:block;width:20px;height:24px;fill:currentColor}
-
-  @media(max-width:600px){
-    body.rest-energy{padding-top:120px}
-    .fp-grid{grid-template-columns:repeat(3,1fr);gap:4px;margin:0 -12px}
-  }
+  body.rest-energy{padding-top:92px}
+  @media(max-width:600px){ body.rest-energy{padding-top:104px} }
 </style>
 </head>
 <body class="rest-energy">
-<div class="fp-bar" id="fp-bar">
-  <span>name font</span>
-  <a class="fp-back" href="./">the real gallery &rarr;</a>
+<div class="sz-bar" id="sz-bar">
+  <span>name size</span>
+  <a class="sz-back" href="./">the real gallery &rarr;</a>
 </div>
 
 <header class="re-header">
@@ -90,89 +39,29 @@
   </div>
 </header>
 
-<p class="fp-note">
-  the same font sets your collection names and your photo titles — click a photo to see it there too.
-  “site font” is your body font: on your mac that’s neue machina, but it isn’t installed on the site,
-  so everyone else sees space grotesk — which is the option below it.
+<p class="sz-note">
+  the collections are collapsed, so it’s just the names — pick a size and tell claude.
+  phones get a matching size worked out from whichever you choose.
 </p>
 
-<div id="fp-collections"></div>
-
-<div class="sv" id="sv">
-  <button type="button" class="sv-close" id="sv-close" aria-label="close">&times;</button>
-  <button type="button" class="sv-nav" id="sv-prev" aria-label="previous"><svg viewBox="0 0 20 24"><path d="M16 2 4 12l12 10z"/></svg></button>
-  <img class="sv-photo" id="sv-photo" src="" alt="">
-  <button type="button" class="sv-nav" id="sv-next" aria-label="next"><svg viewBox="0 0 20 24"><path d="M4 2l12 10L4 22z"/></svg></button>
-  <div class="sv-cap" id="sv-cap"></div>
-</div>
+<div id="re-collections"></div>
 
 <script src="../studio-config.js?v=1"></script>
+<script src="../photozoom.js?v=1"></script>
+<script src="../restenergy.js?v=13"></script>
 <script>
-const OPTS=[
-  ['fr-book','fraunces'],['fr-light','fraunces light'],['fr-semi','fraunces bold'],
-  ['fr-italic','fraunces italic'],['fr-wonky','fraunces wonky'],
-  ['site','site font'],['site-wide','site font wide'],['grotesk','space grotesk'],
-];
-const bar=document.getElementById('fp-bar'),back=document.querySelector('.fp-back');
-OPTS.forEach(([v,label])=>{const b=document.createElement('button');b.textContent=label;b.dataset.v=v;
-  b.onclick=()=>set(v);bar.insertBefore(b,back);});
-function set(v){document.body.dataset.f=v;
-  [...bar.querySelectorAll('button')].forEach(b=>b.classList.toggle('on',b.dataset.v===v));}
-
-let svList=[],svIdx=0;
-const sv=document.getElementById('sv'),svPhoto=document.getElementById('sv-photo'),
-      svCap=document.getElementById('sv-cap');
-function svShow(){const p=svList[svIdx]||{};svPhoto.src=p.src||'';svCap.textContent=p.title||'';}
-function svStep(d){svIdx=(svIdx+d+svList.length)%svList.length;svShow();}
-document.getElementById('sv-prev').onclick=e=>{e.stopPropagation();svStep(-1)};
-document.getElementById('sv-next').onclick=e=>{e.stopPropagation();svStep(1)};
-document.getElementById('sv-close').onclick=()=>sv.classList.remove('on');
-sv.addEventListener('click',e=>{if(e.target===sv)sv.classList.remove('on')});
-document.addEventListener('keydown',e=>{if(!sv.classList.contains('on'))return;
-  if(e.key==='Escape')sv.classList.remove('on');
-  else if(e.key==='ArrowLeft')svStep(-1); else if(e.key==='ArrowRight')svStep(1);});
-
-const fileOf=e=>typeof e==='string'?e:e.file;
-const titleOf=e=>typeof e==='string'?'':(e.title||'');
-
-// the live titles come from the saved arrangement, same as the real gallery
-async function saved(){
-  if(!window.STUDIO_API_URL) return null;
-  try{
-    const r=await Promise.race([fetch(window.STUDIO_API_URL+'?type=restenergy'),
-      new Promise((_,j)=>setTimeout(()=>j(new Error('t')),2500))]);
-    return (await r.json()).arrangement||null;
-  }catch(e){return null}
+const SIZES=['1.4','1.6','1.8','1.9','2.1','2.3','2.6','3'];
+const bar=document.getElementById('sz-bar'),back=document.querySelector('.sz-back');
+function set(v){
+  document.documentElement.style.setProperty('--name-size', v+'rem');
+  [...bar.querySelectorAll('button')].forEach(b=>b.classList.toggle('on',b.dataset.v===v));
+  try{ localStorage.setItem('re-name-size', v); }catch(e){}
 }
-
-(async()=>{
-  const [mRes,arr]=await Promise.all([fetch('manifest.json?v='+Date.now()),saved()]);
-  const man=await mRes.json();
-  const root=document.getElementById('fp-collections');
-  man.collections.forEach(col=>{
-    const caps=((arr&&arr[col.slug])||{}).captions||{};
-    const photos=col.photos.slice(0,9).map(e=>{
-      const f=fileOf(e), c=caps[f];
-      return {file:f, title:(c&&c.title)||titleOf(e),
-              thumb:'img/'+col.slug+'/thumb/'+f+'.jpg', large:'img/'+col.slug+'/large/'+f+'.jpg'};
-    });
-    const sec=document.createElement('section');
-    sec.className='fp-col';
-    sec.innerHTML='<div class="fp-head"><span class="fp-title">'+col.title+
-      '</span><span class="fp-chev"></span></div>';
-    const g=document.createElement('div');
-    g.className='fp-grid';
-    const list=photos.map(p=>({src:p.large,title:p.title}));
-    photos.forEach((p,i)=>{
-      const im=new Image();im.src=p.thumb;im.alt=p.title;im.loading='lazy';
-      im.onclick=()=>{svList=list;svIdx=i;svShow();sv.classList.add('on')};
-      g.appendChild(im);
-    });
-    sec.appendChild(g);
-    root.appendChild(sec);
-  });
-  set('fr-book');
-})();
+SIZES.forEach(v=>{const b=document.createElement('button');b.textContent=v+'rem';b.dataset.v=v;
+  b.onclick=()=>set(v);bar.insertBefore(b,back);});
+let start='1.9';
+try{ start=localStorage.getItem('re-name-size')||start; }catch(e){}
+set(SIZES.includes(start)?start:'1.9');
 </script>
 </body>
 </html>
