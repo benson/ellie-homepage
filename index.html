@@ -9,7 +9,7 @@
   <meta property="og:description" content="">
   <meta property="og:url" content="https://elliexcenteno.com">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="style.css?v=114">
+  <link rel="stylesheet" href="style.css?v=115">
   <link rel="stylesheet" href="photobox.css?v=5">
   <link rel="stylesheet" href="photozoom.css?v=3">
 </head>
@@ -271,18 +271,18 @@
   // Locked-in element sizes and positions.
   (() => {
     const TUNABLES = {
-      ear:            { type: 'icon',  size: 64, x: -10, y: -1 },
-      eye:            { type: 'icon',  size: 66, x: 0,   y: 8  },
-      hand:           { type: 'icon',  size: 56, x: 0,   y: 0  },
-      foot:           { type: 'icon',  size: 52, x: 9,   y: -3 },
+      ear:            { type: 'icon',  size: 67, x: -10, y: -1 },
+      eye:            { type: 'icon',  size: 69, x: 0,   y: 8  },
+      hand:           { type: 'icon',  size: 59, x: 0,   y: 0  },
+      foot:           { type: 'icon',  size: 55, x: 9,   y: -3 },
       'slow-control': { type: 'label', size: 50, x: 0,   y: 0  },
       'rest-energy':  { type: 'label', size: 58, x: 0,   y: 4  },
       'slow-control-row': { type: 'row', x: 0,   y: 0 },
       'rest-energy-row':  { type: 'row', x: 0,   y: 0 },
-      listening:      { type: 'label', size: 46, x: -28, y: 0  },
-      reading:        { type: 'label', size: 50, x: -7,  y: 13 },
-      making:         { type: 'label', size: 48, x: -10, y: 0  },
-      walking:        { type: 'label', size: 50, x: 2,   y: -5 },
+      listening:      { type: 'label', size: 46, x: -52, y: 0  },
+      reading:        { type: 'label', size: 50, x: -31, y: 13 },
+      making:         { type: 'label', size: 48, x: -34, y: 0  },
+      walking:        { type: 'label', size: 50, x: -22, y: -5 },
     };
     for (const [key, info] of Object.entries(TUNABLES)) {
       document.querySelectorAll(`[data-tunable="${key}"]`).forEach(el => {

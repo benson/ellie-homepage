@@ -166,6 +166,7 @@ h2 {
 .section-icon {
   flex-shrink: 0;
   object-fit: contain;
+  opacity: 0.55;   /* the woodcuts recede behind the handwritten words (ellie-tuned 2026-10) */
 }
 
 .link-label-img {
