@@ -52,15 +52,32 @@ body.bg-stucco .headshot-slot {
   color: rgba(42, 26, 20, 0.6);
 }
 
-h1 {
+h1 {   /* burgundy blackletter, thin linen outline, soft glow (ellie-tuned 2026-10) */
   font-family: "Obra Letra", "KC Obra Letra", "UnifrakturMaguntia", "Old English Text MT", serif;
-  font-size: 5rem;
+  font-size: 3.9rem;
   font-weight: 700;
-  letter-spacing: 0;
+  letter-spacing: 0.01em;
   line-height: 1;
-  color: #000;
-  -webkit-text-stroke: 4px #d4a017;
+  color: #4a0c1e;
+  -webkit-text-stroke: 1.5px #e9dab1;
   paint-order: stroke fill;
+  text-shadow: 0 0 18px rgba(233, 218, 177, 0.35);
+}
+
+/* name + little round duotone portrait to its right (ellie-tuned 2026-10) */
+.name-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  min-width: 0;
+}
+.me-portrait {
+  display: block;
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  opacity: 0.7;
+  flex-shrink: 0;
 }
 
 .header-links {
@@ -539,9 +556,19 @@ html.welcome-open { overflow: hidden; }
     padding: 24px 18px;
   }
 
+  /* phones: name + portrait shrink together so the row keeps its desktop
+     proportions on one line. the row is ~6.1x the name's font size wide;
+     88px = page padding (2x18) + email/social column + the gap before it */
+  .name-wrap {
+    --nfs: min(3.5rem, calc((100vw - 88px) / 6.1));
+    gap: calc(var(--nfs) * 0.22);
+  }
   h1 {
-    font-size: 3.5rem;
-    -webkit-text-stroke: 2.5px #d4a017;
+    font-size: var(--nfs, 3.5rem);
+  }
+  .me-portrait {
+    width: calc(var(--nfs) * 1.09);
+    height: calc(var(--nfs) * 1.09);
   }
 
   .social-link {
@@ -565,5 +592,14 @@ html.welcome-open { overflow: hidden; }
   .book-icon {
     width: 48px;
     height: 72px;
+  }
+}
+
+/* smallest phones (≤380px): the handwritten label + description can't share
+   one line, so the description drops underneath instead of running off-screen */
+@media (max-width: 380px) {
+  .primary-links a {
+    flex-wrap: wrap;
+    max-width: 100%;
   }
 }
