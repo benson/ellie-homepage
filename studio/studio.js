@@ -38,10 +38,14 @@
     body.dataset.mode = mode;
     tabs.forEach(t => t.classList.toggle('active', t.dataset.mode === mode));
     const isManage = mode === 'manage';
-    form.hidden = isManage;
+    const isListening = mode === 'listening';
+    form.hidden = isManage || isListening;
     managePanel.hidden = !isManage;
+    const listenPanel = document.getElementById('listen-panel');
+    if (listenPanel) listenPanel.hidden = !isListening;
     try { localStorage.setItem('studio-mode', mode); } catch (e) {}
     if (isManage) loadManage();
+    if (isListening && window.studioListeningShow) window.studioListeningShow();
   }
   tabs.forEach(t => t.addEventListener('click', () => {
     // leaving an in-progress edit by clicking a tab cancels it
@@ -50,7 +54,8 @@
   }));
   let savedMode = 'making';
   try { savedMode = localStorage.getItem('studio-mode') || 'making'; } catch (e) {}
-  setMode(['walking', 'manage'].indexOf(savedMode) !== -1 ? savedMode : 'making');
+  // (listening.js loads after this file and opens itself if it was the saved tab)
+  setMode(['walking', 'manage', 'listening'].indexOf(savedMode) !== -1 ? savedMode : 'making');
 
   // -- populate state dropdown (walking) ----------------------------
   const US_STATES = [

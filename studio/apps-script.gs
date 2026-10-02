@@ -28,10 +28,15 @@
 // v3 (2026-07) adds archiveOnly — a "straight to archive" flag (new last
 //   column) so backfilled past entries don't take over the homepage.
 //   AFTER PASTING THIS YOU MUST REDEPLOY (step above) or new features stay dark.
+// v4 (2026-10) adds LISTENING — the homepage "listening" shelf, picked by hand
+//   in the studio (replaces the old spotify feed). The whole list lives in one
+//   Script Property as JSON: GET ?type=listening, POST {action:'setListening'}.
+//   GET ?type=preview&url=... reads a link's title/cover (og: tags) so the
+//   studio can fill them in for any audio link (spotify, bandcamp, nts, ...).
 
 const SHEET_ID  = 'REPLACE_WITH_YOUR_SHEET_ID';
 const FOLDER_ID = 'REPLACE_WITH_YOUR_FOLDER_ID';
-const API_VERSION = 3;
+const API_VERSION = 4;
 
 // column layout per type (order matters — must match the header row;
 // archiveOnly is appended last so older rows/sheets stay compatible)
@@ -51,6 +56,13 @@ function doGet(e) {
       if (raw) { try { arrangement = JSON.parse(raw); } catch (e2) { arrangement = {}; } }
       return jsonOut({ arrangement: arrangement, apiVersion: API_VERSION });
     }
+    if (type === 'listening') {
+      const raw = PropertiesService.getScriptProperties().getProperty('LISTENING_ITEMS');
+      let items = [];
+      if (raw) { try { items = JSON.parse(raw); } catch (e2) { items = []; } }
+      return jsonOut({ items: items, apiVersion: API_VERSION });
+    }
+    if (type === 'preview') return jsonOut(Object.assign(linkPreview(e.parameter.url), { apiVersion: API_VERSION }));
     if (!COLUMNS[type]) return jsonOut({ error: 'invalid type', apiVersion: API_VERSION });
 
     const ss = SpreadsheetApp.openById(SHEET_ID);
@@ -91,6 +103,7 @@ function doPost(e) {
     const data = JSON.parse(e.postData.contents);
     const action = (data.action || 'create').toLowerCase();
     if (action === 'setarrangement') return setArrangement(data);
+    if (action === 'setlistening') return setListening(data);
     if (action === 'update') return editEntry(data);
     if (action === 'delete') return deleteEntry(data);
     return createEntry(data);
@@ -106,6 +119,69 @@ function setArrangement(data) {
   PropertiesService.getScriptProperties()
     .setProperty('RESTENERGY_ARRANGEMENT', JSON.stringify(arr));
   return jsonOut({ ok: true });
+}
+
+// store the listening shelf: { items: [{ url, title, by, art, coverData? }] }
+// coverData (a data: URL) = a cover she uploaded herself; it goes to Drive and
+// becomes the item's art. Covers she later removes are NOT trashed (cheap, and
+// keeps an accidental publish recoverable).
+function setListening(data) {
+  const items = data.items;
+  if (!Array.isArray(items)) return jsonOut({ error: 'no items' });
+  const clean = items.map(function (it) {
+    let art = String(it.art || '');
+    if (it.coverData) {
+      const ids = uploadPhotos('listening', [it.coverData]);
+      if (ids.length) art = 'https://lh3.googleusercontent.com/d/' + ids[0] + '=s600';
+    }
+    return {
+      url: String(it.url || ''),
+      title: String(it.title || ''),
+      by: String(it.by || ''),
+      art: art,
+    };
+  });
+  PropertiesService.getScriptProperties()
+    .setProperty('LISTENING_ITEMS', JSON.stringify(clean));
+  return jsonOut({ ok: true, items: clean });
+}
+
+// read a page's og: tags so any audio link can fill in its own title + cover
+function linkPreview(url) {
+  if (!/^https?:\/\//i.test(String(url || ''))) return { error: 'bad url' };
+  try {
+    const res = UrlFetchApp.fetch(url, {
+      muteHttpExceptions: true,
+      followRedirects: true,
+      headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15' },
+    });
+    if (res.getResponseCode() >= 400) return { error: 'http ' + res.getResponseCode() };
+    const html = res.getContentText().slice(0, 300000);
+    function meta(name) {
+      const re1 = new RegExp('<meta[^>]+(?:property|name)=["\']' + name + '["\'][^>]*content=["\']([^"\']*)', 'i');
+      const re2 = new RegExp('<meta[^>]+content=["\']([^"\']*)["\'][^>]*(?:property|name)=["\']' + name + '["\']', 'i');
+      const m = re1.exec(html) || re2.exec(html);
+      return m ? decodeEntities(m[1]) : '';
+    }
+    let title = meta('og:title') || meta('twitter:title');
+    if (!title) { const t = /<title[^>]*>([^<]*)/i.exec(html); title = t ? decodeEntities(t[1]) : ''; }
+    return {
+      title: title.trim(),
+      image: meta('og:image') || meta('twitter:image'),
+      description: meta('og:description'),
+      site: meta('og:site_name'),
+      musician: meta('music:musician_description'),
+    };
+  } catch (err) {
+    return { error: String(err) };
+  }
+}
+
+function decodeEntities(s) {
+  return String(s)
+    .replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&#x27;|&apos;/g, "'")
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&#(\d+);/g, function (_, n) { return String.fromCharCode(+n); });
 }
 
 function createEntry(data) {

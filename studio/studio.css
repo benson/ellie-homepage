@@ -336,7 +336,8 @@ body.studio[data-mode="making"]  .mode-only-making  { display: flex; }
 
 /* hidden toggling (author rules beat the UA [hidden] display:none) */
 .entry-form[hidden],
-.manage-panel[hidden] { display: none; }
+.manage-panel[hidden],
+.listen-panel[hidden] { display: none; }
 
 /* edit banner (shown on the form while editing an existing entry) */
 .edit-banner {
@@ -488,6 +489,155 @@ body.studio[data-mode="making"]  .mode-only-making  { display: flex; }
 }
 .manage-edit:hover { color: var(--text-bright); border-color: var(--text-bright); }
 .manage-delete:hover { color: #e8b4b4; border-color: rgba(200, 90, 90, 0.7); background: rgba(90, 0, 0, 0.2); }
+
+/* listening panel — the homepage listening shelf */
+.listen-intro {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+.listen-intro em { color: var(--text-main); }
+.listen-add {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.listen-add input,
+.listen-input {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(244, 237, 228, 0.18);
+  border-radius: 3px;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 10px 12px;
+  width: 100%;
+  min-width: 0;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+.listen-add input:focus,
+.listen-input:focus {
+  outline: none;
+  border-color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.3);
+}
+.listen-add-btn,
+.listen-btn {
+  background: none;
+  border: 1px solid rgba(244, 237, 228, 0.3);
+  color: var(--text-muted);
+  border-radius: 3px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+}
+.listen-add-btn {
+  padding: 0 20px;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+}
+.listen-add-btn:hover:not(:disabled),
+.listen-btn:hover:not(:disabled) { color: var(--text-bright); border-color: var(--text-bright); }
+.listen-btn:disabled,
+.listen-add-btn:disabled { opacity: 0.3; cursor: default; }
+.listen-remove:hover:not(:disabled) { color: #e8b4b4; border-color: rgba(200, 90, 90, 0.7); background: rgba(90, 0, 0, 0.2); }
+
+.listen-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.listen-empty {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+.listen-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px;
+  border: 1px solid rgba(244, 237, 228, 0.16);
+  border-radius: 5px;
+  background: rgba(0, 0, 0, 0.14);
+}
+.listen-cover {
+  position: relative;
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 3px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+.listen-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.listen-cover-hint,
+.listen-cover-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+.listen-cover-empty { border: 1.5px dashed rgba(244, 237, 228, 0.3); border-radius: 3px; }
+.listen-cover-hint {
+  background: rgba(0, 0, 0, 0.55);
+  color: var(--text-bright);
+  opacity: 0;
+  transition: opacity 0.16s ease;
+}
+.listen-cover:hover .listen-cover-hint { opacity: 1; }
+.listen-fields {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.listen-input { padding: 6px 9px; font-size: 0.88rem; }
+.listen-input-by { font-size: 0.8rem; font-style: italic; }
+.listen-link {
+  font-size: 0.65rem;
+  color: rgba(244, 237, 228, 0.4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+}
+.listen-link:hover { color: var(--text-muted); }
+.listen-actions {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.listen-btn {
+  width: 32px;
+  height: 32px;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+@media (max-width: 600px) {
+  .mode-tabs { gap: 0; }
+  .mode-tab { padding: 10px 9px; letter-spacing: 0.04em; }
+  .listen-card { flex-wrap: wrap; }
+  .listen-cover { width: 64px; height: 64px; }
+  .listen-fields { flex-basis: calc(100% - 78px); }
+  .listen-actions { width: 100%; justify-content: flex-end; }
+  .listen-input { font-size: 16px; } /* <16px makes iOS zoom on focus */
+}
 
 @media (max-width: 600px) {
   body.studio { padding: 32px 18px 60px; }

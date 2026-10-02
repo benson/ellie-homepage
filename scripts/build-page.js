@@ -18,64 +18,47 @@ async function fetchBase64(url) {
 
 const esc = s => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
-async function getSpotifyToken() {
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-  const refreshToken = process.env.SPOTIFY_REFRESH_TOKEN;
-  if (!clientId || !clientSecret || !refreshToken) return null;
-
-  const res = await fetch('https://accounts.spotify.com/api/token', {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Basic ' + btoa(`${clientId}:${clientSecret}`),
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({ grant_type: 'refresh_token', refresh_token: refreshToken }),
-  });
-  const data = await res.json();
-  if (!data.access_token) throw new Error('spotify: no access token');
-  return data.access_token;
+// the listening shelf is picked by hand in the studio (studio/listening.js)
+// and stored by the studio backend. bake it in so the page shows the right
+// albums before the homepage's live fetch lands (the backend cold-starts slowly).
+function studioApiUrl() {
+  const cfg = fs.readFileSync(path.join(ROOT, 'studio-config.js'), 'utf8');
+  const m = cfg.match(/STUDIO_API_URL\s*=\s*'([^']+)'/);
+  return m ? m[1] : '';
 }
 
-async function buildAlbumStrip(albums, containerId) {
-  let html = `<div id="${containerId}">\n`;
-  for (const a of albums) {
-    const art = a.artUrl ? await fetchBase64(a.artUrl) : '';
-    html += `      <a class="album-wrap" href="${esc(a.url)}" target="_blank">`;
-    html += `<img class="album-icon" src="${art}" alt="${esc(a.album)}">`;
-    html += `<div class="album-tip"><span class="tip-track">${esc(a.album)}</span><span>${esc(a.artist)}</span></div>`;
+// small covers get inlined; big ones (some sites only offer 1600px art) stay
+// as plain links so index.html doesn't balloon
+async function coverSrc(url) {
+  if (!url) return '';
+  // spotify serves several sizes off the same id; 300px is plenty here
+  url = url.replace(/(i\.scdn\.co\/image\/ab67616d)0000b273/, '$100001e02');
+  try {
+    const data = await fetchBase64(url);
+    return data.length < 60000 ? data : url;
+  } catch (e) {
+    return url;
+  }
+}
+
+async function buildListening() {
+  const api = studioApiUrl();
+  if (!api) return null;
+  const res = await fetch(api + '?type=listening&t=' + Date.now());
+  const data = await res.json();
+  if (!Array.isArray(data.items) || !data.items.length) return null;
+
+  let html = '<div id="spotify-recent">\n';
+  for (const it of data.items) {
+    const art = await coverSrc(it.art);
+    html += `      <a class="album-wrap" href="${esc(it.url || '')}" target="_blank" rel="noopener">`;
+    html += `<img class="album-icon" src="${art}" alt="${esc(it.title || '')}">`;
+    html += `<div class="album-tip"><span class="tip-track">${esc(it.title || '')}</span><span>${esc(it.by || '')}</span></div>`;
     html += `</a>\n`;
   }
   html += '    </div>';
+  console.log(`listening: ${data.items.length} items inlined`);
   return html;
-}
-
-async function buildSpotify(token) {
-  const res = await fetch('https://api.spotify.com/v1/me/player/recently-played?limit=50', {
-    headers: { 'Authorization': `Bearer ${token}` },
-  });
-  if (!res.ok) throw new Error(`spotify recent: ${res.status}`);
-  const data = await res.json();
-
-  const seen = new Set();
-  const albums = [];
-  for (const item of data.items) {
-    const t = item.track;
-    const albumId = t.album.id;
-    if (seen.has(albumId)) continue;
-    seen.add(albumId);
-    albums.push({
-      album: t.album.name,
-      artist: t.artists.map(a => a.name).join(', '),
-      artUrl: t.album.images.find(i => i.width <= 64)?.url
-        || t.album.images[t.album.images.length - 1]?.url || '',
-      url: t.album.external_urls.spotify,
-    });
-    if (albums.length >= 5) break;
-  }
-
-  console.log(`spotify recent: ${albums.length} albums inlined`);
-  return buildAlbumStrip(albums, 'spotify-recent');
 }
 
 function decodeCdata(str) {
@@ -128,22 +111,16 @@ async function buildGoodreadsShelf(shelf, containerId) {
 async function main() {
   let html = fs.readFileSync(HTML_PATH, 'utf8');
 
-  const token = await getSpotifyToken();
-  if (token) {
-    try {
-      const recentHtml = await buildSpotify(token);
-      if (recentHtml) {
-        html = html.replace(
-          /<!-- SPOTIFY_START -->[\s\S]*?<!-- SPOTIFY_END -->/,
-          `<!-- SPOTIFY_START -->\n    ${recentHtml}\n    <!-- SPOTIFY_END -->`
-        );
-      }
-    } catch (err) {
-      console.error('spotify recent error:', err.message);
+  try {
+    const listeningHtml = await buildListening();
+    if (listeningHtml) {
+      html = html.replace(
+        /<!-- SPOTIFY_START -->[\s\S]*?<!-- SPOTIFY_END -->/,
+        `<!-- SPOTIFY_START -->\n    ${listeningHtml}\n    <!-- SPOTIFY_END -->`
+      );
     }
-
-  } else {
-    console.error('spotify credentials not set, skipping');
+  } catch (err) {
+    console.error('listening error:', err.message);
   }
 
   try {

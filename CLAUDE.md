@@ -1,20 +1,18 @@
 # ellie's homepage
 
-static site at elliexcenteno.com, hosted on github pages. shows ellie's spotify (recent listens + on repeat) and goodreads (currently reading + recently read) activity.
+static site at elliexcenteno.com, hosted on github pages. shows a hand-picked listening shelf (from the studio) and goodreads (currently reading + recently read) activity.
 
 ## structure
 - `index.html` — single page, has `<!-- SPOTIFY_START -->` / `<!-- ONREPEAT_START -->` / `<!-- READING_START -->` / `<!-- READ_START -->` markers that get rewritten by the build script
 - `style.css` — all styles
-- `spotify-callback.html` — used during one-time spotify oauth setup
-- `scripts/build-page.js` — fetches spotify + goodreads data, inlines images as base64 into index.html
-- `scripts/spotify-auth-step1.js` / `step2.js` — one-time setup for getting a refresh token
+- `scripts/build-page.js` — bakes the listening shelf + goodreads data into index.html (images inlined as base64)
 - `.github/workflows/update-page.yml` — hourly cron rebuilds the page
 
-## how spotify data gets in
-1. github action runs hourly with secrets `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REFRESH_TOKEN`
-2. `build-page.js` uses refresh token to get a fresh access token, fetches recently-played and top-tracks
-3. album art is downloaded and inlined as base64 (so the page is fully self-contained, no external image requests)
-4. the file is rewritten between the marker comments and pushed back to the repo
+## how the listening shelf gets in
+the old spotify api feed was retired in 2026-10 (its refresh token kept expiring). now:
+1. ellie picks items in the studio's "listening" tab (`studio/listening.js`) — any audio link (spotify, bandcamp, soundcloud, nts, youtube…). the backend's `?type=preview&url=` reads the link's og: title/cover; she can edit both or upload her own cover.
+2. publish stores the whole list in the apps script's `LISTENING_ITEMS` script property (`studio/apps-script.gs` v4, `setListening`).
+3. the homepage fetches `?type=listening` live (cached in localStorage `studio-latest-listening`), and the hourly build bakes the same list between the `SPOTIFY_START`/`SPOTIFY_END` markers as the no-js / cold-start fallback. the marker names and `#spotify-recent` id are historical.
 
 ## how goodreads data gets in
 goodreads has no working public api — instead we hit their public RSS endpoint:
@@ -29,4 +27,4 @@ goodreads has no working public api — instead we hit their public RSS endpoint
 push to main. github pages deploys automatically. cache-bust `?v=N` on css/js links in `index.html` if you change them.
 
 ## local edits
-edit `index.html` and `style.css` directly. don't touch the content between `<!-- SPOTIFY_START -->` / `<!-- SPOTIFY_END -->` (and the on-repeat equivalents) — that gets overwritten on every cron run.
+edit `index.html` and `style.css` directly. don't touch the content between the `<!-- SPOTIFY_START -->` / `<!-- SPOTIFY_END -->`, `READING` or `READ` markers — that gets overwritten on every cron run.

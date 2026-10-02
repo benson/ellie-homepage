@@ -194,8 +194,38 @@
       try { localStorage.setItem(cacheKey, JSON.stringify(entry)); } catch (e) {}
     }
 
+    // listening shelf — picked by hand in the studio (any audio link). same
+    // pattern: last-known list from localStorage first, then the live one.
+    // the baked list between the SPOTIFY markers is the no-js/cold fallback.
+    function escAttr(v) {
+      return String(v || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    function renderListening(items) {
+      const el = document.getElementById('spotify-recent');
+      if (!el || !items || !items.length) return;
+      el.innerHTML = items.map(it =>
+        '<a class="album-wrap" href="' + escAttr(it.url) + '" target="_blank" rel="noopener">' +
+          '<img class="album-icon" src="' + escAttr(it.art) + '" alt="' + escAttr(it.title) + '">' +
+          '<div class="album-tip"><span class="tip-track">' + escAttr(it.title) + '</span><span>' + escAttr(it.by) + '</span></div>' +
+        '</a>'
+      ).join('');
+    }
+    async function loadListening() {
+      const cacheKey = 'studio-latest-listening';
+      try { renderListening(JSON.parse(localStorage.getItem(cacheKey) || 'null')); } catch (e) {}
+      if (!window.STUDIO_API_URL) return;
+      try {
+        const res = await fetch(window.STUDIO_API_URL + '?type=listening&t=' + Date.now(), { cache: 'no-store' });
+        const data = await res.json();
+        if (!Array.isArray(data.items) || !data.items.length) return;
+        renderListening(data.items);
+        try { localStorage.setItem(cacheKey, JSON.stringify(data.items)); } catch (e) {}
+      } catch (e) {}
+    }
+
     loadLatest('making', 'making-content');
     loadLatest('walking', 'walking-content');
+    loadListening();
   })();
   </script>
 

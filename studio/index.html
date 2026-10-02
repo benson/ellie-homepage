@@ -6,7 +6,7 @@
   <title>studio · ellie centeno</title>
   <meta name="robots" content="noindex,nofollow">
   <link rel="stylesheet" href="../style.css?v=110">
-  <link rel="stylesheet" href="studio.css?v=5">
+  <link rel="stylesheet" href="studio.css?v=6">
 </head>
 <body class="studio">
   <header class="studio-header">
@@ -21,6 +21,7 @@
   <div class="mode-tabs" role="tablist">
     <button class="mode-tab active" data-mode="making" role="tab">making</button>
     <button class="mode-tab" data-mode="walking" role="tab">walking</button>
+    <button class="mode-tab" data-mode="listening" role="tab">listening</button>
     <button class="mode-tab mode-tab-manage" data-mode="manage" role="tab">manage</button>
   </div>
 
@@ -90,8 +91,24 @@
     <div class="manage-list" id="manage-list"></div>
   </section>
 
+  <section class="listen-panel" id="listen-panel" hidden>
+    <p class="listen-intro">what shows under <em>listening</em> on your homepage, left to right.
+      paste any audio link: album, playlist, song, radio show, mix. spotify, bandcamp, soundcloud, nts, youtube, anything.</p>
+    <form class="listen-add" id="listen-add">
+      <input id="listen-url" type="url" placeholder="https://..." autocomplete="off" required>
+      <button type="submit" class="listen-add-btn">add</button>
+    </form>
+    <p class="manage-status" id="listen-status" hidden></p>
+    <div class="listen-list" id="listen-list"></div>
+    <div class="form-actions">
+      <button type="button" class="publish-btn" id="listen-publish">publish</button>
+      <span class="form-status" id="listen-publish-status"></span>
+    </div>
+  </section>
+
   <script src="../studio-config.js?v=1"></script>
   <script src="../studio-render.js?v=2"></script>
-  <script src="studio.js?v=5"></script>
+  <script src="studio.js?v=6"></script>
+  <script src="listening.js?v=1"></script>
 </body>
 </html>
