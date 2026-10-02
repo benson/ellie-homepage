@@ -9,7 +9,7 @@
   <meta property="og:description" content="">
   <meta property="og:url" content="https://elliexcenteno.com">
   <meta property="og:type" content="website">
-  <link rel="stylesheet" href="style.css?v=113">
+  <link rel="stylesheet" href="style.css?v=114">
   <link rel="stylesheet" href="photobox.css?v=5">
   <link rel="stylesheet" href="photozoom.css?v=3">
 </head>
@@ -19,7 +19,7 @@
     <div class="welcome-snailpop" role="dialog" aria-label="welcome">
       <img class="welcome-snail" src="icons/snail.png?v=1" alt="">
       <div class="welcome-chip welcome-chip-text">welcome to my brain.<br>enjoy your stay.</div>
-      <button type="button" class="welcome-chip welcome-chip-btn" id="welcome-btn">crawl in &#8599;</button>
+      <button type="button" class="welcome-chip welcome-chip-btn" id="welcome-btn">crawl in &gt;</button>
     </div>
   </div>
   <script>
@@ -66,6 +66,43 @@
       <rect width="100%" height="14" fill="url(#barb)"/>
     </svg>
   </div>
+  <script>
+  // twisted-pair barbed wire riding a slow wave (ellie-tuned 2026-10). drawn at
+  // the real pixel width so the strokes stay crisp; the static pattern above is
+  // the no-js fallback.
+  (function () {
+    var el = document.querySelector('.barbed-divider');
+    if (!el) return;
+    var AMP = 4, WL = 120, GAP = 54, BARB = 5.5, SW = 1, H = 30, MID = H / 2;
+    function y(x) { return MID + AMP * Math.sin(x / WL * Math.PI * 2); }
+    function draw() {
+      var W = Math.round(el.getBoundingClientRect().width);
+      if (!W) return;
+      var st = 'fill="none" stroke="currentColor" stroke-width="' + SW + '" stroke-linecap="round" stroke-linejoin="round"';
+      var d1 = '', d2 = '';
+      for (var x = 0; x <= W; x += 2) {
+        var t = 1.6 * Math.sin(x / 9);
+        d1 += (x ? 'L' : 'M') + x + ' ' + (y(x) + t).toFixed(2);
+        d2 += (x ? 'L' : 'M') + x + ' ' + (y(x) - t).toFixed(2);
+      }
+      var svg = '<path d="' + d1 + '" ' + st + '/><path d="' + d2 + '" ' + st + '/>';
+      for (var bx = GAP / 2; bx < W; bx += GAP) {
+        var a = Math.atan2(y(bx + 1) - y(bx - 1), 2) * 180 / Math.PI, s = BARB;
+        svg += '<g transform="translate(' + bx.toFixed(1) + ' ' + y(bx).toFixed(2) + ') rotate(' + a.toFixed(1) + ')">' +
+          '<line x1="' + (-s * .55) + '" y1="' + (-s) + '" x2="' + (s * .55) + '" y2="' + s + '" ' + st + '/>' +
+          '<line x1="' + (-s * .55) + '" y1="' + s + '" x2="' + (s * .55) + '" y2="' + (-s) + '" ' + st + '/>' +
+          '<path d="M-2.2 -1.6 C -0.6 1.8, 0.6 -1.8, 2.2 1.6" ' + st + '/></g>';
+      }
+      el.innerHTML = '<svg class="barbed-wire" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" xmlns="http://www.w3.org/2000/svg">' + svg + '</svg>';
+    }
+    draw();
+    var last = 0;
+    window.addEventListener('resize', function () {
+      var w = Math.round(el.getBoundingClientRect().width);
+      if (w !== last) { last = w; draw(); }
+    });
+  })();
+  </script>
 
   <div class="section-row">
   <section class="compact">
