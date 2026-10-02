@@ -55,7 +55,12 @@
       const data = await res.json();
       if (Array.isArray(data.items)) {
         backendOk = true;
-        items = data.items;
+        // show entries the way the homepage does (nts dates trimmed, the
+        // source off the "by" line); saved as-is until she next publishes
+        items = data.items.map(it => Object.assign({}, it, {
+          title: window.studioListeningTitle ? window.studioListeningTitle(it) : it.title,
+          by: window.studioListeningBy ? window.studioListeningBy(it) : it.by,
+        }));
         markSaved();
         if (!items.length) await seedFromHomepage();
       } else {
@@ -138,19 +143,14 @@
     } else if ((m = /^(.+?) - (.+?) \| (?:Listen|Stream)/i.exec(title))) {
       title = m[1]; by = m[2];
     }
-    if (/spotify/i.test(p.site || '') && /playlist/.test(url) && !by) by = 'playlist';
-    if (!by) by = siteName(p, url);
+    // spotify playlists: "Playlist · Will Miller · 50 items"
+    if (!by && (m = /^Playlist · (.+?) ·/.exec(p.description || ''))) by = m[1];
+    // the source (spotify, nts…) is shown on its own label, never as "by";
+    // studioListeningBy fills nts shows in from the link
+    const it = { url, title, by };
+    if (window.studioListeningBy) by = window.studioListeningBy(it);
     return { title: title.toLowerCase(), by: by.toLowerCase() };
   }
-  function siteName(p, url) {
-    try {
-      const host = new URL(url).hostname.replace(/^www\./, '');
-      if (/nts\.live$/.test(host)) return 'nts radio';
-      if (/youtube\.com$|youtu\.be$/.test(host)) return 'youtube';
-      return (p.site && p.site.length < 30) ? p.site : host.split('.').slice(-2, -1)[0] || host;
-    } catch (e) { return p.site || ''; }
-  }
-
   addForm.addEventListener('submit', async (ev) => {
     ev.preventDefault();
     const url = urlInput.value.trim();
@@ -161,7 +161,8 @@
     let p = {};
     try { p = await preview(url); } catch (e) {}
     const names = guessNames(p, url);
-    items.unshift({ url, title: names.title, by: names.by, art: p.image || '' });
+    const title = window.studioListeningTitle ? window.studioListeningTitle({ url, title: names.title }) : names.title;
+    items.unshift({ url, title, by: names.by, art: p.image || '' });
     urlInput.value = '';
     btn.disabled = false;
     setStatus(p.image ? '' : 'couldn’t find a cover for that one. tap the empty square to add your own.');
@@ -207,6 +208,14 @@
       link.rel = 'noopener';
       link.textContent = it.url.replace(/^https?:\/\/(www\.)?/, '');
       fields.appendChild(link);
+      const tag = window.studioListeningTag ? window.studioListeningTag(it) : '';
+      if (tag) {
+        const t = document.createElement('span');
+        t.className = 'listen-tag';
+        t.textContent = tag;
+        t.title = 'worked out from the link';
+        fields.appendChild(t);
+      }
 
       const actions = document.createElement('div');
       actions.className = 'listen-actions';

@@ -41,6 +41,18 @@ async function coverSrc(url) {
   }
 }
 
+// reuse the homepage's own label logic ("album · spotify") so baked and live match
+function loadListeningHelpers() {
+  const vm = require('vm');
+  const sandbox = { window: {}, URL };
+  vm.runInNewContext(fs.readFileSync(path.join(ROOT, 'studio-render.js'), 'utf8'), sandbox);
+  return {
+    tag: sandbox.window.studioListeningTag || (() => ''),
+    title: sandbox.window.studioListeningTitle || (it => it.title || ''),
+    by: sandbox.window.studioListeningBy || (it => it.by || ''),
+  };
+}
+
 async function buildListening() {
   const api = studioApiUrl();
   if (!api) return null;
@@ -48,12 +60,13 @@ async function buildListening() {
   const data = await res.json();
   if (!Array.isArray(data.items) || !data.items.length) return null;
 
+  const helpers = loadListeningHelpers();
   let html = '<div id="spotify-recent">\n';
   for (const it of data.items) {
     const art = await coverSrc(it.art);
     html += `      <a class="album-wrap" href="${esc(it.url || '')}" target="_blank" rel="noopener">`;
     html += `<img class="album-icon" src="${art}" alt="${esc(it.title || '')}">`;
-    html += `<div class="album-tip"><span class="tip-track">${esc(it.title || '')}</span><span>${esc(it.by || '')}</span></div>`;
+    html += `<div class="album-tip"><span class="tip-track">${esc(helpers.title(it))}</span><span>${esc(helpers.by(it))}</span><span class="album-tag">${esc(helpers.tag(it))}</span></div>`;
     html += `</a>\n`;
   }
   html += '    </div>';

@@ -617,6 +617,12 @@ body.studio[data-mode="making"]  .mode-only-making  { display: flex; }
   text-decoration: none;
 }
 .listen-link:hover { color: var(--text-muted); }
+.listen-tag {
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(244, 237, 228, 0.45);
+}
 .listen-actions {
   display: flex;
   gap: 5px;

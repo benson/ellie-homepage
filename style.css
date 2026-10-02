@@ -211,62 +211,15 @@ h2 {
   width: 110px;
 }
 
-/* ---------- albums = cd jewel case with the disc peeking out ---------- */
-.album-wrap {
-  position: relative;
-}
-
-.album-icon {              /* the jewel-case front (album cover) */
-  position: relative;
-  z-index: 2;
+/* ---------- listening = plain covers (any audio: albums, shows, playlists) ---------- */
+.album-icon {
   width: 64px;
   height: 64px;
   border-radius: 4px;
   display: block;
+  object-fit: cover;
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-}
-
-.album-wrap::before {      /* plastic sheen across the case */
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 64px;
-  height: 64px;
-  border-radius: 4px;
-  z-index: 3;
-  pointer-events: none;
-  background: linear-gradient(115deg,
-    rgba(255, 255, 255, 0.5) 0%,
-    rgba(255, 255, 255, 0) 30%,
-    rgba(255, 255, 255, 0.15) 100%);
-}
-
-.album-wrap::after {       /* iridescent disc sliding out the right */
-  content: "";
-  position: absolute;
-  left: 40px;
-  top: 9px;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  z-index: 1;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 50% 50%,
-      #2d3826 0 5px,
-      rgba(255, 255, 255, 0.4) 5px 8px,
-      transparent 8px 10px),
-    conic-gradient(from 0deg,
-      #c9d6e8, #e8d4e0, #d4e8d8, #e8e0c9,
-      #d0d8ec, #e6d2e2, #c9d6e8);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  transition: left 0.25s ease;
-}
-
-.album-wrap:hover::after { /* disc slides out a touch more on hover */
-  left: 46px;
 }
 
 .book-icon {
@@ -296,6 +249,16 @@ h2 {
 .album-tip span:not(.tip-track),
 .book-tip span:not(.tip-track) {
   font-style: italic;
+}
+
+.album-tip span.album-tag {   /* "radio · nts", "album · spotify" */
+  font-style: normal;
+  font-size: 0.56rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(244, 237, 228, 0.45);
+  margin-top: 2px;
+  white-space: nowrap;
 }
 
 .tip-track {
@@ -592,22 +555,6 @@ html.welcome-open { overflow: hidden; }
   .album-icon {
     width: 56px;
     height: 56px;
-  }
-
-  .album-wrap::before {
-    width: 56px;
-    height: 56px;
-  }
-
-  .album-wrap::after {
-    left: 34px;
-    top: 8px;
-    width: 40px;
-    height: 40px;
-  }
-
-  .album-wrap:hover::after {
-    left: 40px;
   }
 
   .book-icon {
