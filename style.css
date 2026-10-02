@@ -64,17 +64,22 @@ h1 {   /* burgundy blackletter, thin linen outline, soft glow (ellie-tuned 2026-
   text-shadow: 0 0 18px rgba(233, 218, 177, 0.35);
 }
 
-/* name + little round duotone portrait to its right (ellie-tuned 2026-10) */
+/* name + little round duotone portrait tucked snug under its last letter,
+   the same overlap as the section words over their icons (ellie-tuned 2026-10) */
 .name-wrap {
   display: flex;
   align-items: flex-end;
-  gap: 14px;
   min-width: 0;
+}
+.name-wrap h1 {
+  position: relative;
+  z-index: 1;            /* the name sits over the portrait's edge */
 }
 .me-portrait {
   display: block;
   width: 68px;
   height: 68px;
+  margin-left: -10px;
   border-radius: 50%;
   opacity: 0.7;
   flex-shrink: 0;
@@ -557,11 +562,10 @@ html.welcome-open { overflow: hidden; }
   }
 
   /* phones: name + portrait shrink together so the row keeps its desktop
-     proportions on one line. the row is ~6.1x the name's font size wide;
+     proportions on one line. the row is ~5.7x the name's font size wide;
      88px = page padding (2x18) + email/social column + the gap before it */
   .name-wrap {
-    --nfs: min(3.5rem, calc((100vw - 88px) / 6.1));
-    gap: calc(var(--nfs) * 0.22);
+    --nfs: min(3.5rem, calc((100vw - 88px) / 5.7));
   }
   h1 {
     font-size: var(--nfs, 3.5rem);
@@ -569,6 +573,7 @@ html.welcome-open { overflow: hidden; }
   .me-portrait {
     width: calc(var(--nfs) * 1.09);
     height: calc(var(--nfs) * 1.09);
+    margin-left: calc(var(--nfs) * -0.16);
   }
 
   .social-link {
