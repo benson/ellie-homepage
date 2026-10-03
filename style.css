@@ -22,6 +22,23 @@ body {
   text-transform: lowercase;
 }
 
+/* burgundy paper grain over the ink, a fixed layer behind everything
+   (ellie-tuned 2026-10: 24% strength) */
+body {
+  isolation: isolate;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.24;
+  background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22240%22%20height%3D%22240%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.9%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22/%3E%3CfeColorMatrix%20values%3D%220%200%200%200%200.4706%200%200%200%200%200.1176%200%200%200%200%200.2039%200%200%200%201.4%20-0.45%22/%3E%3C/filter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url%28%23n%29%22/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+}
+
+
 .section-label-img,
 .section-icon,
 .link-label-img {
@@ -607,4 +624,49 @@ html.welcome-open { overflow: hidden; }
     flex-wrap: wrap;
     max-width: 100%;
   }
+}
+
+/* the snail is the way home — ellie's drawing, flipped to crawl left, on the
+   archive + studio pages (replaces the "← home" text link) */
+.snail-home,
+.snail-home:hover {
+  text-decoration: none;
+}
+.snail-home {
+  position: relative;
+  display: inline-block;
+}
+.snail-home img {
+  display: block;
+  width: 86px;
+  height: auto;
+  filter: var(--label-filter);
+  transform: scaleX(-1);
+  opacity: 0.85;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+.snail-home:hover img,
+.snail-home:focus-visible img {
+  opacity: 1;
+  transform: scaleX(-1) translateX(5px);   /* inches toward home */
+}
+/* "home" written on the shell, in the welcome popup's outlined lettering */
+.snail-home span {
+  position: absolute;
+  left: 65.5%;            /* shell centre, mirrored with the flip */
+  top: 45%;
+  transform: translate(-50%, -50%);
+  font-family: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 550;
+  font-size: 11px;
+  color: #9a6a48;
+  -webkit-text-stroke: 3.5px rgba(10, 13, 8, 0.95);
+  paint-order: stroke fill;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: transform 0.25s ease;
+}
+.snail-home:hover span,
+.snail-home:focus-visible span {
+  transform: translate(-50%, -50%) translateX(-5px);
 }
