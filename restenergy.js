@@ -317,39 +317,64 @@
     } catch (e) { return null; }
   }
 
-  async function fetchArrangement() {
-    if (!window.STUDIO_API_URL) return null;
-    try {
-      const res = await Promise.race([
-        fetch(window.STUDIO_API_URL + '?type=restenergy'),
-        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 1800)),
-      ]);
-      const data = await res.json();
-      const arr = (data && data.arrangement) ? data.arrangement : null;
-      if (arr) { try { localStorage.setItem(ARR_CACHE, JSON.stringify(arr)); } catch (e) {} }
-      return arr;
-    } catch (e) {
-      return cachedArrangement();
-    }
+  // returns { now, late }: `now` is the live arrangement if it beats the
+  // timeout, otherwise the cached one; `late` resolves with the live answer
+  // whenever it finally lands (null if it fails), so the page can catch up
+  // instead of being stuck on a stale order.
+  function fetchArrangement() {
+    if (!window.STUDIO_API_URL) return { now: Promise.resolve(null), late: Promise.resolve(null) };
+    const live = fetch(window.STUDIO_API_URL + '?type=restenergy&t=' + Date.now(), { cache: 'no-store' })
+      .then(r => r.json())
+      .then(data => {
+        const arr = (data && data.arrangement) ? data.arrangement : null;
+        if (arr) { try { localStorage.setItem(ARR_CACHE, JSON.stringify(arr)); } catch (e) {} }
+        return arr;
+      })
+      .catch(() => null);
+    const now = Promise.race([
+      live.then(arr => ({ arr, live: true })),
+      new Promise(res => setTimeout(() => res(null), 1800)),
+    ]).then(r => (r && r.arr) ? r : { arr: cachedArrangement(), live: false });
+    return { now, late: live };
+  }
+
+  function build(baseManifest, arrangement) {
+    manifest = JSON.parse(JSON.stringify(baseManifest));
+    applyCustomCollections(arrangement);
+    applyArrangement(arrangement);
   }
 
   (async function load() {
     root.innerHTML = '<p class="re-loading">loading…</p>';
     try {
-      const [mRes, rRes, arrangement] = await Promise.all([
+      const arrFetch = fetchArrangement();
+      const [mRes, rRes, first] = await Promise.all([
         fetch('manifest.json?v=' + Date.now()),
         fetch('ratios.json?v=' + Date.now()).catch(() => null),
-        fetchArrangement(),
+        arrFetch.now,
       ]);
-      manifest = await mRes.json();
+      const base = await mRes.json();
       if (rRes) { try { ratios = await rRes.json(); } catch (e) { ratios = {}; } }
-      if (!manifest.collections || !manifest.collections.length) {
+      if (!base.collections || !base.collections.length) {
         root.innerHTML = '<p class="re-empty">no photos yet.</p>';
         return;
       }
-      applyCustomCollections(arrangement);
-      applyArrangement(arrangement);
+      build(base, first.arr);
       render();
+
+      // the live arrangement was too slow: when it does arrive, redraw with
+      // it if it differs, keeping whichever collections were open
+      if (!first.live) {
+        const arr = await arrFetch.late;
+        if (!arr || JSON.stringify(arr) === JSON.stringify(first.arr)) return;
+        const open = new Set([...root.querySelectorAll('.re-acc.open .re-acc-title')].map(t => t.textContent));
+        build(base, arr);
+        render();
+        root.querySelectorAll('.re-acc').forEach(sec => {
+          const t = sec.querySelector('.re-acc-title');
+          if (t && open.has(t.textContent)) sec.querySelector('.re-acc-head').click();
+        });
+      }
     } catch (err) {
       root.innerHTML = '<p class="re-empty">couldn’t load the galleries.</p>';
     }

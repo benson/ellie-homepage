@@ -7,19 +7,19 @@
       "photos": [
         {
           "file": "bobstrees",
-          "title": "bob's trees"
+          "title": "greetings from bob's trees"
         },
         {
-          "file": "appalachianairbnbview",
-          "title": "appalachia airbnb"
+          "file": "twinspeek",
+          "title": "twins peek"
         },
         {
           "file": "balanceddiet",
           "title": "a balanced diet"
         },
         {
-          "file": "busybee",
-          "title": "busy bee"
+          "file": "misterskyblue",
+          "title": "mr. sky, blue"
         },
         {
           "file": "catcowcall",
@@ -50,20 +50,28 @@
           "title": "dream space house"
         },
         {
+          "file": "horseplay",
+          "title": "horseplay"
+        },
+        {
           "file": "easylife",
-          "title": "life ain't ain't easy"
+          "title": "sometimes life ain't ain't easy"
         },
         {
           "file": "pickingapples",
-          "title": "apple pick flick"
+          "title": "well-liked apples"
         },
         {
           "file": "fishermanonkeuka",
-          "title": "loner man, liner man"
+          "title": "teach a fish how to man"
+        },
+        {
+          "file": "be-s-tbuds",
+          "title": "be(s)t buds"
         },
         {
           "file": "gardenparty",
-          "title": "at the swim meet"
+          "title": "casual hang"
         },
         {
           "file": "hisandhers",
@@ -72,6 +80,10 @@
         {
           "file": "nycwinter",
           "title": "nyc winter"
+        },
+        {
+          "file": "appalachianairbnbview",
+          "title": "appalachia airbnb"
         },
         {
           "file": "layhere",
@@ -86,10 +98,6 @@
           "title": "misty af sf"
         },
         {
-          "file": "nycbeach",
-          "title": "nyc beach"
-        },
-        {
           "file": "staringcontest",
           "title": "staring contest"
         },
@@ -98,8 +106,20 @@
           "title": "staring contest winner"
         },
         {
+          "file": "housewinning",
+          "title": "house/how's winning/whinnying"
+        },
+        {
+          "file": "bettheirbottomdollar",
+          "title": "bet their bottom dollar"
+        },
+        {
           "file": "paradisema",
           "title": "paradise, ma"
+        },
+        {
+          "file": "nycbeach",
+          "title": "nyc beach"
         },
         {
           "file": "shygurl",
@@ -130,12 +150,20 @@
           "title": "bath time"
         },
         {
+          "file": "supercyan",
+          "title": "super cyan"
+        },
+        {
           "file": "weouthere",
           "title": "we out here"
         },
         {
           "file": "urbanprism",
           "title": "urban prism"
+        },
+        {
+          "file": "busybee",
+          "title": "busy bee"
         },
         {
           "file": "alligatorhotdog",
@@ -148,34 +176,6 @@
         {
           "file": "americhuh-naaah",
           "title": "americ-huh? naaah"
-        },
-        {
-          "file": "misterskyblue",
-          "title": "mr. sky, blue"
-        },
-        {
-          "file": "horseplay",
-          "title": "horseplay"
-        },
-        {
-          "file": "housewinning",
-          "title": "house winning"
-        },
-        {
-          "file": "bettheirbottomdollar",
-          "title": "bet their bottom dollar"
-        },
-        {
-          "file": "twinspeek",
-          "title": "twins peek"
-        },
-        {
-          "file": "be-s-tbuds",
-          "title": "be(s)t buds"
-        },
-        {
-          "file": "supercyan",
-          "title": "super cyan"
         }
       ]
     },
@@ -185,20 +185,36 @@
       "prints": "https://restenergy.pixieset.com/texturalhealing/",
       "photos": [
         {
-          "file": "seethrough",
-          "title": "see (me) through"
-        },
-        {
           "file": "applezen",
           "title": "unexpected zen at the apple store"
+        },
+        {
+          "file": "sharethespotlight",
+          "title": "share the spotlight"
+        },
+        {
+          "file": "idealhammockview",
+          "title": "ideal hammock view"
+        },
+        {
+          "file": "bigwingsfan",
+          "title": "big wings-fan"
+        },
+        {
+          "file": "gardenparty2",
+          "title": "firing line"
+        },
+        {
+          "file": "dusttodusk",
+          "title": "dust to dusk"
         },
         {
           "file": "bkbotanical1",
           "title": "bk botanical 1"
         },
         {
-          "file": "vineyardwhines",
-          "title": "vineyard whines"
+          "file": "backstroke",
+          "title": "backstroke?"
         },
         {
           "file": "bkbotanical2",
@@ -211,6 +227,10 @@
         {
           "file": "bumpyride",
           "title": "bumpy ride"
+        },
+        {
+          "file": "seethrough",
+          "title": "see (me) through"
         },
         {
           "file": "catchawave",
@@ -226,11 +246,19 @@
         },
         {
           "file": "inhaleexhale",
-          "title": "inhale exhale"
+          "title": "inhale, exhale"
         },
         {
           "file": "intimacy",
           "title": "intimacy"
+        },
+        {
+          "file": "socialclimber",
+          "title": "social climber"
+        },
+        {
+          "file": "pro-glare",
+          "title": "pro-glare lens"
         },
         {
           "file": "itchyeyes",
@@ -245,40 +273,8 @@
           "title": "pnw fuzz"
         },
         {
-          "file": "bigwingsfan",
-          "title": "big wings-fan"
-        },
-        {
-          "file": "sharethespotlight",
-          "title": "share the spotlight"
-        },
-        {
-          "file": "dusttodusk",
-          "title": "dust to dusk"
-        },
-        {
-          "file": "feelingprickly",
-          "title": "feeling prickly"
-        },
-        {
-          "file": "lookup2",
-          "title": "look up"
-        },
-        {
-          "file": "stardust",
-          "title": "stardust"
-        },
-        {
-          "file": "backstroke",
-          "title": "backstroke?"
-        },
-        {
-          "file": "afternoonwalk",
-          "title": "afternoon walk"
-        },
-        {
           "file": "redheads",
-          "title": "redheads"
+          "title": "redheads have more fun"
         },
         {
           "file": "slick",
@@ -293,24 +289,28 @@
           "title": "snow lines"
         },
         {
-          "file": "idealhammockview",
-          "title": "ideal hammock view"
-        },
-        {
-          "file": "gardenparty2",
-          "title": "garden party"
-        },
-        {
-          "file": "pro-glare",
-          "title": "pro-glare lens"
+          "file": "vineyardwhines",
+          "title": "vineyard whines"
         },
         {
           "file": "whattimeisit",
           "title": "nap time"
         },
         {
-          "file": "socialclimber",
-          "title": "social climber"
+          "file": "feelingprickly",
+          "title": "feeling prickly"
+        },
+        {
+          "file": "lookup2",
+          "title": "smells like laundry day"
+        },
+        {
+          "file": "stardust",
+          "title": "stardust"
+        },
+        {
+          "file": "afternoonwalk",
+          "title": "afternoon walk"
         }
       ]
     },
@@ -320,44 +320,68 @@
       "prints": "https://restenergy.pixieset.com/outonahike/",
       "photos": [
         {
-          "file": "aquinnahcliff",
-          "title": "aquinnah cliff"
+          "file": "californiaredwoods",
+          "title": "california redwoods"
         },
         {
-          "file": "blueridgemountains",
-          "title": "blue ridge mountains"
+          "file": "californiaredwoods2",
+          "title": "california redwoods 2"
+        },
+        {
+          "file": "goetheskindofpurple",
+          "title": "goethe's kind of purple"
+        },
+        {
+          "file": "aquinnahcliff",
+          "title": "perpetual fire"
         },
         {
           "file": "brushstrokes",
           "title": "brush strokes"
         },
         {
-          "file": "californiaredwoods",
-          "title": "california redwoods"
-        },
-        {
           "file": "coldsprings",
-          "title": "cold springs"
+          "title": "very cold springs"
         },
         {
           "file": "evergladesshowoff",
-          "title": "everglades show off"
+          "title": "everglades show-off"
         },
         {
           "file": "lookup",
-          "title": "look up"
+          "title": "hello there"
+        },
+        {
+          "file": "smotherme",
+          "title": "smother me"
         },
         {
           "file": "wellfed",
-          "title": "well fed"
+          "title": "well-fed, so they said"
         },
         {
           "file": "newyorkwinter",
-          "title": "new york winter"
+          "title": "knee deep"
+        },
+        {
+          "file": "fairytrampoline",
+          "title": "fairy trampoline"
+        },
+        {
+          "file": "trueabundance",
+          "title": "true abundance"
+        },
+        {
+          "file": "blueridgemountains",
+          "title": "blue ridge mountains"
         },
         {
           "file": "oregoncoast",
           "title": "oregon coast"
+        },
+        {
+          "file": "anyonehome",
+          "title": "anyone home?"
         },
         {
           "file": "oregoncoast2",
@@ -377,7 +401,7 @@
         },
         {
           "file": "middleofnowhere",
-          "title": "middle of nowhere"
+          "title": "free parking"
         },
         {
           "file": "restingplace2",
@@ -390,30 +414,6 @@
         {
           "file": "sneakingaround",
           "title": "sneaking around"
-        },
-        {
-          "file": "californiaredwoods2",
-          "title": "california redwoods 2"
-        },
-        {
-          "file": "trueabundance",
-          "title": "true abundance"
-        },
-        {
-          "file": "fairytrampoline",
-          "title": "fairy trampoline"
-        },
-        {
-          "file": "smotherme",
-          "title": "smother me"
-        },
-        {
-          "file": "goetheskindofpurple",
-          "title": "goethe's kind of purple"
-        },
-        {
-          "file": "anyonehome",
-          "title": "anyone home?"
         }
       ]
     }
