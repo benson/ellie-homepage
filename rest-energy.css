@@ -126,7 +126,11 @@ body.rest-energy {
   transition: grid-template-rows 0.4s ease;
 }
 .re-acc.open .re-acc-panel { grid-template-rows: 1fr; }
-.re-acc-inner { overflow: hidden; min-height: 0; }
+.re-acc-inner { overflow: hidden; min-height: 0; min-width: 0; }   /* min-width: the wall scrolls inside, never widens the page */
+/* once fully open, let the wall run past the page column to the screen edges
+   (the clip is only needed while the panel animates) */
+.re-acc.open.settled .re-acc-inner { overflow: visible; }
+html { overflow-x: clip; }   /* the edge-to-edge wall never makes the page scroll sideways */
 
 .re-acc-tools {
   display: flex;
@@ -150,33 +154,100 @@ body.rest-energy {
   background: rgba(244, 237, 228, 0.06);
 }
 
-/* ---- photo grid: even squares, three across ---- */
-.re-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+/* ---- exhibition wall: one row per collection, scroll sideways ---- */
+.re-wall-wrap {
+  position: relative;
+  min-width: 0;
+  /* break out of the page column so the wall runs edge to edge */
+  margin: 0 calc(50% - 50vw);
+}
+.re-wall {
+  display: flex;
+  min-width: 0;
+  align-items: flex-start;
+  gap: 44px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  scroll-padding: 0 max(30px, calc(50vw - 510px));
+  padding: 8px max(30px, calc(50vw - 510px)) 30px;
+  scrollbar-width: none;
+}
+.re-wall::-webkit-scrollbar { display: none; }
+
+.re-piece {
+  flex: none;
+  margin: 0;
+  scroll-snap-align: start;
 }
 
+.re-wall { --row: min(62vh, 560px); }
+.re-frame {
+  height: var(--row);
+  display: flex;
+  align-items: flex-end;
+}
 .re-photo {
   display: block;
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 3px;
+  aspect-ratio: var(--r);
+  width: min(calc(100vw - 120px), calc(var(--row) * var(--r)));
+  height: auto;
   cursor: zoom-in;
-  /* a hairline of warm light plus a soft halo, so photos sit above the page */
-  box-shadow:
-    0 0 0 1px rgba(233, 218, 177, 0.26),
-    0 0 18px rgba(233, 218, 177, 0.15),
-    0 6px 20px rgba(0, 0, 0, 0.42);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+  outline: 1px solid rgba(244, 237, 228, 0.16);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 .re-photo:hover {
   transform: translateY(-2px);
   box-shadow:
     0 0 0 1px rgba(233, 218, 177, 0.4),
-    0 0 28px rgba(233, 218, 177, 0.24),
-    0 10px 26px rgba(0, 0, 0, 0.5);
+    0 0 28px rgba(233, 218, 177, 0.2),
+    0 22px 44px rgba(0, 0, 0, 0.6);
+}
+
+/* museum label under each photo — same type as the slideshow titles */
+.re-label {
+  margin-top: 12px;
+  max-width: 300px;
+  font-family: "Cutive Mono", monospace;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+.re-label-title { display: block; color: var(--text-main); }
+.re-label-cap { display: block; }
+
+/* floating see-through arrows over the wall's edges */
+.re-wall-nav {
+  position: absolute;
+  top: calc(8px + min(62vh, 560px) / 2);   /* middle of the photo row */
+  transform: translateY(-50%);
+  width: 52px;
+  height: 52px;
+  border: none;
+  background: none;
+  padding: 0;
+  color: rgba(243, 231, 187, 0.9);
+  /* no circle — just the triangle with a soft glow so it reads over any photo */
+  filter: drop-shadow(0 0 6px rgba(233, 218, 177, 0.55)) drop-shadow(0 0 2px rgba(10, 13, 8, 0.8));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: opacity 0.25s ease, background 0.2s ease;
+}
+.re-wall-nav:hover {
+  color: var(--text-bright);
+  filter: drop-shadow(0 0 9px rgba(233, 218, 177, 0.8)) drop-shadow(0 0 2px rgba(10, 13, 8, 0.8));
+}
+.re-wall-nav svg { width: 20px; height: 24px; fill: currentColor; }
+.re-wall-prev { left: 18px; }
+.re-wall-next { right: 18px; }
+.re-wall-nav.hidden { opacity: 0; pointer-events: none; }
+.re-wall-next.nudge { animation: re-nudge 1.1s ease-in-out 2; }
+@keyframes re-nudge {
+  0%, 100% { transform: translateY(-50%) translateX(0); }
+  50% { transform: translateY(-50%) translateX(7px); }
 }
 
 /* ---- lightbox / slideshow ---- */
@@ -281,12 +352,22 @@ body.re-lb-open { overflow: hidden; }
   .re-acc-title { font-size: var(--name-size-mobile, 1.5rem); }
   .re-strip { gap: 6px; padding-bottom: 20px; }
   .re-strip img { height: 68px; }
-  /* three across, breaking out of the body padding so it reaches the edges */
-  .re-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
-    margin: 0 -12px;
+  /* the wall on phones: shorter photos, tighter gaps, smaller arrows */
+  .re-wall { --row: 52vh; gap: 22px; padding: 6px 16px 24px; scroll-padding: 0 16px; scroll-snap-type: x mandatory; }
+  .re-photo { width: min(calc(100vw - 48px), calc(var(--row) * var(--r))); }
+  /* one photo fills the screen at a time here, so centre each photo + label
+     in the row instead of hanging them from a shared bottom line */
+  .re-piece {
+    height: calc(var(--row) + 44px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
+  .re-frame { height: auto; }
+  .re-label { font-size: 0.74rem; max-width: 240px; }
+  .re-wall-nav { width: 40px; height: 40px; top: calc(6px + 26vh + 22px); }
+  .re-wall-prev { left: 8px; }
+  .re-wall-next { right: 8px; }
 
   /* on phones the side arrows move to a row at the bottom, centered under
      the count — no box, off the photo */

@@ -99,6 +99,13 @@
 
   // ---- render the accordion ----
   function render() {
+    // layout experiments (rest-energy/explore.html) can take over drawing while
+    // reusing the data loading + slideshow; the live page never sets this
+    if (window.reCustomRender) {
+      const cols = manifest.collections.map(col => Object.assign({}, col, { photos: col.photos.map(p => normPhoto(col, p)) }));
+      window.reCustomRender(root, cols, ratios, openLightbox);
+      return;
+    }
     root.innerHTML = '';
     manifest.collections.forEach(col => {
       const photos = col.photos.map(p => normPhoto(col, p));
@@ -122,21 +129,68 @@
       const inner = document.createElement('div');
       inner.className = 're-acc-inner';
 
-      const grid = document.createElement('div');
-      grid.className = 're-grid';
+      // exhibition wall — the collection hung in one row you walk along
+      // sideways: real shapes, big, with a small museum label under each
+      const wrap = document.createElement('div');
+      wrap.className = 're-wall-wrap';
+      const wall = document.createElement('div');
+      wall.className = 're-wall';
       photos.forEach((p, i) => {
+        const fig = document.createElement('figure');
+        fig.className = 're-piece';
         const img = document.createElement('img');
         img.className = 're-photo';
-        img.src = p.thumb;
+        img.src = p.large;
         img.alt = p.title || '';
         img.loading = 'lazy';
+        // the ratio sizes the photo before it loads (so lazy-loading works
+        // in the sideways scroll) and lets wide shots shrink to fit a phone
+        const r = parseFloat(ratios[p.src + '/' + p.file]) || 1.5;
+        img.style.setProperty('--r', r);
         img.addEventListener('click', () => openLightbox(lbList, i));
-        grid.appendChild(img);
+        // every photo hangs from the same bottom line, like prints on a wall
+        const frame = document.createElement('div');
+        frame.className = 're-frame';
+        frame.appendChild(img);
+        fig.appendChild(frame);
+        if (p.title || p.caption) {
+          const cap = document.createElement('figcaption');
+          cap.className = 're-label';
+          cap.innerHTML = (p.title ? '<span class="re-label-title">' + p.title + '</span>' : '') +
+            (p.caption ? '<span class="re-label-cap">' + p.caption + '</span>' : '');
+          fig.appendChild(cap);
+        }
+        wall.appendChild(fig);
       });
-      inner.appendChild(grid);
+      wrap.appendChild(wall);
 
-      // prints link — bottom-left, under the photos
-      if (col.prints) {
+      // floating see-through arrows — say "there's more this way", scroll a
+      // wall-width at a time, and fade out at each end
+      const arrow = (dir) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 're-wall-nav re-wall-' + dir;
+        b.setAttribute('aria-label', dir === 'prev' ? 'scroll left' : 'scroll right');
+        b.innerHTML = dir === 'prev'
+          ? '<svg viewBox="0 0 20 24" aria-hidden="true"><path d="M16 2 4 12l12 10z"/></svg>'
+          : '<svg viewBox="0 0 20 24" aria-hidden="true"><path d="M4 2l12 10L4 22z"/></svg>';
+        b.addEventListener('click', () => wall.scrollBy({ left: (dir === 'prev' ? -1 : 1) * wall.clientWidth * 0.8, behavior: 'smooth' }));
+        wrap.appendChild(b);
+        return b;
+      };
+      const prev = arrow('prev'), next = arrow('next');
+      const syncArrows = () => {
+        const max = wall.scrollWidth - wall.clientWidth;
+        prev.classList.toggle('hidden', wall.scrollLeft < 8);
+        next.classList.toggle('hidden', wall.scrollLeft > max - 8);
+      };
+      wall.addEventListener('scroll', syncArrows, { passive: true });
+      window.addEventListener('resize', syncArrows);
+      inner.appendChild(wrap);
+
+      // prints link — hidden for now (ellie, 2026-10); flip SHOW_PRINTS to bring it back
+      const SHOW_PRINTS = false;
+      if (SHOW_PRINTS && col.prints) {
         const tools = document.createElement('div');
         tools.className = 're-acc-tools';
         const a = document.createElement('a');
@@ -153,6 +207,18 @@
       head.addEventListener('click', () => {
         const open = section.classList.toggle('open');
         head.setAttribute('aria-expanded', open ? 'true' : 'false');
+        section.classList.remove('settled');
+        if (open) {
+          clearTimeout(section._settle);
+          section._settle = setTimeout(() => section.classList.add('settled'), 420);
+          syncArrows();
+          // a little nudge the first time, so the sideways scroll is obvious
+          if (!next.classList.contains('hidden') && !section.dataset.nudged) {
+            section.dataset.nudged = '1';
+            next.classList.add('nudge');
+            setTimeout(() => next.classList.remove('nudge'), 2200);
+          }
+        }
       });
 
       // preview strip — a right-aligned taste of the collection, shown while
